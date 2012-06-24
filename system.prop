@@ -1,0 +1,44 @@
+#
+# system.prop for u8818
+#
+rild.libpath=/system/lib/libril-qc-1.so
+rild.libargs=-d /dev/smd0
+ro.telephony.default_network=0
+ro.telephony.ril_class=HWQcomRIL
+ril.subscription.types=NV,RUIM
+DEVICE_PROVISIONED=1
+debug.sf.hw=1
+ro.sf.lcd_density=240
+ro.opengles.version=131072
+ro.use_data_netmgrd=true
+
+wifi.interface=eth0
+wifi.supplicant_scan_interval=15
+
+#debug.camcorder.disablemeta=1
+
+sys.usb.config=mass_storage,adb
+persist.sys.usb.config=mass_storage,adb
+persist.service.adb.enable=1
+
+# System
+dalvik.vm.heapsize=48m
+dalvik.vm.dexopt-data-only=1
+
+# hold precise GC data, and use SMP
+dalvik.vm.dexopt-flags=m=y,u=n
+
+# Mount the internal SD card, too
+ro.additionalmounts=/mnt/emmc 
+ro.vold.switchablepair=/mnt/sdcard,/mnt/emmc 
+ro.emmc.sdcard.partition=19
+
+persist.sys.use_dithering=1
+com.qc.hardware=true
+
+ro.telephony.call_ring.delay=3000
+
+keyguard.no_require_sim=true
+ro.confg.hw_appsbootversion=U8818VCM9_APPSBOOT
+ro.confg.hw_appversion=U8818VCM9_KERNEL
+ro.confg.hw_appfsversion=U8818VCM9_SYSIMG

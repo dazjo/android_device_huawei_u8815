@@ -1,0 +1,16 @@
+#
+# ADDITIONAL_DEFAULT_PROPERTIES
+#
+ro.secure=0
+ro.allow.mock.location=0
+ro.debuggable=1
+persist.service.adb.enable=1
+ro.modversion=<version>
+ro.product.device=hwu8815
+ro.product.name=U8815
+usb.default.pid=0x1038
+persist.usb.default.pid=0x1038
+ro.build.date=<date>
+ro.build.datei.utc=<utc>
+ro.build.owner=sebastian404
+ro.build.url=http://android.podtwo.com/
