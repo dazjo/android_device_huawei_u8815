@@ -63,17 +63,12 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/ueventd.huawei.rc:root/ueventd.huawei.rc \
     device/huawei/u8818/prebuilt/init.qcom.sh:root/init.qcom.sh \
     device/huawei/u8818/prebuilt/init.huawei.usb.rc:root/init.huawei.usb.rc
-#   device/huawei/u8818/prebuilt/init.rc:root/init.rc
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/wifi/dhd_4330.ko:system/wifi/dhd_4330.ko \
     device/huawei/u8818/prebuilt/system/wifi/fw_4330_b2.bin:system/wifi/fw_4330_b2.bin \
     device/huawei/u8818/prebuilt/system/wifi/nvram_4330.txt:system/wifi/nvram_4330.txt \
     device/huawei/u8818/prebuilt/system/etc/wifi/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
-#    device/huawei/u8818/prebuilt/system/wifi/fw_bcm4330_b2.bin:system/wifi/fw_bcm4330_b2.bin \
-#    device/huawei/u8818/prebuilt/system/wifi/fw_bcm4330_apsta_b2.bin:system/wifi/fw_bcm4330_apsta_b2.bin \
-#    device/huawei/u8818/prebuilt/system/wifi/fw_bcm4330_p2p_b2.bin:system/wifi/fw_bcm4330_p2p_b2.bin \
-
 PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/etc/bluetooth/BCM4330.hcd:system/etc/bluetooth/BCM4330.hcd \
     device/huawei/u8818/prebuilt/system/etc/bluetooth/init.bcm.bt.sh:system/etc/bluetooth/init.bcm.bt.sh \

@@ -113,6 +113,19 @@ on boot
     chmod 0664 /data/system/sensors/settings
     mkdir /data/cust
 
+    symlink /cust/nv /data/cust/nv
+    symlink /cust/wifi /data/cust/wifi
+    symlink /cust/xml /data/cust/xml
+    symlink /cust/prop /data/cust/prop
+    symlink /cust/wallpaper /data/cust/wallpaper
+    symlink /cust/ons /data/cust/ons
+    symlink /cust/app /data/cust/app
+    symlink /cust/media /data/cust/media
+    symlink /cust/logo /data/cust/logo
+    symlink /cust/guide /data/cust/guide
+    symlink /cust/email /data/cust/email
+    exec /system/bin/load_oemlogo
+
 # create the OMA directories, so as to enforce our permissions
     mkdir /data/oma 0777
     chmod 0777 /data/oma
@@ -361,6 +374,12 @@ service akm8962 /system/bin/akmd8962
     class main
     disabled
     oneshot
+
+#service bcm_hciattach /system/bin/sh /system/etc/bluetooth/init.bcm.bt.sh
+#    class main
+#    user bluetooth
+#    group qcom_oncrpc bluetooth net_bt_admin system
+#    disabled 
     
 service chip_power_on /system/bin/sh /system/etc/bluetooth/init.bcm.chip_on.sh
     class main
@@ -390,6 +409,12 @@ service hci_dev_down /system/bin/hci_dev_state --dev_down
     disabled 
     oneshot    
     
+service hciattach /system/bin/sh /system/etc/bluetooth/init.bcm.bt.sh
+    class main
+    user bluetooth
+    group qcom_oncrpc bluetooth net_bt_admin
+    disabled
+    oneshot
 
 service wpa_supplicant /system/bin/wpa_supplicant -Dwext -ieth0 -W -c/data/misc/wifi/wpa_supplicant.conf
     socket wpa_eth0 dgram 0660 wifi wifi
