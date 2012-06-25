@@ -79,7 +79,7 @@ WIFI_DRIVER_MODULE_PATH := "/system/wifi/dhd_4330.ko"
 WIFI_DRIVER_FW_PATH_AP := "/system/wifi/fw_4330_b2.bin"
 WIFI_DRIVER_FW_PATH_STA := "/system/wifi/fw_4330_b2.bin"
 WIFI_DRIVER_FW_PATH_P2P := "/system/wifi/fw_4330_b2.bin"
-WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/wifi/fw_4330_b2.bin,nvram_path=/system/wifi/nvram_4330.txt"
+WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/wifi/fw_4330_b2.bin nvram_path=/system/wifi/nvram_4330.txt"
 WIFI_DRIVER_MODULE_NAME := "dhd"
 
 TARGET_USERIMAGES_USE_EXT4 := true
