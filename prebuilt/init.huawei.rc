@@ -110,39 +110,14 @@ on boot
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
 # Create the directories used by the Wireless subsystem
-    mkdir /data/misc/wifi 0770 wifi wifi
+# wi-fi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
-    mkdir /data/misc/wifi/wpa_supplicant 0770 wifi wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
-    chown dhcp dhcp /data/misc/dhcp
-    setprop wifi.interface eth0
-#create  WIFI filesystem structure
-    mkdir /data/misc/wifi/sockets 0775
-    chown wifi wifi /data/misc/wifi/sockets
-    mkdir /data/misc/wpa_supplicant 0775
-    chown wifi wifi /data/misc/wpa_supplicant
-    mkdir /data/misc/dhcp 0775 system system
-    mkdir /data/misc/wifi/load
-    chmod 0775 /data/misc/wifi/load
-    chown system system /data/misc/wifi/load/
-    mkdir /data/misc/wifi/bin 0775 system system
+
     mkdir /data/misc/sensors 0775 root root
     write /data/system/sensors/settings 0
     chmod 0664 /data/system/sensors/settings
     mkdir /data/cust
-
-    symlink /cust/nv /data/cust/nv
-    symlink /cust/wifi /data/cust/wifi
-    symlink /cust/xml /data/cust/xml
-    symlink /cust/prop /data/cust/prop
-    symlink /cust/wallpaper /data/cust/wallpaper
-    symlink /cust/ons /data/cust/ons
-    symlink /cust/app /data/cust/app
-    symlink /cust/media /data/cust/media
-    symlink /cust/logo /data/cust/logo
-    symlink /cust/guide /data/cust/guide
-    symlink /cust/email /data/cust/email
-    exec /system/bin/load_oemlogo
 
 # create the OMA directories, so as to enforce our permissions
     mkdir /data/oma 0777
@@ -236,26 +211,16 @@ service cnd /system/bin/cnd
 service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmcblk0p11 /dev/block/mmcblk0p17
     class main
     user root
-＃ fix random reboots
-＃    disabled  
     oneshot
+
+# bugreport is triggered by holding down volume down, volume up and power
+service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
+    disabled
+    oneshot
+    keycodes 114 115 116
 
 on property:ro.emmc=1
     start rmt_storage
-
-#service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
-#    class main
-#    user bluetooth
-#    group qcom_oncrpc bluetooth net_bt_admin
-#    disabled
-#    oneshot
-
-#service bcmbtld /system/bin/logwrapper /system/bin/btld -lpm 1 -hb 3000000  -pf /system/etc/bluetooth/BCM4330.hcd
-#    class main
-#    user root
-#    group bluetooth net_bt_admin
-#    disabled
-#    oneshot
 
 # start btld if soft_onoff is enabled
 on property:service.brcm.bt.soft_onoff=1
@@ -280,6 +245,7 @@ service sapd /system/bin/sdptool add --channel=15 SAP
     group bluetooth net_bt_admin
     disabled
     oneshot
+
 service dund /system/bin/sdptool add --channel=1 DUN
     class main
     user bluetooth
@@ -326,164 +292,10 @@ service netmgrd /system/bin/netmgrd
     class main
     disabled
 
-#service sensors /system/bin/sensors.qcom
-#    class main
-#    user root
-#    group root
-#    disabled
 
-#on property:ro.use_data_netmgrd=false
-#    # netmgr not supported on specific target
-#    stop netmgrd
 
-# Adjust socket buffer to enlarge TCP receive window for high bandwidth
-# but only if ro.data.large_tcp_window_size property is set.
-on property:ro.data.large_tcp_window_size=true
-    write /proc/sys/net/ipv4/tcp_adv_win_scale  1
-
-#service btwlancoex /system/bin/sh /system/etc/init.qcom.coex.sh
-#    class main
-#    user shell
-#    group bluetooth net_bt_admin
-#    disabled
-#    oneshot
-
-#service amp_init /system/bin/amploader -i
-#    class main
-#    user root
-#    disabled
-#    oneshot
-
-#service amp_load /system/bin/amploader -l 7000
-#    class main
-#    user root
-#    disabled
-#    oneshot
-
-#service amp_unload /system/bin/amploader -u
-#    class main
-#    user root
-#    disabled
-#    oneshot
-
-#/* < DTS2011121504967 wanghao 20111215 begin */
-#service wpa_supplicant /system/bin/logwrapper /system/bin/wpa_supplicant -Dwext -iwlan0 -c/data/misc/wifi/wpa_supplicant.conf -dd
-#    user root
-#   group wifi inet
-#    socket wpa_wlan0 dgram 660 wifi wifi
-#    disabled
-#    oneshot
-
-#service dhcpcd_wlan0 /system/bin/dhcpcd -BKLG wlan0
-#    disabled
-#    oneshot
-
-#service iprenew_wlan0 /system/bin/dhcpcd -n wlan0
-#    disabled
-#    oneshot
-#/* DTS2011121504967 wanghao 20111215 end > */
-
-#service wiperiface /system/bin/wiperiface
-#    class main
-#    user location
-#    group qcom_oncrpc
-#    oneshot
-
-#service gpsone_daemon /system/bin/gpsone_daemon
-#    class main
-#    user system
-#    group system qcom_oncrpc inet
-#    disabled
-
-#service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
-#    class main
-#    user root
-#    group system qcom_oncrpc
-#    disabled
-#    oneshot
-
-#on property:drmdiag.load=1
-#    start drmdiag
-
-#on property:drmdiag.load=0
-#    stop drmdiag
-
-service qcom-sh /system/bin/sh /init.qcom.sh
-    class main
-    user root
-    oneshot
-
-service qcom-post-boot /system/bin/sh /system/etc/init.qcom.post_boot.sh
-    class main
-    user root
-    disabled
-    oneshot
-
-service qcom-wifi /system/bin/sh /system/etc/init.qcom.wifi.sh
-    class main
-    oneshot
-
-on property:init.svc.bootanim=stopped
-    start qcom-post-boot
-
-#service atfwd /system/bin/ATFWD-daemon
-#    class main
-#    user system
-#    group system radio
-#    onrestart /system/bin/log -t RIL-ATFWD -p w "ATFWD daemon restarted"
-
-#service hdmid /system/bin/hdmid
-#    class main
-#    socket hdmid stream 0660 root system graphics
-#    disabled
-
-#on property:ro.hdmi.enable=true
-#    start hdmid
-
-#service abld /system/bin/mm-abl-daemon
-#    class main
-#    disabled
-
-#service ds_fmc_appd /system/bin/ds_fmc_appd -p "rmnet0" -D
-#    class main
-#    group radio
-#    disabled
-#    oneshot
-
-#on property:persist.data.ds_fmc_app.mode=1
-#    start ds_fmc_appd
-
-#service ims_regmanager /system/bin/exe-ims-regmanagerprocessnative
-#    user system
-#    group qcom_oncrpc net_bt_admin inet radio wifi
-#    disabled
-
-#on property:persist.ims.regmanager.mode=1
-#    start ims_regmanager
-
-#on property:ro.data.large_tcp_window_size=true
-#    # Adjust socket buffer to enlarge TCP receive window for high bandwidth (e.g. DO-RevB)
-#    write /proc/sys/net/ipv4/tcp_adv_win_scale  1
-
-#service thermald /system/bin/thermald
-#    class main
-#    user root
-#    group root
-#    disabled
-
-#on property:persist.thermal.monitor=true
-#    start thermald
-
-#service time_daemon /system/bin/time_daemon
-#    class main
-#    user root
-#    group root
-#    oneshot
-#    disabled
-
-#on property:persist.timed.enable=true
-#    mkdir /data/time/ 0700
-#    start time_daemon
+#on property:init.svc.bootanim=stopped
+#    start qcom-post-boot
 
 service ftp /system/bin/sdptool add --psm=5257 --channel=20 FTP
     class main
@@ -512,32 +324,7 @@ service profiler_daemon /system/bin/profiler_daemon
     user root
     group root
     disabled
-#/*< DTS2011062206646 libeibei 20110623 begin */
-# bugreport is triggered by the KEY_VOLUMEUP and KEY_VOLUMEDOWN keycodes or triggered by projectmenu
-#service bugreport /system/bin/dumpstate -d -v -o /sdcard/logs/bugreport
-#    class main
-#    user root
-#    disabled
-#    oneshot
-#    keycodes 115 114
 
-# applogcat is triggered by projectmenu or setprop
-#service applogcat /system/bin/logcat -v time -r 1024 -n 16 -f /sdcard/bugreports/applogcat-log
-#    class main
-#    disabled
-
-# kmsglogcat is triggered by projectmenu or setprop
-#service kmsglogcat /system/bin/kmsgcat -r 1024 -n 16 -f /sdcard/bugreports/kmsgcat-log
-#    class main
-#    disabled
-
-#service modemlogcat /system/bin/diag_mdlog
-#    class main
-#    disabled
-# sleeplogcat is triggered by projectmenu or setprop
-#service sleeplogcat /system/bin/sleeplogcat -t 10 -p /sdcard/sleeplog/
-#    class main
-#    disabled
 
 # start huawei rpc server
 service oem_rpc_svc /system/bin/oem_rpc_svc
@@ -553,7 +340,7 @@ service dumpstate /system/bin/dumpstate -s
 service rmt_oeminfo /system/bin/rmt_oeminfo
     class main
     user root
-    disabled
+    oneshot
 
 on property:ro.emmc=1
     start rmt_oeminfo
@@ -571,12 +358,6 @@ service akm8962 /system/bin/akmd8962
     class main
     disabled
     oneshot
-
-#service bcm_hciattach /system/bin/sh /system/etc/bluetooth/init.bcm.bt.sh
-#    class main
-#    user bluetooth
-#    group qcom_oncrpc bluetooth net_bt_admin system
-#    disabled 
     
 service chip_power_on /system/bin/sh /system/etc/bluetooth/init.bcm.chip_on.sh
     class main
@@ -606,38 +387,21 @@ service hci_dev_down /system/bin/hci_dev_state --dev_down
     disabled 
     oneshot    
     
-#service BtWiRfServer /system/xbin/RfTest
-#    class main
-#    user root
-#    group bluetooth net_bt_admin system  
-#    disabled
-#    oneshot
 
-#service btld /system/bin/btld
-#    class main
-#    user bluetooth system
-#    group bluetooth net_bt_admin system
-#    disabled 
-    
-#service wlan_detect /system/bin/wlan_detect
-#    class main
-#    user root
-#    group root
-#    oneshot
-
-service wpa_supplicant /system/bin/wpa_supplicant -Dwext -ieth0 -W -c/data/misc/wifi/wpa_supplicant.conf 
+service wpa_supplicant /system/bin/wpa_supplicant -Dwext -ieth0 -W -c/data/misc/wifi/wpa_supplicant.conf
+    socket wpa_eth0 dgram 0660 wifi wifi
     class main
     disabled
     oneshot
 
-service dhcpcd_eth0 /system/bin/dhcpcd -BKL 
+service dhcpcd_eth0 /system/bin/dhcpcd -BKL
     class main
     disabled 
     oneshot
-    
-service iprenew_eth0 /system/bin/dhcpcd -n 
-    class main
-    disabled 
+
+service iprenew_eth0 /system/bin/dhcpcd -n
+    class main        
+    disabled        
     oneshot
     
 #/* we change the following lines to change the accel and  compass_aot mode to pass the AT&T test
