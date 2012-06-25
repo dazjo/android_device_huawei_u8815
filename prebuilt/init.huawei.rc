@@ -87,12 +87,6 @@ on post-fs
 
     write /proc/apanic_console 1
 
-# Same reason as /data above
-#    mkdir /cache/huawei_ota 0775 system system
-#    chmod 0775 /cache/huawei_ota
-#    mkdir /cache/huawei_ota/tmp 0775 system system
-#    chmod 0775 /cache/huawei_ota/tmp
-
 on boot
     mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
@@ -213,6 +207,17 @@ service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmc
     user root
     oneshot
 
+service qcom-sh /system/bin/sh /init.qcom.sh      	
+    class main	  	
+    user root	  	
+    oneshot
+	  	
+service qcom-post-boot /system/bin/sh /system/etc/init.qcom.post_boot.sh 	
+    class main
+    user root	  	
+    disabled	
+    oneshot
+
 # bugreport is triggered by holding down volume down, volume up and power
 service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
     disabled
@@ -291,8 +296,6 @@ service qmuxd /system/bin/qmuxd
 service netmgrd /system/bin/netmgrd
     class main
     disabled
-
-
 
 #on property:init.svc.bootanim=stopped
 #    start qcom-post-boot
