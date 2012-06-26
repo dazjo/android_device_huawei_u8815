@@ -70,10 +70,10 @@ BOARD_HAVE_BLUETOOTH_BCM := true
 # RIL
 BOARD_PROVIDES_LIBRIL := true
 
-# Wifi
+# Wi-Fi
 BOARD_WPA_SUPPLICANT_DRIVER := WEXT
-WPA_SUPPLICANT_VERSION := VER_0_6_X
-#BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_wext
+WPA_SUPPLICANT_VERSION := VER_0_8_X
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_wext
 BOARD_WLAN_DEVICE := bcm4330
 WIFI_DRIVER_MODULE_PATH := "/system/wifi/dhd_4330.ko"
 WIFI_DRIVER_FW_PATH_AP := "/system/wifi/fw_4330_b2.bin"
@@ -89,18 +89,16 @@ BOARD_SYSTEMIMAGE_PARTITION_SIZE := 314572800
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 183500800
 BOARD_FLASH_BLOCK_SIZE := 131072
 
-# build kernel 
-#ENABLE_BCM_4330 := true
-#BT_BCM_VER_3 := true
-#TARGET_KERNEL_SOURCE := kernel/huawei/u8818
-#TARGET_KERNEL_CONFIG := cyanogen_u8818_defconfig
+# Kernel 
+TARGET_KERNEL_SOURCE := kernel/huawei/u8818
+TARGET_KERNEL_CONFIG := cyanogen_u8818_defconfig
 TARGET_PREBUILT_KERNEL := device/huawei/u8818/kernel
 BOARD_KERNEL_CMDLINE := console=ttyDDC0 androidboot.hardware=huawei
 BOARD_KERNEL_BASE := 0x00200000
 BOARD_PAGE_SIZE := 2048
 
 TARGET_RECOVERY_INITRC := device/huawei/u8818/recovery/etc/init.rc
-#TARGET_PREBUILT_RECOVERY_KERNEL := device/huawei/u8818/kernel
+TARGET_PREBUILT_RECOVERY_KERNEL := device/huawei/u8818/kernel
 BOARD_DATA_DEVICE := /dev/block/mmcblk0p13
 BOARD_DATA_FILESYSTEM := ext4
 BOARD_DATA_FILESYSTEM_OPTIONS := rw
@@ -113,8 +111,8 @@ BOARD_CACHE_FILESYSTEM_OPTIONS := rw
 BOARD_USES_MMCUTILS := true
 BOARD_HAS_NO_MISC_PARTITION := true
 
-#BOARD_CUSTOM_GRAPHICS := ../../../device/huawei/u8818/recovery/graphics.c
-#BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/huawei/u8818/recovery/recovery_ui.c
+BOARD_CUSTOM_GRAPHICS := ../../../device/huawei/u8818/recovery/graphics.c
+BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/huawei/u8818/recovery/recovery_ui.c
 BOARD_USE_USB_MASS_STORAGE_SWITCH := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun
 TARGET_USE_CUSTOM_SECOND_LUN_NUM := 2
