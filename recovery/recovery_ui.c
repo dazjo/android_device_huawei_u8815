@@ -48,6 +48,9 @@ int device_handle_key(int key_code, int visible) {
                     return GO_BACK;
                 break;
 
+            case KEY_POWER:
+                return SELECT_ITEM;
+
 	        case KEY_HOME:
                 return SELECT_ITEM;
 
