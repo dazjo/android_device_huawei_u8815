@@ -17,6 +17,8 @@ wifi.supplicant_scan_interval=15
 
 #debug.camcorder.disablemeta=1
 
+ro.cwm.enable_key_repeat=true
+
 sys.usb.config=mass_storage,adb
 persist.sys.usb.config=mass_storage,adb
 persist.service.adb.enable=1
