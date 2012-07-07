@@ -1,13 +1,28 @@
+# Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
 
-# The gps config appropriate for this device
-$(call inherit-product, device/common/gps/gps_as_supl.mk)
+$(call inherit-product, device/common/gps/gps_eu_supl.mk)
 
-$(call inherit-product-if-exists, vendor/huawei/u8818/u8818-vendor.mk)
+DEVICE_PACKAGE_OVERLAYS := device/huawei/u8818/overlay
 
-DEVICE_PACKAGE_OVERLAYS += device/huawei/u8818/overlay
-PRODUCT_LOCALES += hdpi
-#PRODUCT_LOCALES := zh_CN zh_TW en_US
+PRODUCT_PACKAGES += \
+    LiveWallpapers \
+    LiveWallpapersPicker \
+    VisualizationWallpapers \
+    MagicSmokeWallpapers \
+    VisualizationWallpapers \
+    librs_jni \
+    Gallery3d \
+    SpareParts \
+    Development \
+    Term \
+    prox_cal \
+    libOmxVidEnc \
+    FM \
+    abtfilt \
+    dexpreopt
+
 
 # Video decoding
 PRODUCT_PACKAGES += \
@@ -33,17 +48,10 @@ PRODUCT_PACKAGES += \
 
 # Other
 PRODUCT_PACKAGES += \
-    dexpreopt \
     lights.u8818 \
     gps.u8818
 
-# Camera
-PRODUCT_PACKAGES += \
-   camera.msm7x27
-
-# Misc
-PRODUCT_PACKAGES += \
-    com.android.future.usb.accessory 
+$(call inherit-product-if-exists, vendor/huawei/u8818/u8818-vendor.mk)
 
 # Install the features available on this device.
 PRODUCT_COPY_FILES += \
@@ -112,12 +120,29 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     vendor/cm/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml \
-    device/huawei/u8818/prebuilt/system/bin/vold:system/bin/vold \
-    device/huawei/u8818/prebuilt/system/lib/libhardware_legacy.so:system/lib/libhardware_legacy.so
+    device/huawei/u8818/prebuilt/system/bin/vold:system/bin/vold
 
-$(call inherit-product, build/target/product/full.mk)
+PRODUCT_LOCALES += hdpi
+
+PRODUCT_TAGS += dalvik.gc.type-precise
+
+PRODUCT_PROPERTY_OVERRIDES += \
+    keyguard.no_require_sim=true \
+    ro.com.android.dateformat=dd-MM-yyyy \
+    wifi.supplicant_scan_interval=180 \
+    ro.com.android.dataroaming=false \
+    qemu.sf.lcd_density=240 \
+    ro.ril.hsxpa=2 \
+    ro.ril.gprsclass=10 \
+    ro.telephony.default_network=0 \
+    ro.telephony.call_ring.multiple=false \
+    ro.com.google.locationfeatures=1 \
+    ro.setupwizard.enable_bypass=1 \
+    ro.media.dec.jpeg.memcap=20000000 \
+    ro.opengles.version=131072
 
 PRODUCT_NAME := huawei_u8818
 PRODUCT_DEVICE := u8818
-PRODUCT_BRAND := huawei
-
+PRODUCT_BRAND := Huawei
+PRODUCT_MANUFACTURER := Huawei
+PRODUCT_MODEL := Ascend G300
