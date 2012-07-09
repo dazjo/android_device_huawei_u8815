@@ -7,14 +7,12 @@ $(call inherit-product-if-exists, vendor/huawei/u8818/u8818-vendor.mk)
 
 DEVICE_PACKAGE_OVERLAYS += device/huawei/u8818/overlay
 PRODUCT_LOCALES += hdpi
-#PRODUCT_LOCALES := zh_CN zh_TW en_US
 
 # Video decoding
 PRODUCT_PACKAGES += \
     libstagefrighthw \
     libmm-omxcore \
-    libOmxCore \
-    Torch
+    libOmxCore
     
 # Graphics 
 PRODUCT_PACKAGES += \
@@ -35,7 +33,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     dexpreopt \
     lights.u8818 \
-    gps.u8818
+    gps.u8818 \
+#   Torch
 
 # Camera
 PRODUCT_PACKAGES += \
@@ -69,6 +68,7 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/wifi/fw_4330_b2.bin:system/wifi/fw_4330_b2.bin \
     device/huawei/u8818/prebuilt/system/wifi/nvram_4330.txt:system/wifi/nvram_4330.txt \
     device/huawei/u8818/prebuilt/system/etc/wifi/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
+
 PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/etc/bluetooth/BCM4330.hcd:system/etc/bluetooth/BCM4330.hcd \
     device/huawei/u8818/prebuilt/system/etc/bluetooth/init.bcm.bt.sh:system/etc/bluetooth/init.bcm.bt.sh \
@@ -113,11 +113,9 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     vendor/cm/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml \
     device/huawei/u8818/prebuilt/system/bin/vold:system/bin/vold \
-    device/huawei/u8818/prebuilt/system/lib/libhardware_legacy.so:system/lib/libhardware_legacy.so
 
 $(call inherit-product, build/target/product/full.mk)
 
 PRODUCT_NAME := huawei_u8818
 PRODUCT_DEVICE := u8818
 PRODUCT_BRAND := huawei
-
