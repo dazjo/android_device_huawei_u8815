@@ -33,7 +33,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     dexpreopt \
     lights.u8818 \
-    gps.u8818 \
+    gps.u8818
 #   Torch
 
 # Camera
@@ -87,10 +87,6 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/etc/AutoVolumeControl.txt:system/etc/AutoVolumeControl.txt
 
 PRODUCT_COPY_FILES += \
-    device/huawei/u8818/prebuilt/system/etc/firmware/yamato_pfp.fw:system/etc/firmware/yamato_pfp.fw \
-    device/huawei/u8818/prebuilt/system/etc/firmware/yamato_pm4.fw:system/etc/firmware/yamato_pm4.fw
-
-PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/usr/idc/synaptics.idc:system/usr/idc/synaptics.idc \
     device/huawei/u8818/prebuilt/system/usr/keychars/7x27a_kp.kcm:system/usr/keychars/7x27a_kp.kcm \
     device/huawei/u8818/prebuilt/system/usr/keylayout/7x27a_kp.kl:system/usr/keylayout/7x27a_kp.kl \
@@ -98,19 +94,9 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/usr/keylayout/AVRCP.kl:system/usr/keylayout/AVRCP.kl \
     device/huawei/u8818/prebuilt/system/usr/keylayout/Generic.kl:system/usr/keylayout/Generic.kl \
     device/huawei/u8818/prebuilt/system/usr/keylayout/surf_keypad.kl:system/usr/keylayout/surf_keypad.kl
-    
-PRODUCT_COPY_FILES += \
-    device/huawei/u8818/prebuilt/system/lib/egl/libq3dtools_adreno200.so:system/lib/egl/libq3dtools_adreno200.so \
-    device/huawei/u8818/prebuilt/system/lib/egl/libGLESv2_adreno200.so:system/lib/egl/libGLESv2_adreno200.so \
-    device/huawei/u8818/prebuilt/system/lib/egl/libGLESv1_CM_adreno200.so:system/lib/egl/libGLESv1_CM_adreno200.so \
-    device/huawei/u8818/prebuilt/system/lib/egl/libEGL_adreno200.so:system/lib/egl/libEGL_adreno200.so \
-    device/huawei/u8818/prebuilt/system/lib/egl/eglsubAndroid.so:system/lib/egl/eglsubAndroid.so \
-    device/huawei/u8818/prebuilt/system/lib/libC2D2.so:system/lib/libC2D2.so \
-    device/huawei/u8818/prebuilt/system/lib/libOpenVG.so:system/lib/libOpenVG.so \
-    device/huawei/u8818/prebuilt/system/lib/libsc-a2xx.so:system/lib/libsc-a2xx.so \
-    device/huawei/u8818/prebuilt/system/lib/libgsl.so:system/lib/libgsl.so
 
 PRODUCT_COPY_FILES += \
+    # wat
     vendor/cm/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml \
     device/huawei/u8818/prebuilt/system/bin/vold:system/bin/vold \
 
