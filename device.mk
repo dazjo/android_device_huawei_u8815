@@ -96,7 +96,6 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/usr/keylayout/surf_keypad.kl:system/usr/keylayout/surf_keypad.kl
 
 PRODUCT_COPY_FILES += \
-    # wat
     vendor/cm/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml \
     device/huawei/u8818/prebuilt/system/bin/vold:system/bin/vold \
 
