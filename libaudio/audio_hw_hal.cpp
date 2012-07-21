@@ -418,7 +418,7 @@ static int adev_open_output_stream(struct audio_hw_device *dev,
     if (!out)
         return -ENOMEM;
 
-    out->legacy_out = ladev->hwif->openOutputStream(devices, (int *) &config->format,
+    out->qcom_out = qadev->hwif->openOutputStream(devices, (int *) &config->format,
                                                     &config->channel_mask,
                                                     &config->sample_rate, &status);
     if (!out->qcom_out) {
@@ -482,7 +482,6 @@ static int adev_open_input_stream(struct audio_hw_device *dev,
     in->qcom_in = qadev->hwif->openInputStream(devices, (int *) &config->format,
                                                  &config->channel_mask, &config->sample_rate,
                                                  &status, (AudioSystem::audio_in_acoustics)0);
-
     if (!in->qcom_in) {
         ret = status;
         goto err_open;
