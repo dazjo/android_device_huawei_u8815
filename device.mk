@@ -59,7 +59,6 @@ PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.sensor.gyroscope.xml:system/etc/permissions/android.hardware.sensor.gyroscope.xml
 
 PRODUCT_COPY_FILES += \
-    device/huawei/u8818/kernel:kernel \
     device/huawei/u8818/prebuilt/init.huawei.rc:root/init.huawei.rc \
     device/huawei/u8818/prebuilt/ueventd.huawei.rc:root/ueventd.huawei.rc \
     device/huawei/u8818/prebuilt/init.qcom.sh:root/init.qcom.sh \
