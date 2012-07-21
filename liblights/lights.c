@@ -406,7 +406,7 @@ static struct hw_module_methods_t lights_module_methods = {
 /*
  * The lights Module
  */
-const struct hw_module_t HAL_MODULE_INFO_SYM = {
+struct hw_module_t HAL_MODULE_INFO_SYM = {
     .tag = HARDWARE_MODULE_TAG,
     .version_major = 1,
     .version_minor = 0,

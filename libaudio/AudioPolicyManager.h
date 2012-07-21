@@ -45,7 +45,7 @@ public:
                                                           AudioSystem::device_connection_state state,
                                                           const char *device_address);
 
-        virtual uint32_t getDeviceForStrategy(routing_strategy strategy, bool fromCache = true);
+        virtual audio_devices_t getDeviceForStrategy(routing_strategy strategy, bool fromCache = true);
         virtual void setForceUse(AudioSystem::force_use usage, AudioSystem::forced_config config);
 protected:
         fm_modes fmMode;
@@ -68,7 +68,5 @@ protected:
    virtual status_t stopOutput(audio_io_handle_t output,AudioSystem::stream_type stream,int session = 0);
    virtual void setFmMode(fm_modes mode) {  fmMode = mode; }
    virtual fm_modes getFMMode() const {  return fmMode; }
-
-
 };
 };

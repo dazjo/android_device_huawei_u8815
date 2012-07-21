@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2009 The Android Open Source Project
- * Copyright (c) 2011, Code Aurora Forum. All rights reserved.
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *      http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
+* Copyright (C) 2009 The Android Open Source Project
+* Copyright (c) 2011, Code Aurora Forum. All rights reserved.
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*
+*      http://www.apache.org/licenses/LICENSE-2.0
+*
+* Unless required by applicable law or agreed to in writing, software
+* distributed under the License is distributed on an "AS IS" BASIS,
+* WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+* See the License for the specific language governing permissions and
+* limitations under the License.
+*/
 
 #define LOG_TAG "AudioPolicyManager"
 //#define LOG_NDEBUG 0
@@ -32,7 +32,7 @@ namespace android_audio_legacy {
 // Common audio policy manager code is implemented in AudioPolicyManagerBase class
 // ----------------------------------------------------------------------------
 
-// ---  class factory
+// --- class factory
 
 
 extern "C" AudioPolicyInterface* createAudioPolicyManager(AudioPolicyClientInterface *clientInterface)
@@ -151,7 +151,8 @@ void AudioPolicyManager::setPhoneState(int state)
 }
 
 
-uint32_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy, bool fromCache)
+audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy,
+                                                             bool fromCache)
 {
     uint32_t device = 0;
 
@@ -186,7 +187,7 @@ uint32_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy, boo
             // if SCO device is requested but no SCO device is available, fall back to default case
             // FALL THROUGH
 
-        default:    // FORCE_NONE
+        default: // FORCE_NONE
             device = mAvailableOutputDevices & AudioSystem::DEVICE_OUT_WIRED_HEADPHONE;
             if (device) break;
             device = mAvailableOutputDevices & AudioSystem::DEVICE_OUT_WIRED_HEADSET;
@@ -253,7 +254,7 @@ uint32_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy, boo
 #ifdef FM_RADIO
 
         // for analog FM alerts should be played on the speaker only
-        if(FM_ANAALOG == getFMMode())
+        if(FM_ANALOG == getFMMode())
             break;
 #endif
     case STRATEGY_MEDIA: {
@@ -261,7 +262,7 @@ uint32_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy, boo
         default:{
             uint32_t device2 = mAvailableOutputDevices & AudioSystem::DEVICE_OUT_AUX_DIGITAL;
 #ifdef WITH_A2DP
-            if ((mA2dpOutput != 0) && !(FM_ANAALOG == getFMMode())) {
+            if (mHasA2dp && (mForceUse[AudioSystem::FOR_MEDIA] != AudioSystem::FORCE_NO_BT_A2DP) && (getA2dpOutput() != 0) && !mA2dpSuspended && !(FM_ANALOG == getFMMode())) {
                 /* analog fm over a2dp not supported */
                 if (strategy == STRATEGY_SONIFICATION && !a2dpUsedForSonification()) {
                     break;
@@ -327,7 +328,7 @@ uint32_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy, boo
     }
 
     ALOGV("getDeviceForStrategy() strategy %d, device %x", strategy, device);
-    return device;
+    return (audio_devices_t)device;
 }
 
 status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices device,
@@ -667,7 +668,7 @@ uint32_t AudioPolicyManager::getDeviceForInputSource(int inputSource)
         break;
     }
     ALOGV("getDeviceForInputSource()input source %d, device %08x", inputSource, device);
-    return device;
+    return (audio_devices_t)device;
 }
 
 status_t AudioPolicyManager::startOutput(audio_io_handle_t output,

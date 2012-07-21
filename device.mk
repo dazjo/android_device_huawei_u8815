@@ -33,7 +33,8 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     dexpreopt \
     lights.u8818 \
-#   gps.u8818
+    gps.u8818 \
+    make_ext4fs
 #   Torch
 
 # Camera
@@ -84,7 +85,9 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/etc/init.qcom.post_boot.sh:system/etc/init.qcom.post_boot.sh \
     device/huawei/u8818/prebuilt/system/etc/init.qcom.sdio.sh:system/etc/init.qcom.sdio.sh \
     device/huawei/u8818/prebuilt/system/etc/vold.fstab:system/etc/vold.fstab \
-    device/huawei/u8818/mediaprofiles/media_profiles.xml:system/etc/media_profiles.xml \
+    device/huawei/u8818/cfg/audio_policy.conf:system/etc/audio_policy.conf \
+    device/huawei/u8818/cfg/media_profiles.xml:system/etc/media_profiles.xml \
+    device/huawei/u8818/cfg/media_codecs.xml:system/etc/media_codecs.xml \
     device/huawei/u8818/prebuilt/system/etc/AutoVolumeControl.txt:system/etc/AutoVolumeControl.txt
 
 PRODUCT_COPY_FILES += \

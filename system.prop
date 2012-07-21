@@ -35,7 +35,7 @@ ro.additionalmounts=/mnt/emmc
 ro.vold.switchablepair=/mnt/sdcard,/mnt/emmc 
 ro.emmc.sdcard.partition=19
 
-persist.sys.use_dithering=1
+persist.sys.use_dithering=2
 com.qc.hardware=true
 
 ro.telephony.call_ring.delay=3000

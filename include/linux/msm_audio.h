@@ -91,9 +91,6 @@
 #define AUDIO_GET_ACDB_BLK _IOW(AUDIO_IOCTL_MAGIC, 96,  \
 					struct msm_acdb_cmd_device)
 
-#define AUDIO_REGISTER_ION _IOW(AUDIO_IOCTL_MAGIC, 97, unsigned)
-#define AUDIO_DEREGISTER_ION _IOW(AUDIO_IOCTL_MAGIC, 98, unsigned)
-
 #define	AUDIO_MAX_COMMON_IOCTL_NUM	100
 
 
@@ -168,11 +165,6 @@ struct msm_audio_stats {
 	uint32_t byte_count;
 	uint32_t sample_count;
 	uint32_t unused[2];
-};
-
-struct msm_audio_ion_info {
-	int fd;
-	void *vaddr;
 };
 
 struct msm_audio_pmem_info {
@@ -358,5 +350,33 @@ struct msm_acdb_cmd_device {
 	uint32_t     *phys_buf;           /* Physical Address of data */
 };
 
+//LGE_SND_UPDATE_S [
+struct msm_snd_72xx_rpc_extcmd_config {
+    uint32_t rpc_extcmd;
+    uint32_t option;
 
+    uint32_t result;    
+};
+
+#define SND_72XX_RPC_EXTCMD _IOWR(SND_IOCTL_MAGIC, 8, struct msm_snd_72xx_rpc_extcmd_config *)
+
+struct msm_snd_audio_cal_config {
+    uint32_t nCalType;
+    uint32_t nCmd;
+    uint32_t nDevice;
+    uint32_t nIndex;
+    uint32_t nSubIndex;
+    uint32_t nItem;
+
+    uint32_t result;
+};
+
+#define SND_AUDIO_CAL _IOWR(SND_IOCTL_MAGIC, 9, struct msm_snd_audio_cal_config *)
+
+struct msm_snd_set_fm_radio_vol_param {
+	int32_t volume;
+};
+
+#define SND_SET_FM_RADIO_VOLUME _IOWR(SND_IOCTL_MAGIC, 17, int *)
+//LGE_SND_UPDATE_E ]
 #endif
