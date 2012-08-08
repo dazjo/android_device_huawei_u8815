@@ -17,7 +17,7 @@ PRODUCT_PACKAGES += \
 # Graphics 
 PRODUCT_PACKAGES += \
     gralloc.msm7x27 \
-    copybit.msm7x27 \
+    copybit.u8818 \
     hwcomposer.msm7x27 \
     libtilerenderer \
     libQcomUI
@@ -34,7 +34,8 @@ PRODUCT_PACKAGES += \
     dexpreopt \
     lights.u8818 \
     gps.u8818 \
-    make_ext4fs
+    make_ext4fs \
+    setup_fs
 #   Torch
 
 # Camera

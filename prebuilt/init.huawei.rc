@@ -2,7 +2,7 @@ import init.huawei.usb.rc
 
 on init
 # create mountpoints
-    export EXTERNAL_STORAGE /mnt/sdcard
+    export EXTERNAL_STORAGE /storage/sdcard1
     mkdir /system
     mkdir /data 0771 system system
     mkdir /persist 0771 system system
@@ -11,18 +11,21 @@ on init
     mkdir /cust   
     mkdir /persist 0771 system system
     mkdir /mnt 0775 root system
-    mkdir /mnt/sdcard 0000 system system
-    mkdir /mnt/emmc 0000 system system
+    mkdir /storage 0775 system sdcard_r
+    mkdir /storage/sdcard1 0000 system system
+    mkdir /storage/sdcard0 0000 system system
     mkdir /HWUserData 0000 system system
-        
+
 # Create cgroup mount point for cpu accounting
     mkdir /acct
     mount cgroup none /acct cpuacct
     mkdir /acct/uid
 
 # Backwards Compat - XXX: Going away in G*
-    symlink /mnt/sdcard /sdcard
-    symlink /mnt/emmc /HWUserData
+    symlink /storage/sdcard1 /mnt/sdcard
+	symlink /storage/sdcard1 /sdcard
+    symlink /storage/sdcard0 /mnt/emmc
+    symlink /storage/sdcard0 /HWUserData
 
     
 on boot-pause
@@ -38,7 +41,7 @@ on emmc-fs
     mount ext4 /dev/block/mmcblk0p6 /cache nosuid nodev barrier=1,nodelalloc
     write /sys/module/block2mtd/parameters/block2mtd /dev/block/mmcblk0p17
     wait /dev/block/mmcblk0p19
-    mount vfat /dev/block/mmcblk0p19 /mnt/emmc  uid=1000,gid=1015,umask=0002,utf8
+    mount vfat /dev/block/mmcblk0p19 /storage/sdcard0  uid=1000,gid=1015,umask=0002,utf8
     mount ext4 /dev/block/mmcblk0p18 /cust ro
 
 on post-fs
@@ -74,7 +77,7 @@ on post-fs
 
     chmod 0664 /dev/light
     chmod 0664 /dev/proximity
-    chmod 0777 /mnt/sdcard/.android_secure/
+    chmod 0777 /storage/sdcard1/.android_secure/
 
 # Collect apanic data, free resources and re-arm trigger
     copy /proc/apanic_console /data/dontpanic/apanic_console

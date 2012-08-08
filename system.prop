@@ -13,7 +13,7 @@ ro.opengles.version=131072
 ro.use_data_netmgrd=true
 
 wifi.interface=eth0
-wifi.supplicant_scan_interval=15
+wifi.supplicant_scan_interval=60
 
 #debug.camcorder.disablemeta=1
 
@@ -31,8 +31,8 @@ dalvik.vm.dexopt-data-only=1
 dalvik.vm.dexopt-flags=m=y,u=n
 
 # Mount the internal SD card, too
-ro.additionalmounts=/mnt/emmc 
-ro.vold.switchablepair=/mnt/sdcard,/mnt/emmc 
+ro.additionalmounts=/storage/sdcard0 
+ro.vold.switchablepair=/storage/sdcard1,/storage/sdcard0 
 ro.emmc.sdcard.partition=19
 
 persist.sys.use_dithering=2

@@ -235,8 +235,8 @@ Bluetooth module -->
              8 - Search
             16 - App switch
          For example, a device with Home, Back, Menu, and Search keys would set this
-         config to 15.
-    <integer name="config_deviceHardwareKeys">7</integer> -->
+         config to 15. -->
+    <integer name="config_deviceHardwareKeys">7</integer>
 
 
 </resources>
