@@ -18,7 +18,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     gralloc.msm7x27 \
     copybit.u8818 \
-    hwcomposer.msm7x27 \
+#   hwcomposer.msm7x27 \
     libtilerenderer \
     libQcomUI
 
