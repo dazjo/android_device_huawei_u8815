@@ -1,5 +1,5 @@
 #!/system/bin/sh
-# Copyright (c) 2009-2010, Code Aurora Forum. All rights reserved.
+# Copyright (c) 2009-2012, Code Aurora Forum. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -25,6 +25,70 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
+# /* < DTS2012021302632 lixiangyu 00111074 20120213 begin */
+# move all the cpu related parameters in file init.qcom.post_boot.sh 
+# /* DTS2012021302632 lixiangyu 00111074 20120213 end > */
+#
+# For controlling console and shell on console on 8960 - perist.serial.enable 8960
+# On other target use default ro.debuggable property.
+#
+target=`getprop ro.board.platform`
+serial=`getprop persist.serial.enable`
+dserial=`getprop ro.debuggable`
+case "$target" in
+    "msm8960")
+        case "$serial" in
+            "0")
+                echo 0 > /sys/devices/platform/msm_serial_hsl.0/console
+                ;;
+            *)
+                echo 1 > /sys/devices/platform/msm_serial_hsl.0/console
+                start console
+                ;;
+        esac
+        ;;
+    *)
+        case "$dserial" in
+            "1")
+                start console
+                ;;
+	esac
+	;;
+esac
+#
+# Function to start sensors for DSPS enabled platforms
+#
+start_sensors()
+{
+    mkdir -p /data/system/sensors
+    touch /data/system/sensors/settings
+    chmod 665 /data/system/sensors
+
+    mkdir -p /data/misc/sensors
+    chmod 775 /data/misc/sensors
+
+    if [ ! -s /data/system/sensors/settings ]; then
+        # If the settings file is empty, enable sensors HAL
+        # Otherwise leave the file with it's current contents
+        echo 1 > /data/system/sensors/settings
+    fi
+    start sensors
+}
+
+#
+# Allow persistent faking of bms
+# User needs to set fake bms charge in persist.bms.fake_batt_capacity
+#
+fake_batt_capacity=`getprop persist.bms.fake_batt_capacity`
+case "$fake_batt_capacity" in
+    "") ;; #Do nothing here
+    * )
+    case $target in
+        "msm8960")
+        echo "$fake_batt_capacity" > /sys/module/pm8921_bms/parameters/bms_fake_battery
+	;;
+    esac
+esac
 
 #
 # start ril-daemon only for targets on which radio is present
@@ -32,11 +96,11 @@
 baseband=`getprop ro.baseband`
 multirild=`getprop ro.multi.rild`
 dsds=`getprop persist.dsds.enabled`
+netmgr=`getprop ro.use_data_netmgrd`
 case "$baseband" in
-    "msm" | "csfb" | "svlte2a" | "unknown")
+    "msm" | "csfb" | "svlte2a" | "mdm" | "unknown")
     start ril-daemon
     start qmuxd
-    start netmgrd
     case "$baseband" in
         "svlte2a" | "csfb")
         start qmiproxy
@@ -48,31 +112,59 @@ case "$baseband" in
              start ril-daemon1
          esac
     esac
+    case "$netmgr" in
+        "true")
+        start netmgrd
+    esac
 esac
+
+#
+# Suppress default route installation during RA for IPV6; user space will take
+# care of this
+#
+for file in /proc/sys/net/ipv6/conf/*
+do
+  echo 0 > $file/accept_ra_defrtr
+done
+
+#
+# Update USB serial number if passed from command line
+#
+# /*< DTS2012011801998 chenxi 20120203 begin */
+# /* we get the blutooth addr from cmdline directly, so we do not use this code */
+# serialnum=`getprop ro.serialno`
+# case "$serialnum" in
+#     "") ;; #Do nothing, use default serial number or check for persist one below
+#     * )
+#     echo "$serialnum" > /sys/class/android_usb/android0/iSerial
+# esac
+# /* DTS2012011801998 chenxi 20120203 end >*/
 
 #
 # Allow unique persistent serial numbers for devices connected via usb
 # User needs to set unique usb serial number to persist.usb.serialno
 #
-serialno=`getprop persist.usb.serialno`
-case "$serialno" in
-    "") ;; #Do nothing here
-    * )
-    mount -t debugfs none /sys/kernel/debug
-    echo "$serialno" > /sys/kernel/debug/android/serial_number
-esac
+# /*< DTS2012011801998 chenxi 20120203 begin */
+# /* we get the blutooth addr from cmdline directly, so we do not use this code */
+# serialno=`getprop persist.usb.serialno`
+# case "$serialno" in
+#     "") ;; #Do nothing here
+#     * )
+#     echo "$serialno" > /sys/class/android_usb/android0/iSerial
+# esac
+# /* DTS2012011801998 chenxi 20120203 end >*/
 
 #
 # Allow persistent usb charging disabling
 # User needs to set usb charging disabled in persist.usb.chgdisabled
 #
-target=`getprop ro.product.device`
+target=`getprop ro.board.platform`
 usbchgdisabled=`getprop persist.usb.chgdisabled`
 case "$usbchgdisabled" in
     "") ;; #Do nothing here
     * )
     case $target in
-        "msm8660_surf" | "msm8660_csfb")
+        "msm8660")
         echo "$usbchgdisabled" > /sys/module/pmic8058_charger/parameters/disabled
         echo "$usbchgdisabled" > /sys/module/smb137b/parameters/disabled
 	;;
@@ -81,6 +173,60 @@ case "$usbchgdisabled" in
 	;;
     esac
 esac
+
+# /*< DTS2010102301151 liyuping liliang  20101122 begin */
+# enable hwvefs daemon process.
+/system/bin/hwvefs /data/hwvefs -o allow_other &
+# /* DTS2010102301151 liyuping liliang  20101122 end > */
+#
+# Allow USB enumeration with default PID/VID
+#
+echo 1  > /sys/class/android_usb/f_mass_storage/lun/nofua
+usb_config=`getprop persist.sys.usb.config`
+case "$usb_config" in
+    "" | "adb") #USB persist config not set, select default configuration
+        case $target in
+            "msm8960")
+                socid=`cat /sys/devices/system/soc/soc0/id`
+                case "$socid" in
+                    "109")
+                         setprop persist.sys.usb.config diag,adb
+                    ;;
+                    *)
+                        case "$baseband" in
+                            "mdm")
+                                 setprop persist.sys.usb.config diag,diag_mdm,serial_hsic,serial_tty,rmnet_hsic,mass_storage,adb
+                            ;;
+                            *)
+                                 setprop persist.sys.usb.config diag,serial_smd,serial_tty,rmnet_bam,mass_storage,adb
+                            ;;
+                        esac
+                    ;;
+                esac
+            ;;
+            "msm7627a")
+                setprop persist.sys.usb.config diag,serial_smd,serial_tty,rmnet_smd,mass_storage,adb
+            ;;
+            * )
+                case "$baseband" in
+                    "svlte2a")
+                         setprop persist.sys.usb.config diag,diag_mdm,serial_sdio,serial_smd,rmnet_smd_sdio,mass_storage,adb
+                    ;;
+                    "csfb")
+                         setprop persist.sys.usb.config diag,diag_mdm,serial_sdio,serial_tty,rmnet_sdio,mass_storage,adb
+                    ;;
+                    *)
+                         setprop persist.sys.usb.config diag,serial_tty,serial_tty,rmnet_smd,mass_storage,adb
+                    ;;
+                esac
+            ;;
+        esac
+    ;;
+    * ) ;; #USB persist config exists, do nothing
+esac
+/* < DTS2011031705399 renxigang 20110317 begin */
+/system/bin/write_NV_114
+/* DTS2011031705399 renxigang 20110317 end > */
 
 #
 # Start gpsone_daemon for SVLTE Type I & II devices
@@ -93,6 +239,14 @@ case "$baseband" in
         "svlte2a")
         start gpsone_daemon
         start bridgemgrd
+esac
+case "$target" in
+        "msm7630_surf" | "msm8660" | "msm8960")
+        start quipc_igsn
+esac
+case "$target" in
+        "msm7630_surf" | "msm8660" | "msm8960")
+        start quipc_main
 esac
 
 case "$target" in
@@ -193,26 +347,73 @@ case "$target" in
             ;;
         esac
         ;;
-    "msm8660_surf" | "msm8660_csfb" )
+    "msm8660" )
         platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`
         case "$platformvalue" in
             "Fluid")
-                echo 1 > /data/system/sensors/settings
-                start sensors
+                start_sensors
                 setprop ro.sf.lcd_density 240
                 start profiler_daemon;;
+            "Dragon")
+                setprop ro.sound.alsa "WM8903";;
         esac
-        chown root.system /sys/devices/platform/msm_hsusb/gadget/wakeup
-        chmod 220 /sys/devices/platform/msm_hsusb/gadget/wakeup
-        ;;
-    "msm7627a" )
-        chown root.system /sys/devices/platform/msm_hsusb/gadget/wakeup
-        chmod 220 /sys/devices/platform/msm_hsusb/gadget/wakeup
         ;;
     "msm8960")
-	echo 1 > /data/system/sensors/settings
-	start sensors
-	chown root.system /sys/devices/platform/msm_otg/msm_hsusb/gadget/wakeup
-	chmod 220 /sys/devices/platform/msm_otg/msm_hsusb/gadget/wakeup
+        case "$baseband" in
+            "msm")
+                start_sensors;;
+        esac
+
+        platformvalue=`cat /sys/devices/system/soc/soc0/hw_platform`
+        case "$platformvalue" in
+             "Fluid")
+                 start profiler_daemon;;
+        esac
+
+        # lcd density is write-once. Hence the separate switch case
+        case "$platformvalue" in
+             "Liquid")
+                 setprop ro.sf.lcd_density 160;;
+             *)
+                 setprop ro.sf.lcd_density 240;;
+        esac
+
+        # Dynamic Memory Managment (DMM) provides a sys file system to the userspace
+        # that can be used to plug in/out memory that has been configured as 'Movable'.
+        # This unstable memory can be in Active or In-Active State.
+        # Each of which the userspace can request by writing to a sys file.
+
+        # If ro.dev.dmm.dpd.start_address is set here then the target has a memory
+        # configuration that supports DynamicMemoryManagement.
+        mem="/sys/devices/system/memory"
+        op=`cat $mem/movable_start_bytes`
+        case "$op" in
+            "0" )
+                log -p i -t DMM DMM Disabled. movable_start_bytes not set: $op
+            ;;
+
+           "$mem/movable_start_bytes: No such file or directory " )
+                log -p i -t DMM DMM Disabled. movable_start_bytes does not exist: $op
+            ;;
+
+            * )
+                log -p i -t DMM DMM available.
+                movable_start_bytes=0x`cat $mem/movable_start_bytes`
+                log -p i -t DMM movable_start_bytes at $movable_start_bytes
+                block_size_bytes=0x`cat $mem/block_size_bytes`
+                log -p i -t DMM block_size_bytes: $block_size_bytes
+                block=$(($movable_start_bytes/$block_size_bytes))
+                block=11
+
+                chown system.system $mem/memory$block/state
+                chown system.system $mem/probe
+                chown system.system $mem/active
+                chown system.system $mem/remove
+
+                setprop ro.dev.dmm.dpd.start_address $movable_start_bytes
+                setprop ro.dev.dmm.dpd.block $block
+            ;;
+        esac
+        ;;
 
 esac

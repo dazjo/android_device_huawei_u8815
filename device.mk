@@ -64,7 +64,7 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/ueventd.huawei.rc:root/ueventd.huawei.rc \
     device/huawei/u8818/prebuilt/init.qcom.sh:root/init.qcom.sh \
     device/huawei/u8818/prebuilt/system/lib/hw/gralloc.u8818.so:system/lib/hw/gralloc.u8818.so \
-    device/huawei/u8818/prebuilt/init.huawei.usb.rc:root/init.huawei.usb.rc
+    device/huawei/u8818/prebuilt/init.qcom.usb.rc:root/init.qcom.usb.rc
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/wifi/dhd_4330.ko:system/wifi/dhd_4330.ko \
