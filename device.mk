@@ -65,7 +65,6 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/init.huawei.usb.rc:root/init.huawei.usb.rc \
     device/huawei/u8818/prebuilt/system/lib/hw/gralloc.u8818.so:system/lib/hw/gralloc.u8818.so
 
-
 PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/wifi/dhd_4330.ko:system/wifi/dhd_4330.ko \
     device/huawei/u8818/prebuilt/system/wifi/fw_4330_b2.bin:system/wifi/fw_4330_b2.bin \
