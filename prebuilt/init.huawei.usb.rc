@@ -27,7 +27,7 @@
 
 on init
     write /sys/class/android_usb/android0/iSerial ${ro.serialno}
-    write /sys/class/android_usb/android0/f_rndis/manufacturer Huawei
+    write /sys/class/android_usb/android0/f_rndis/manufacturer HUAWEI
     write /sys/class/android_usb/android0/f_rndis/vendorID 12d1
     write /sys/class/android_usb/android0/f_rndis/wceis 1
 
@@ -35,38 +35,11 @@ on boot
     write /sys/class/android_usb/android0/iManufacturer ${ro.product.manufacturer}
     write /sys/class/android_usb/android0/iProduct ${ro.product.model}
 
-on property:sys.usb.config=autorun,mass_storage
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct $ro.hw.usb.pid.cdrom
-    write /sys/class/android_usb/android0/iSerial cleanup
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
-    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
-    write /sys/class/android_usb/android0/functions mass_storage
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=autorun,mass_storage,adb
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct $ro.hw.usb.pid.cdrom
-    write /sys/class/android_usb/android0/iSerial cleanup
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
-    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
-    write /sys/class/android_usb/android0/functions mass_storage
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state ${sys.usb.config}
-
 # USB google mode configuration
 on property:sys.usb.config=mass_storage
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 12d1
     write /sys/class/android_usb/android0/idProduct 1037
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 3
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 2
-    write /sys/class/android_usb/android0/f_mass_storage/lun2/file /system/cdrom/autorun.iso
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state ${sys.usb.config}
@@ -75,40 +48,7 @@ on property:sys.usb.config=mass_storage,adb
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 12d1
     write /sys/class/android_usb/android0/idProduct 1038
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 3
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 2
-    write /sys/class/android_usb/android0/f_mass_storage/lun2/file /system/cdrom/autorun.iso
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
-    write /sys/class/android_usb/android0/enable 1
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-# USB normal mode configuration
-on property:sys.usb.config=serial,mass_storage
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct $ro.hw.usb.pid.normal
-    write /sys/class/android_usb/android0/iSerial cleanup
-    write /sys/class/android_usb/android0/f_diag/clients  diag
-    write /sys/class/android_usb/android0/f_serial/transports smd,smd
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
-    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
-    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=serial,mass_storage,adb
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct $ro.hw.usb.pid.normal
-    write /sys/class/android_usb/android0/iSerial cleanup
-    write /sys/class/android_usb/android0/f_diag/clients  diag
-    write /sys/class/android_usb/android0/f_serial/transports smd,smd
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
-    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
-    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
     write /sys/class/android_usb/android0/enable 1
     start adbd
     setprop sys.usb.state ${sys.usb.config}
@@ -184,109 +124,6 @@ on property:sys.usb.config=accessory,adb
     write /sys/class/android_usb/android0/idVendor 18d1
     write /sys/class/android_usb/android0/idProduct 2d01
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
-    write /sys/class/android_usb/android0/enable 1
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
-
-# USB udisk mode configuration
-# /* lun0/file and lun1/file will be configured by vold */
-on property:sys.usb.config=udisk,mass_storage
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct 1005
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 2
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index none
-    write /sys/class/android_usb/android0/functions mass_storage
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=udisk,mass_storage,adb
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct 1005
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 2
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index none
-    write /sys/class/android_usb/android0/functions mass_storage
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state ${sys.usb.config}
-
-# These actually need product IDs.
-on property:sys.usb.config=slate,autorun,mass_storage
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct $ro.hw.usb.pid.cdrom
-    write /sys/class/android_usb/android0/iSerial cleanup
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
-    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
-    write /sys/class/android_usb/android0/functions mass_storage
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=slate,autorun,mass_storage,adb
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct $ro.hw.usb.pid.cdrom
-    write /sys/class/android_usb/android0/iSerial cleanup
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
-    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
-    write /sys/class/android_usb/android0/functions mass_storage
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=slate,serial,mass_storage
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct $ro.hw.usb.pid.normal
-    write /sys/class/android_usb/android0/f_diag/clients  diag
-    write /sys/class/android_usb/android0/f_serial/transports smd,smd
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
-    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
-    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=slate,serial,mass_storage,adb
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct $ro.hw.usb.pid.normal
-    write /sys/class/android_usb/android0/f_diag/clients  diag
-    write /sys/class/android_usb/android0/f_serial/transports smd,smd
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
-    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
-    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
-    write /sys/class/android_usb/android0/enable 1
-    start adbd
-    setprop sys.usb.state ${sys.usb.config}
-    
-on property:sys.usb.config=auth,serial,mass_storage
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct $ro.hw.usb.pid.auth
-    write /sys/class/android_usb/android0/iSerial cleanup
-    write /sys/class/android_usb/android0/f_diag/clients  diag
-    write /sys/class/android_usb/android0/f_serial/transports smd,smd
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
-    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
-    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
-    write /sys/class/android_usb/android0/enable 1
-    setprop sys.usb.state ${sys.usb.config}
-
-on property:sys.usb.config=auth,serial,mass_storage,adb
-    write /sys/class/android_usb/android0/enable 0
-    write /sys/class/android_usb/android0/idVendor 12d1
-    write /sys/class/android_usb/android0/idProduct $ro.hw.usb.pid.auth
-    write /sys/class/android_usb/android0/iSerial cleanup
-    write /sys/class/android_usb/android0/f_diag/clients  diag
-    write /sys/class/android_usb/android0/f_serial/transports smd,smd
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
-    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index 0
-    write /sys/class/android_usb/android0/f_mass_storage/lun0/file /system/cdrom/autorun.iso
-    write /sys/class/android_usb/android0/functions serial,mass_storage,adb,diag
     write /sys/class/android_usb/android0/enable 1
     start adbd
     setprop sys.usb.state ${sys.usb.config}
