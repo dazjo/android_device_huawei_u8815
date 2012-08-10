@@ -25,7 +25,7 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-#/*< DTS2011081800819 zhangyun 20110818 begin*/
+# /*< DTS2011012004291 xuhui 20110120 begin */
 CHIP_POWER_PATH=/sys/class/rfkill/rfkill0/state
 LOG_TAG="bcm-fm"
 LOG_NAME="${0}:"
@@ -58,4 +58,5 @@ kill_power ()
 kill_power
 
 exit 0
-#/* DTS2011081800819 zhangyun 20110818 end >*/
+# /* DTS2011012004291 xuhui 20110120 end >*/
+
