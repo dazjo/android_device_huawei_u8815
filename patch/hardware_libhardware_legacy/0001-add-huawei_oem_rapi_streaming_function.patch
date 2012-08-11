@@ -1,12 +1,13 @@
-From 14ef03bc581f3c3ea910caa4630ba387d27f6e48 Mon Sep 17 00:00:00 2001
+From 5804ddb54d59c9276decc899ed51023a64077166 Mon Sep 17 00:00:00 2001
 From: Daz Jones <yuki@thebronasium.com>
-Date: Mon, 9 Jul 2012 16:40:54 +0100
+Date: Fri, 10 Aug 2012 17:02:03 -0700
 Subject: [PATCH] Add huawei_oem_rapi_streaming_function
 
+Change-Id: Ib7ec3632f823258fb7390bf928759f1c1b7f8860
 ---
  Android.mk  |    2 +-
- wifi/wifi.c |   24 ++++++++++++++++++++----
- 2 files changed, 21 insertions(+), 5 deletions(-)
+ wifi/wifi.c |   19 ++++++++++++++++++-
+ 2 files changed, 19 insertions(+), 2 deletions(-)
 
 diff --git a/Android.mk b/Android.mk
 index 1faf6e2..e61e77d 100644
@@ -22,29 +23,19 @@ index 1faf6e2..e61e77d 100644
  LOCAL_INCLUDES += $(LOCAL_PATH)
  
 diff --git a/wifi/wifi.c b/wifi/wifi.c
-index 119252b..094bca2 100644
+index 3660657..b440485 100644
 --- a/wifi/wifi.c
 +++ b/wifi/wifi.c
-@@ -49,6 +49,8 @@
+@@ -61,6 +61,8 @@ extern void get_dhcp_info();
  extern int init_module(void *, unsigned long, const char *);
  extern int delete_module(const char *, unsigned int);
  
 +extern void huawei_oem_rapi_streaming_function(int n, int p1, int p2, int p3, char *v1, int *v2, int *v3);
 +
- static char iface[PROPERTY_VALUE_MAX];
+ static char primary_iface[PROPERTY_VALUE_MAX];
  // TODO: use new ANDROID_SOCKET mechanism, once support for multiple
  // sockets is in
-@@ -147,9 +149,6 @@ char* get_samsung_wifi_type()
-     if (strncmp(buf, "semcove", 7) == 0)
-         return "_semcove";
- 
--    if (strncmp(buf, "semcosh", 7) == 0)
--        return "_semcosh";
--
-     return NULL;
- }
- #endif
-@@ -159,18 +158,35 @@ static int insmod(const char *filename, const char *args)
+@@ -171,12 +173,27 @@ static int insmod(const char *filename, const char *args)
      void *module;
      unsigned int size;
      int ret;
@@ -58,28 +49,20 @@ index 119252b..094bca2 100644
          return -1;
  
 -    ret = init_module(module, size, args);
-+	property_get("persist.sys.wifimac",cust_mac_param,"");
-+	if(!strcmp(cust_mac_param,"")) {
-+	        memset(x,0,8);
-+	        y=0;
-+	        huawei_oem_rapi_streaming_function(3,0,0,0,0,&y,x);
-+	        LOGI("huawei_oem_rapi_streaming_function %p %x %x",x,x[0],y);
-+	        sprintf(mac_param,"mac_param=%02X:%02X:%02X:%02X:%02X:%02X %s",x[5],x[4],x[3],x[2],x[1],x[0],args);
-+	} else {
-+                sprintf(mac_param,"mac_param=%s %s",cust_mac_param,args);
-+        }
-+        LOGI("Got MAC Address: %s ",mac_param);
-+        ret = init_module(module, size, mac_param);
++    property_get("persist.sys.wifimac", cust_mac_param, "");
++    if (!strcmp(cust_mac_param, "")) {
++        memset(x, 0, 8);
++        y = 0;
++        huawei_oem_rapi_streaming_function(3, 0, 0, 0, 0, &y, x);
++        ALOGI("huawei_oem_rapi_streaming_function %p %x %x", x, x[0], y);
++        sprintf(mac_param, "mac_param=%02X:%02X:%02X:%02X:%02X:%02X %s", x[5], x[4], x[3], x[2], x[1], x[0], args);
++    } else {
++        sprintf(mac_param, "mac_param=%s %s", cust_mac_param, args);
++    }
++    ALOGI("Got MAC Address: %s ", mac_param);
++    ret = init_module(module, size, mac_param);
  
      free(module);
  
-     return ret;
- }
- 
-+
-+
- static int rmmod(const char *modname)
- {
-     int ret = -1;
 -- 
-1.7.10
+1.7.0.4
