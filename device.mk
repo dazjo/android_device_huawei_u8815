@@ -19,8 +19,7 @@ PRODUCT_PACKAGES += \
     copybit.msm7x27 \
     gralloc.msm7x27 \
     hwcomposer.msm7x27 \
-    libtilerenderer \
-    libQcomUI
+    libtilerenderer
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -39,8 +38,8 @@ PRODUCT_PACKAGES += \
 #   Torch
 
 # Camera
-PRODUCT_PACKAGES += \
-#   camera.msm7x27
+#PRODUCT_PACKAGES += \
+#    camera.msm7x27
 
 # Misc
 PRODUCT_PACKAGES += \
