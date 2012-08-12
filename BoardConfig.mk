@@ -75,17 +75,15 @@ FM_RADIO := true
 BOARD_PROVIDES_LIBRIL := true
 
 # Wi-Fi
-BOARD_WLAN_DEVICE := bcmdhd
 WPA_SUPPLICANT_VERSION := VER_0_8_X
 BOARD_WPA_SUPPLICANT_DRIVER := WEXT
-BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd
+BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_wext
 WIFI_DRIVER_MODULE_PATH := "/system/wifi/dhd_4330.ko"
 WIFI_DRIVER_FW_PATH_AP := "/system/wifi/fw_4330_b2.bin"
 WIFI_DRIVER_FW_PATH_STA := "/system/wifi/fw_4330_b2.bin"
 WIFI_DRIVER_FW_PATH_P2P := "/system/wifi/fw_4330_b2.bin"
 WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/wifi/fw_4330_b2.bin nvram_path=/system/wifi/nvram_4330.txt"
 WIFI_DRIVER_MODULE_NAME := "dhd"
-WIFI_BAND := 802_11_ABG
 
 # Kernel 
 TARGET_KERNEL_SOURCE := kernel/huawei/u8818

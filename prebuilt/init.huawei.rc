@@ -28,14 +28,12 @@
 import init.huawei.usb.rc
 
 on init
-    export EXTERNAL_STORAGE /storage/sdcard1
-    mkdir /persist 0771 system system
-    mkdir /config 0500 root root
     mkdir /cust
     mkdir /storage 0775 system sdcard_r
     mkdir /storage/sdcard1 0000 system system
     mkdir /storage/sdcard0 0000 system system
     mkdir /HWUserData 0000 system system
+    export EXTERNAL_STORAGE /storage/sdcard1
 
     symlink /storage/sdcard1 /mnt/sdcard
     symlink /storage/sdcard1 /sdcard
