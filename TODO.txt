@@ -1,13 +1,7 @@
 TODO
 ====
 
-1. Test building cfg80211 in to the kernel instead of as a module.
-- If this succeeds, a regular wpa_supplicant method should suffice.
-- If not, a method of insmodding the cfg80211.ko module needs to be found for boot up.
--- cfg80211 does not control Wi-Fi. It only adds Wi-Fi functionality to the kernel that is required for dhd_4330.ko.
--- Without the module inserted, missing symbols are reported in dmesg when the Wi-Fi attempts to initialise. (Obviously these are added by cfg80211 as suggested by their names.)
-
-2. Fix wpa_supplicant - kernel is now totally satisfied with the Wi-Fi, this is purely an Android issue:
+1. Fix wpa_supplicant - kernel is now totally satisfied with the Wi-Fi, this is purely an Android issue:
 
 D/WifiService(  318): setWifiEnabled: true pid=587, uid=1000
 E/SoftapController(  114): SIOCGIPRIV failed: -1

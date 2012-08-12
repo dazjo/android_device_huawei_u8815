@@ -16,11 +16,11 @@ PRODUCT_PACKAGES += \
     
 # Graphics 
 PRODUCT_PACKAGES += \
+    copybit.msm7x27 \
     gralloc.msm7x27 \
-    copybit.u8818 \
+    hwcomposer.msm7x27 \
     libtilerenderer \
-    libQcomUI \
-#   hwcomposer.msm7x27
+    libQcomUI
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -62,8 +62,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/init.huawei.rc:root/init.huawei.rc \
     device/huawei/u8818/prebuilt/ueventd.huawei.rc:root/ueventd.huawei.rc \
-    device/huawei/u8818/prebuilt/init.huawei.usb.rc:root/init.huawei.usb.rc \
-    device/huawei/u8818/prebuilt/system/lib/hw/gralloc.u8818.so:system/lib/hw/gralloc.u8818.so
+    device/huawei/u8818/prebuilt/init.huawei.usb.rc:root/init.huawei.usb.rc
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/wifi/dhd_4330.ko:system/wifi/dhd_4330.ko \
