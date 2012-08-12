@@ -29,13 +29,9 @@ import init.huawei.usb.rc
 
 on init
     export EXTERNAL_STORAGE /storage/sdcard1
-    mkdir /system
-    mkdir /data 0771 system system
     mkdir /persist 0771 system system
-    mkdir /cache 0771 system cache
     mkdir /config 0500 root root
     mkdir /cust
-    mkdir /mnt 0775 root system
     mkdir /storage 0775 system sdcard_r
     mkdir /storage/sdcard1 0000 system system
     mkdir /storage/sdcard0 0000 system system
@@ -46,24 +42,7 @@ on init
     symlink /storage/sdcard0 /mnt/emmc
     symlink /storage/sdcard0 /HWUserData
 
-    mkdir /dev/cpuctl/fg_boost
-    chown system system /dev/cpuctl/fg_boost/tasks
-    chmod 0777 /dev/cpuctl/fg_boost/tasks
-    write /dev/cpuctl/fg_boost/cpu.shares 1024
-
-    mkdir /dev/cpuctl/bg_non_interactive
-    chown system system /dev/cpuctl/bg_non_interactive/tasks
-    chmod 0777 /dev/cpuctl/bg_non_interactive/tasks
-    # 5.0 %
-    write /dev/cpuctl/bg_non_interactive/cpu.shares 52
-
-
-on early-boot
-    # set RLIMIT_MEMLOCK to 64MB
-    setrlimit 8 67108864 67108864
-
 on boot
-    setrlimit 7 2048 2048
     exec system/bin/btnvtool -O
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
@@ -317,8 +296,10 @@ on property:ro.use_data_netmgrd=false
     # netmgr not supported on specific target
     stop netmgrd
 
-service wpa_supplicant /system/bin/logwrapper /system/bin/wpa_supplicant -Dwext -ieth0 -W -c/data/misc/wifi/wpa_supplicant.conf 
+service wpa_supplicant /system/bin/logwrapper /system/bin/wpa_supplicant -Dwext -ieth0 -W -c/data/misc/wifi/wpa_supplicant.conf
     class main
+    group wifi inet
+    socket wpa_eth0 dgram 660 wifi wifi
     disabled
     oneshot
 
@@ -326,7 +307,6 @@ service dhcpcd_eth0 /system/bin/dhcpcd -BKLG
     class late_start
     disabled
     oneshot
-# end
 
 service iprenew_eth0 /system/bin/dhcpcd -n
     class late_start
