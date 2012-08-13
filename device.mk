@@ -71,10 +71,7 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/etc/bluetooth/BCM4330.hcd:system/etc/bluetooth/BCM4330.hcd \
-    device/huawei/u8818/prebuilt/system/etc/bluetooth/init.bcm.bt.sh:system/etc/bluetooth/init.bcm.bt.sh \
-    device/huawei/u8818/prebuilt/system/etc/bluetooth/init.bcm.chip_off.sh:system/etc/bluetooth/init.bcm.chip_off.sh \
-    device/huawei/u8818/prebuilt/system/etc/bluetooth/init.bcm.chip_on.sh:system/etc/bluetooth/init.bcm.chip_on.sh \
-    device/huawei/u8818/prebuilt/system/etc/bluetooth/main.conf:system/etc/bluetooth/main.conf
+    device/huawei/u8818/prebuilt/system/etc/init.qcom.bt.sh:system/etc/init.qcom.bt.sh
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/etc/dhcpcd/dhcpcd.conf:system/etc/dhcpcd/dhcpcd.conf \
