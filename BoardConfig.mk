@@ -3,8 +3,7 @@ USE_CAMERA_STUB := false
 # inherit from the proprietary version
 -include vendor/huawei/u8818/BoardConfigVendor.mk
 
-TARGET_NO_BOOTLOADER := true
-
+# CPU and Platform
 TARGET_BOARD_PLATFORM := msm7x27
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
 
@@ -21,6 +20,7 @@ TARGET_OTA_ASSERT_DEVICE := u8818,hwu8818,u8815,hwu8815
 
 TARGET_SPECIFIC_HEADER_PATH := device/huawei/u8818/include
 
+# Boot Animation
 TARGET_BOOTANIMATION_USE_RGB565 := true
 TARGET_BOOTANIMATION_PRELOAD := false
 TARGET_BOOTANIMATION_TEXTURE_CACHE := true
@@ -39,27 +39,34 @@ BOARD_USES_QCOM_GPS := true
 BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION := 50000
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := u8818
 
-# Touchscreen
-BOARD_USE_LEGACY_TOUCHSCREEN := true
-
 # Graphics
-BOARD_EGL_CFG := device/huawei/u8818/prebuilt/system/lib/egl/egl.cfg
-BOARD_USES_QCOM_HARDWARE := true
 COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE -DREFRESH_RATE=60 -DICS_CAMERA_BLOB -DQCOM_NO_SECURE_PLAYBACK
+BOARD_EGL_CFG := device/huawei/u8818/prebuilt/system/lib/egl/egl.cfg
+USE_OPENGL_RENDERER := true
+BOARD_USES_QCOM_HARDWARE := true
 BOARD_USES_QCOM_LIBRPC := true
 BOARD_USES_QCOM_LIBS := true
-TARGET_GRALLOC_USES_ASHMEM := true
 
-BOARD_USE_SKIA_LCDTEXT := true
-USE_OPENGL_RENDERER := true
 TARGET_USES_GENLOCK := true
+TARGET_GRALLOC_USES_ASHMEM := true
+BOARD_USE_SKIA_LCDTEXT := true
 TARGET_FORCE_CPU_UPLOAD := true
 
+# Web Rendering
 WITH_JIT := true
 ENABLE_JSC_JIT := true
 JS_ENGINE := v8
 HTTP := chrome
 
+# USB
+BOARD_USE_USB_MASS_STORAGE_SWITCH := true
+TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun
+TARGET_USE_CUSTOM_SECOND_LUN_NUM := 2
+BOARD_VOLD_MAX_PARTITIONS := 19
+BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
+BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun0/file"
+
+# Bluetooth
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
 
@@ -91,7 +98,12 @@ BOARD_KERNEL_CMDLINE := console=ttyDDC0 androidboot.hardware=huawei
 BOARD_KERNEL_BASE := 0x00200000
 BOARD_PAGE_SIZE := 2048
 
+# Recovery
+BOARD_CUSTOM_GRAPHICS := ../../../device/huawei/u8818/recovery/graphics.c
+BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/huawei/u8818/recovery/recovery_ui.c
 TARGET_RECOVERY_INITRC := device/huawei/u8818/recovery/etc/init.rc
+
+# Partitions
 BOARD_DATA_DEVICE := /dev/block/mmcblk0p13
 BOARD_DATA_FILESYSTEM := ext4
 BOARD_DATA_FILESYSTEM_OPTIONS := rw
@@ -110,12 +122,3 @@ BOARD_RECOVERYIMAGE_PARTITION_SIZE := 0x00C00000
 BOARD_SYSTEMIMAGE_PARTITION_SIZE := 314572800
 BOARD_USERDATAIMAGE_PARTITION_SIZE := 183500800
 BOARD_FLASH_BLOCK_SIZE := 131072
-
-BOARD_CUSTOM_GRAPHICS := ../../../device/huawei/u8818/recovery/graphics.c
-BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/huawei/u8818/recovery/recovery_ui.c
-BOARD_USE_USB_MASS_STORAGE_SWITCH := true
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun
-TARGET_USE_CUSTOM_SECOND_LUN_NUM := 2
-BOARD_VOLD_MAX_PARTITIONS := 19
-BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
-BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun0/file"
