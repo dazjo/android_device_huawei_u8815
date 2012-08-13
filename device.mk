@@ -61,7 +61,8 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/init.huawei.rc:root/init.huawei.rc \
     device/huawei/u8818/prebuilt/ueventd.huawei.rc:root/ueventd.huawei.rc \
-    device/huawei/u8818/prebuilt/init.huawei.usb.rc:root/init.huawei.usb.rc
+    device/huawei/u8818/prebuilt/init.huawei.usb.rc:root/init.huawei.usb.rc \
+    device/huawei/u8818/prebuilt/init.qcom.sh:root/init.qcom.sh
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/wifi/dhd_4330.ko:system/wifi/dhd_4330.ko \
@@ -77,8 +78,6 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/etc/dhcpcd/dhcpcd.conf:system/etc/dhcpcd/dhcpcd.conf \
     device/huawei/u8818/prebuilt/system/etc/AudioFilter.csv:system/etc/AudioFilter.csv \
     device/huawei/u8818/prebuilt/system/etc/init.qcom.composition_type.sh:system/etc/init.qcom.composition_type.sh \
-    device/huawei/u8818/prebuilt/system/etc/init.qcom.post_boot.sh:system/etc/init.qcom.post_boot.sh \
-    device/huawei/u8818/prebuilt/system/etc/init.qcom.sdio.sh:system/etc/init.qcom.sdio.sh \
     device/huawei/u8818/prebuilt/system/etc/vold.fstab:system/etc/vold.fstab \
     device/huawei/u8818/prebuilt/system/etc/media_profiles.xml:system/etc/media_profiles.xml \
     device/huawei/u8818/prebuilt/system/etc/media_codecs.xml:system/etc/media_codecs.xml \
