@@ -16,15 +16,15 @@ PRODUCT_PACKAGES += \
     
 # Graphics 
 PRODUCT_PACKAGES += \
-    copybit.msm7x27 \
-    gralloc.msm7x27 \
-    hwcomposer.msm7x27 \
+    copybit.msm7x27a \
+    gralloc.msm7x27a \
+    hwcomposer.msm7x27a \
     libtilerenderer
 
 # Audio
 PRODUCT_PACKAGES += \
-    audio.primary.u8818 \
-    audio_policy.u8818 \
+    audio.primary.msm7x27a \
+    audio_policy.msm7x27a \
     audio.a2dp.default \
     libaudioutils
 
@@ -39,7 +39,7 @@ PRODUCT_PACKAGES += \
 
 # Camera
 #PRODUCT_PACKAGES += \
-#    camera.msm7x27
+#    camera.msm7x27a
 
 # Misc
 PRODUCT_PACKAGES += \
@@ -80,9 +80,8 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/etc/init.qcom.post_boot.sh:system/etc/init.qcom.post_boot.sh \
     device/huawei/u8818/prebuilt/system/etc/init.qcom.sdio.sh:system/etc/init.qcom.sdio.sh \
     device/huawei/u8818/prebuilt/system/etc/vold.fstab:system/etc/vold.fstab \
-    device/huawei/u8818/cfg/audio_policy.conf:system/etc/audio_policy.conf \
-    device/huawei/u8818/cfg/media_profiles.xml:system/etc/media_profiles.xml \
-    device/huawei/u8818/cfg/media_codecs.xml:system/etc/media_codecs.xml \
+    device/huawei/u8818/prebuilt/system/etc/media_profiles.xml:system/etc/media_profiles.xml \
+    device/huawei/u8818/prebuilt/system/etc/media_codecs.xml:system/etc/media_codecs.xml \
     device/huawei/u8818/prebuilt/system/etc/AutoVolumeControl.txt:system/etc/AutoVolumeControl.txt
 
 PRODUCT_COPY_FILES += \

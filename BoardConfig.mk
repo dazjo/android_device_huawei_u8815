@@ -4,7 +4,7 @@ USE_CAMERA_STUB := false
 -include vendor/huawei/u8818/BoardConfigVendor.mk
 
 # CPU and Platform
-TARGET_BOARD_PLATFORM := msm7x27
+TARGET_BOARD_PLATFORM := msm7x27a
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
 
 TARGET_NO_BOOTLOADER := true

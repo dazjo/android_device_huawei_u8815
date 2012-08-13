@@ -1,9 +1,8 @@
 TODO
 ====
 
-1. Hack up audio again (shouldn't be too hard, only disabled because I couldn't be bothered a month ago).
-2. Investigate Bluetooth, I don't think we ever had it working.
-3. Look in to USB weirdness, potentially tidy up some of the USB modes.
-4. General clean up.
-5. RIL. *shivers*
-6. Camera (lol).
+1. Decide which is the best Bluetooth method and pursue it.
+2. Look in to USB weirdness, potentially tidy up some of the USB modes.
+3. General clean up.
+4. RIL. *shivers*
+5. Camera (lol).
