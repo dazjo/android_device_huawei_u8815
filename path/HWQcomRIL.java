@@ -223,7 +223,7 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
     @Override
     public void
     setupDataCall(String radioTechnology, String profile, String apn,
-            String user, String password, String authType, String ipVersion,
+            String user, String password, String authType, String protocol,
             Message result) {
 
         RILRequest rr
@@ -237,12 +237,12 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
         rr.mp.writeString(user);
         rr.mp.writeString(password);
         rr.mp.writeString(authType);
-        rr.mp.writeString(ipVersion); 
+        rr.mp.writeString(protocol); 
 
         if (RILJ_LOGD) riljLog(rr.serialString() + "> "
                 + requestToString(rr.mRequest) + " " + radioTechnology + " "
                 + profile + " " + apn + " " + user + " "
-                + password + " " + authType + " " + ipVersion);
+                + password + " " + authType + " " + protocol);
 
         send(rr);
     }
@@ -255,7 +255,7 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
 //            dataCall.suggestedRetryTime = p.readInt();
             dataCall.cid = p.readInt();
             dataCall.active = p.readInt();
-            dataCall.type = p.readString();
+//            dataCall.type = p.readString(); // I think this is also gone in 2030.
             dataCall.ifname = p.readString();
             if ((dataCall.status == DataConnection.FailCause.NONE.getErrorCode()) &&
                     TextUtils.isEmpty(dataCall.ifname) && dataCall.active != 0) {
