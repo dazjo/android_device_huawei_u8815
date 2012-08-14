@@ -37,10 +37,10 @@ import com.android.internal.telephony.cdma.CdmaInformationRecords;
 import java.util.ArrayList;
 
 /**
-* Custom Qualcomm No SimReady RIL using the latest Uicc stack
-*
-* {@hide}
-*/
+ * Custom Qualcomm No SimReady RIL using the latest Uicc stack
+ *
+ * {@hide}
+ */
 public class HWQcomRIL extends RIL implements CommandsInterface {
     protected HandlerThread mIccThread;
     protected IccHandler mIccHandler;
@@ -62,7 +62,7 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
         mSetPreferredNetworkType = -1;
     }
 
-   @Override public void
+    @Override public void
     supplyIccPin(String pin, Message result) {
         supplyIccPinForApp(pin, mAid, result);
     }
@@ -132,9 +132,10 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
         RILRequest rr
                 = RILRequest.obtain(RIL_REQUEST_SIM_IO, result);
 
-        if (mUSIM)
-            path = path.replaceAll("7F20$","7FFF");
+//        if (mUSIM)
+//            path = path.replaceAll("7F20$","7FFF");
 
+        rr.mp.writeString(mAid);
         rr.mp.writeInt(command);
         rr.mp.writeInt(fileid);
         rr.mp.writeString(path);
@@ -143,7 +144,7 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
         rr.mp.writeInt(p3);
         rr.mp.writeString(data);
         rr.mp.writeString(pin2);
-        rr.mp.writeString(mAid);
+//        rr.mp.writeString(mAid);
 
         if (RILJ_LOGD) riljLog(rr.serialString() + "> iccIO: "
                     + " aid: " + mAid + " "
@@ -187,10 +188,12 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
             ca.pin1_replaced = p.readInt();
             ca.pin1 = ca.PinStateFromRILInt(p.readInt());
             ca.pin2 = ca.PinStateFromRILInt(p.readInt());
+/*
             p.readInt(); //remaining_count_pin1
             p.readInt(); //remaining_count_puk1
             p.readInt(); //remaining_count_pin2
             p.readInt(); //remaining_count_puk2
+*/
             status.addApplication(ca);
         }
         int appIndex = -1;
@@ -234,7 +237,7 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
         rr.mp.writeString(user);
         rr.mp.writeString(password);
         rr.mp.writeString(authType);
-        rr.mp.writeString(ipVersion);
+        rr.mp.writeString(ipVersion); 
 
         if (RILJ_LOGD) riljLog(rr.serialString() + "> "
                 + requestToString(rr.mRequest) + " " + radioTechnology + " "
@@ -247,15 +250,9 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
     @Override
     protected DataCallState getDataCallState(Parcel p, int version) {
         DataCallState dataCall = new DataCallState();
-
-        boolean oldRil = needsOldRilFeature("datacall");
-
-        if (!oldRil && version < 5) {
-            return super.getDataCallState(p, version);
-        } else if (!oldRil) {
             dataCall.version = version;
             dataCall.status = p.readInt();
-            dataCall.suggestedRetryTime = p.readInt();
+//            dataCall.suggestedRetryTime = p.readInt();
             dataCall.cid = p.readInt();
             dataCall.active = p.readInt();
             dataCall.type = p.readString();
@@ -276,85 +273,62 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
             if (!TextUtils.isEmpty(gateways)) {
                 dataCall.gateways = gateways.split(" ");
             }
-        } else {
-            dataCall.version = 4; // was dataCall.version = version;
-            dataCall.cid = p.readInt();
-            dataCall.active = p.readInt();
-            dataCall.type = p.readString();
-            dataCall.ifname = mLastDataIface[dataCall.cid];
-            p.readString(); // skip APN
-
-            if (TextUtils.isEmpty(dataCall.ifname)) {
-                dataCall.ifname = mLastDataIface[0];
-            }
-
-            String addresses = p.readString();
-            if (!TextUtils.isEmpty(addresses)) {
-                dataCall.addresses = addresses.split(" ");
-            }
-            p.readInt(); // RadioTechnology
-            p.readInt(); // inactiveReason
-
-            dataCall.dnses = new String[2];
-            dataCall.dnses[0] = SystemProperties.get("net."+dataCall.ifname+".dns1");
-            dataCall.dnses[1] = SystemProperties.get("net."+dataCall.ifname+".dns2");
-        }
-
         return dataCall;
     }
 
-    @Override
+	
+	@Override
     protected Object
     responseSetupDataCall(Parcel p) {
-        int ver = p.readInt();
+ 		int ver = p.readInt();
         int num = p.readInt();
         if (RILJ_LOGV) riljLog("responseSetupDataCall ver=" + ver + " num=" + num);
 
         DataCallState dataCall;
 
-        boolean oldRil = needsOldRilFeature("datacall");
-
-        if (!oldRil)
-           return super.responseSetupDataCall(p);
-
-        dataCall = new DataCallState();
-        dataCall.version = 4;
-
-        dataCall.cid = 0; // Integer.parseInt(p.readString());
-        p.readString();
-        dataCall.ifname = p.readString();
-        if ((dataCall.status == DataConnection.FailCause.NONE.getErrorCode()) &&
-             TextUtils.isEmpty(dataCall.ifname) && dataCall.active != 0) {
-            throw new RuntimeException(
-                    "RIL_REQUEST_SETUP_DATA_CALL response, no ifname");
+        if (ver < 5) {
+            dataCall = new DataCallState();
+            dataCall.version = ver;
+            dataCall.cid = Integer.parseInt(p.readString());
+            dataCall.ifname = p.readString();
+            if (TextUtils.isEmpty(dataCall.ifname)) {
+                throw new RuntimeException(
+                        "RIL_REQUEST_SETUP_DATA_CALL response, no ifname");
+            }
+            String addresses = p.readString();
+            if (!TextUtils.isEmpty(addresses)) {
+              dataCall.addresses = addresses.split(" ");
+            }
+            if (num >= 4) {
+                String dnses = p.readString();
+                if (RILJ_LOGD) riljLog("responseSetupDataCall got dnses=" + dnses);
+                if (!TextUtils.isEmpty(dnses)) {
+                    dataCall.dnses = dnses.split(" ");
+                }
+            }
+            if (num >= 5) {
+                String gateways = p.readString();
+                if (RILJ_LOGD) riljLog("responseSetupDataCall got gateways=" + gateways);
+                if (!TextUtils.isEmpty(gateways)) {
+                    dataCall.gateways = gateways.split(" ");
+                }
+            }
+        } else {
+            if (num != 1) {
+                throw new RuntimeException(
+                        "RIL_REQUEST_SETUP_DATA_CALL response expecting 1 RIL_Data_Call_response_v5"
+                        + " got " + num);
+            }
+            dataCall = getDataCallState(p, ver);
         }
-        /* Use the last digit of the interface id as the cid */
-        if (!needsOldRilFeature("singlepdp")) {
-            dataCall.cid =
-                Integer.parseInt(dataCall.ifname.substring(dataCall.ifname.length() - 1));
-        }
-
-        mLastDataIface[dataCall.cid] = dataCall.ifname;
-
-
-        String addresses = p.readString();
-        if (!TextUtils.isEmpty(addresses)) {
-          dataCall.addresses = addresses.split(" ");
-        }
-
-        dataCall.dnses = new String[2];
-        dataCall.dnses[0] = SystemProperties.get("net."+dataCall.ifname+".dns1");
-        dataCall.dnses[1] = SystemProperties.get("net."+dataCall.ifname+".dns2");
-        dataCall.active = 1;
-        dataCall.status = 0;
 
         return dataCall;
     }
 
     @Override
     public void getNeighboringCids(Message response) {
-        if (!getRadioState().isOn())
-            return;
+//        if (!getRadioState().isOn())
+//            return;
 
         RILRequest rr = RILRequest.obtain(
                 RILConstants.RIL_REQUEST_GET_NEIGHBORING_CELL_IDS, response);
@@ -369,7 +343,21 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
         if (RILJ_LOGD) riljLog("setCurrentPreferredNetworkType: " + mSetPreferredNetworkType);
         setPreferredNetworkType(mSetPreferredNetworkType, null);
     }
+/*
+    @Override
+    public void setPreferredNetworkType(int networkType , Message response) {
+        /**
+          * If not using a USIM, ignore LTE mode and go to 3G
+          */
+        if (!mUSIM && networkType == RILConstants.NETWORK_MODE_LTE_GSM_WCDMA &&
+                 mSetPreferredNetworkType >= RILConstants.NETWORK_MODE_WCDMA_PREF) {
+            networkType = RILConstants.NETWORK_MODE_WCDMA_PREF;
+        }
+        mSetPreferredNetworkType = networkType;
 
+        super.setPreferredNetworkType(networkType, response);
+    }
+*/
     @Override
     protected Object
     responseSignalStrength(Parcel p) {
@@ -811,4 +799,48 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
 
         send(rr);
     }
+/*
+    @Override
+    public void
+    setNetworkSelectionModeManual(String operatorNumeric, Message response) {
+        RILRequest rr
+                = RILRequest.obtain(RIL_REQUEST_SET_NETWORK_SELECTION_MANUAL,
+                                    response);
+
+        if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest)
+                    + " " + operatorNumeric);
+
+        rr.mp.writeInt(2);
+        rr.mp.writeString(operatorNumeric);
+        rr.mp.writeString("NOCHANGE");
+
+        send(rr);
+    }
+
+    @Override
+    protected Object
+    responseOperatorInfos(Parcel p) {
+        String strings[] = (String [])responseStrings(p);
+        ArrayList<OperatorInfo> ret;
+
+        if (strings.length % 5 != 0) {
+            throw new RuntimeException(
+                "RIL_REQUEST_QUERY_AVAILABLE_NETWORKS: invalid response. Got "
+                + strings.length + " strings, expected multiple of 5");
+        }
+
+        ret = new ArrayList<OperatorInfo>(strings.length / 5);
+
+        for (int i = 0 ; i < strings.length ; i += 5) {
+            ret.add (
+                new OperatorInfo(
+                    strings[i+0],
+                    strings[i+1],
+                    strings[i+2],
+                    strings[i+3]));
+        }
+
+        return ret;
+    }
+*/
 }
