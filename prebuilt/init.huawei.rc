@@ -216,47 +216,41 @@ on property:bluetooth.isEnabled=true
     write /sys/class/bluetooth/hci0/idle_timeout 7000
 
 service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmcblk0p11 /dev/block/mmcblk0p17
-    class late_start
+    class main
     user root
     disabled
 
 service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
-    class late_start
+    class main
     user bluetooth
     group qcom_oncrpc bluetooth net_bt_admin
     disabled
     oneshot
 
 service bt-dun /system/bin/dun-server /dev/smd7 /dev/rfcomm0
-    class late_start
+    class main
     disabled
     oneshot
 
 service sapd /system/bin/sdptool add --channel=15 SAP
-    class late_start
+    class main
     user bluetooth
     group bluetooth net_bt_admin
     disabled
     oneshot
 
 service dund /system/bin/sdptool add --channel=1 DUN
-    class late_start
+    class main
     user bluetooth
     group bluetooth net_bt_admin
     disabled
     oneshot
 
 service bridgemgrd /system/bin/bridgemgrd
-    class late_start
+    class main
     user radio
     group radio
     disabled
-
-service cfg80211 insmod /system/lib/modules/cfg80211.ko
-    class main
-    user root
-    group root
-    oneshot
 
 service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
     class late_start
@@ -265,11 +259,15 @@ service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
     disabled
 
 on property:ro.baseband="msm"
+    start port-bridge
     # Enable BT-DUN only for all msms
     setprop ro.qualcomm.bluetooth.dun true
 
+on property:ro.baseband="unknown"
+    start port-bridge
+
 service qmiproxy /system/bin/qmiproxy
-    class late_start
+    class main
     user radio
     group radio
     disabled
@@ -277,12 +275,14 @@ service qmiproxy /system/bin/qmiproxy
 service pcm-bridge /system/bin/pcm-bridge /dev/smd7 /dev/ttyGS1
 
 service qmuxd /system/bin/qmuxd
-    class late_start
+    class main
     user radio
     group radio
+    disabled
 
 service netmgrd /system/bin/netmgrd
-    class late_start
+    class main
+    disabled
 
 on property:ro.use_data_netmgrd=false
     # netmgr not supported on specific target
@@ -296,17 +296,17 @@ service wpa_supplicant /system/bin/logwrapper /system/bin/wpa_supplicant -Dnl802
     oneshot
 
 service dhcpcd_eth0 /system/bin/dhcpcd -BKLG
-    class late_start
+    class main
     disabled
     oneshot
 
 service iprenew_eth0 /system/bin/dhcpcd -n
-    class late_start
+    class main
     disabled
     oneshot
 
 service iprenew_p2p /system/bin/dhcpcd -n p2p
-    class late_start
+    class main
     disabled
     oneshot
 
@@ -315,14 +315,15 @@ service dhcpcd_bnep0 /system/bin/dhcpcd -BKLG
     oneshot
 
 service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
-    class late_start
+    class main
     user root
     group system qcom_oncrpc
     disabled
     oneshot
 
 service oem_rpc_svc /system/bin/oem_rpc_svc
-    class core
+    class main
+    oneshot
 
 service gps_nmea /system/bin/port-bridge /dev/nmea /dev/ttyGS1
     disabled
@@ -353,8 +354,9 @@ service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -d -n
     disabled
 
 service rmt_oeminfo /system/bin/rmt_oeminfo
-    class core
-    disabled
+    class main
+    user root
+    oneshot
 
 on property:ro.emmc=1
     start rmt_oeminfo
@@ -369,12 +371,12 @@ on property:crypto.driver.load=0
      exec /system/bin/rmmod qce.ko
 
 service qcom-sh /system/bin/sh /init.qcom.sh
-    class late_start
+    class main
     user root
     oneshot
 
 service hostapd /system/bin/hostapd -dddd /data/hostapd/hostapd.conf
-    class late_start
+    class main
     user root
     group root
     oneshot
@@ -388,21 +390,21 @@ service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
     keycodes 115 114
 
 service ftp /system/bin/sdptool add --psm=5257 --channel=20 FTP
-    class late_start
+    class main
     user bluetooth
     group bluetooth net_bt_admin
     disabled
     oneshot
 
 service map0 /system/bin/sdptool add --channel=16 MAS0
-    class late_start
+    class main
     user bluetooth
     group bluetooth net_bt_admin
     disabled
     oneshot
 
 service map1 /system/bin/sdptool add --channel=17 MAS1
-    class late_start
+    class main
     user bluetooth
     group bluetooth net_bt_admin
     disabled
@@ -413,10 +415,11 @@ service ril-daemon /system/bin/rild
     socket rild stream 660 root radio
     socket rild-debug stream 660 radio system
     user root
+    disabled
     group radio cache inet misc audio sdcard_rw qcom_oncrpc diag
 
 service ril-daemon1 /system/bin/rild -c 1
-    class late_start
+    class main
     socket rild1 stream 660 root radio
     socket rild-debug1 stream 660 radio system
     user root
@@ -424,7 +427,7 @@ service ril-daemon1 /system/bin/rild -c 1
     group radio cache inet misc audio sdcard_rw qcom_oncrpc diag
 
 service sdcard /system/bin/sdcard /data/media 1023 1023
-    class late_start
+    class main
     disabled
 
 on property:persist.fuse_sdcard=true
