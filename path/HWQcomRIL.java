@@ -250,37 +250,44 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
     @Override
     protected DataCallState getDataCallState(Parcel p, int version) {
         DataCallState dataCall = new DataCallState();
-            dataCall.version = version;
-            dataCall.status = p.readInt();
-//            dataCall.suggestedRetryTime = p.readInt();
+        dataCall.version = version;
+        if (version < 5)
+        {
             dataCall.cid = p.readInt();
             dataCall.active = p.readInt();
-//            dataCall.type = p.readString(); // I think this is also gone in 2030.
+            dataCall.type = p.readString();
+            String init_addresses = p.readString();
+            if (!TextUtils.isEmpty(init_addresses))
+                dataCall.addresses = init_addresses.split(" ");
+        }
+        while (true)
+        {
+            return dataCall;
+            dataCall.status = p.readInt();
+            dataCall.suggestedRetryTime = p.readInt();
+            dataCall.cid = p.readInt();
+            dataCall.active = p.readInt();
+            dataCall.type = p.readString();
             dataCall.ifname = p.readString();
-            if ((dataCall.status == DataConnection.FailCause.NONE.getErrorCode()) &&
-                    TextUtils.isEmpty(dataCall.ifname) && dataCall.active != 0) {
-              throw new RuntimeException("getDataCallState, no ifname");
-            }
+            if ((dataCall.status == DataConnection.FailCause.NONE.getErrorCode()) && (TextUtils.isEmpty(dataCall.ifname)) && (dataCall.active != 0))
+                throw new RuntimeException("getDataCallState, no ifname");
             String addresses = p.readString();
-            if (!TextUtils.isEmpty(addresses)) {
+            if (!TextUtils.isEmpty(addresses))
                 dataCall.addresses = addresses.split(" ");
-            }
             String dnses = p.readString();
-            if (!TextUtils.isEmpty(dnses)) {
+            if (!TextUtils.isEmpty(dnses))
                 dataCall.dnses = dnses.split(" ");
-            }
             String gateways = p.readString();
-            if (!TextUtils.isEmpty(gateways)) {
-                dataCall.gateways = gateways.split(" ");
-            }
-        return dataCall;
+            if (TextUtils.isEmpty(gateways))
+                continue;
+            dataCall.gateways = gateways.split(" ");
+        }
     }
 
-	
-	@Override
+    @Override
     protected Object
     responseSetupDataCall(Parcel p) {
- 		int ver = p.readInt();
+        int ver = p.readInt();
         int num = p.readInt();
         if (RILJ_LOGV) riljLog("responseSetupDataCall ver=" + ver + " num=" + num);
 
@@ -313,7 +320,10 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
                     dataCall.gateways = gateways.split(" ");
                 }
             }
-        } else {
+        }
+		while (true)
+		{
+			return dataCall;
             if (num != 1) {
                 throw new RuntimeException(
                         "RIL_REQUEST_SETUP_DATA_CALL response expecting 1 RIL_Data_Call_response_v5"
@@ -321,8 +331,6 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
             }
             dataCall = getDataCallState(p, ver);
         }
-
-        return dataCall;
     }
 
     @Override
