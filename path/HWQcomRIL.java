@@ -321,9 +321,9 @@ public class HWQcomRIL extends RIL implements CommandsInterface {
                 }
             }
         }
-		while (true)
-		{
-			return dataCall;
+        while (true)
+        {
+            return dataCall;
             if (num != 1) {
                 throw new RuntimeException(
                         "RIL_REQUEST_SETUP_DATA_CALL response expecting 1 RIL_Data_Call_response_v5"
