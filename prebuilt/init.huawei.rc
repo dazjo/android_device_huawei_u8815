@@ -246,7 +246,7 @@ service dund /system/bin/sdptool add --channel=1 DUN
     disabled
     oneshot
 
-service bridgemgrd /system/bin/logwrapper /system/bin/bridgemgrd
+service bridgemgrd /system/bin/bridgemgrd
     class main
     user radio
     group radio
@@ -266,7 +266,7 @@ on property:ro.baseband="msm"
 on property:ro.baseband="unknown"
     start port-bridge
 
-service qmiproxy /system/bin/logwrapper /system/bin/qmiproxy
+service qmiproxy /system/bin/qmiproxy
     class main
     user radio
     group radio
@@ -274,13 +274,13 @@ service qmiproxy /system/bin/logwrapper /system/bin/qmiproxy
 
 service pcm-bridge /system/bin/pcm-bridge /dev/smd7 /dev/ttyGS1
 
-service qmuxd /system/bin/logwrapper /system/bin/qmuxd
+service qmuxd /system/bin/qmuxd
     class main
     user radio
     group radio
     disabled
 
-service netmgrd /system/bin/logwrapper /system/bin/netmgrd
+service netmgrd /system/bin/netmgrd
     class main
     disabled
 
@@ -321,7 +321,7 @@ service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
     disabled
     oneshot
 
-service oem_rpc_svc /system/bin/logwrapper /system/bin/oem_rpc_svc
+service oem_rpc_svc /system/bin/oem_rpc_svc
     class main
     oneshot
 
@@ -353,7 +353,7 @@ service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -d -n
     group bluetooth net_bt_admin misc
     disabled
 
-service rmt_oeminfo /system/bin/logwrapper /system/bin/rmt_oeminfo
+service rmt_oeminfo /system/bin/rmt_oeminfo
     class main
     user root
     oneshot
@@ -361,14 +361,6 @@ service rmt_oeminfo /system/bin/logwrapper /system/bin/rmt_oeminfo
 on property:ro.emmc=1
     start rmt_oeminfo
     start rmt_storage
-
-on property:crypto.driver.load=1
-     insmod /system/lib/modules/qce.ko
-     insmod /system/lib/modules/qcedev.ko
-
-on property:crypto.driver.load=0
-     exec /system/bin/rmmod qcedev.ko
-     exec /system/bin/rmmod qce.ko
 
 service qcom-sh /system/bin/sh /init.qcom.sh
     class main
@@ -381,13 +373,6 @@ service hostapd /system/bin/hostapd -dddd /data/hostapd/hostapd.conf
     group root
     oneshot
     disabled
-
-# bugreport is triggered by the KEY_VOLUMEUP and KEY_VOLUMEDOWN keycodes or triggered by projectmenu
-service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
-    user root
-    disabled
-    oneshot
-    keycodes 115 114
 
 service ftp /system/bin/sdptool add --psm=5257 --channel=20 FTP
     class main
@@ -410,7 +395,7 @@ service map1 /system/bin/sdptool add --channel=17 MAS1
     disabled
     oneshot
 
-service ril-daemon /system/bin/logwrapper /system/bin/rild
+service ril-daemon /system/bin/rild
     class main
     socket rild stream 660 root radio
     socket rild-debug stream 660 radio system
@@ -418,28 +403,10 @@ service ril-daemon /system/bin/logwrapper /system/bin/rild
     disabled
     group radio cache inet misc audio sdcard_rw qcom_oncrpc diag
 
-service ril-daemon1 /system/bin/logwrapper /system/bin/rild -c 1
+service ril-daemon1 /system/bin/rild -c 1
     class main
     socket rild1 stream 660 root radio
     socket rild-debug1 stream 660 radio system
     user root
     disabled
     group radio cache inet misc audio sdcard_rw qcom_oncrpc diag
-
-service sdcard /system/bin/sdcard /data/media 1023 1023
-    class main
-    disabled
-
-on property:persist.fuse_sdcard=true
-    start sdcard
-
-service atfwd /system/bin/logwrapper /system/bin/ATFWD-daemon
-    class main
-    user system
-    group system radio
-    onrestart /system/bin/log -t RIL-ATFWD -p w "ATFWD daemon restarted"
-
-service ds_fmc_appd /system/bin/logwrapper /system/bin/ds_fmc_appd -p "rmnet0" -D
-    class main
-    group radio
-    oneshot

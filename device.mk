@@ -71,8 +71,8 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/etc/wifi/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
 
 PRODUCT_COPY_FILES += \
-    device/huawei/u8818/prebuilt/system/etc/BCM4330.hcd:system/etc/BCM4330.hcd \
-    device/huawei/u8818/prebuilt/system/etc/init.qcom.bt.sh:system/etc/init.qcom.bt.sh
+    device/huawei/u8818/prebuilt/system/etc/bluetooth/BCM4330.hcd:system/etc/bluetooth/BCM4330.hcd \
+    device/huawei/u8818/prebuilt/system/etc/bluetooth/init.qcom.bt.sh:system/etc/bluetooth/init.qcom.bt.sh
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8818/prebuilt/system/etc/dhcpcd/dhcpcd.conf:system/etc/dhcpcd/dhcpcd.conf \
