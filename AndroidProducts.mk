@@ -1,2 +1,2 @@
 PRODUCT_MAKEFILES := \
-    $(LOCAL_DIR)/u8818.mk
+    $(LOCAL_DIR)/u8815.mk

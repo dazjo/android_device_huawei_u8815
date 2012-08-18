@@ -1,5 +1,5 @@
 #
-# system.prop for u8818
+# system.prop for u8815
 #
 rild.libpath=/system/lib/libril-qc-1.so
 rild.libargs=-d /dev/smd0
@@ -42,6 +42,6 @@ com.qc.hardware=true
 ro.telephony.call_ring.delay=3000
 
 keyguard.no_require_sim=true
-ro.confg.hw_appsbootversion=U8818VCM10_APPSBOOT
-ro.confg.hw_appversion=U8818VCM10_KERNEL
-ro.confg.hw_appfsversion=U8818VCM10_SYSIMG
+ro.confg.hw_appsbootversion=U8815VCM10_APPSBOOT
+ro.confg.hw_appversion=U8815VCM10_KERNEL
+ro.confg.hw_appfsversion=U8815VCM10_SYSIMG

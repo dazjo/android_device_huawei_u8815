@@ -1,5 +1,5 @@
 LOCAL_PATH := $(call my-dir)
-LIBCAMERA_BUILD := u8818
+LIBCAMERA_BUILD := u8815
 include $(call all-subdir-makefiles)
 
 include $(CLEAR_VARS)
@@ -12,8 +12,8 @@ LOCAL_SRC_FILES      := cameraHal.cpp
 LOCAL_PRELINK_MODULE := false
 #CAMERA_LIB           := oemcamera
 
-#ifeq ($(LIBCAMERA_BUILD),u8818)
-#CAMERA_LIB := camera-u8818
+#ifeq ($(LIBCAMERA_BUILD),u8815)
+#CAMERA_LIB := camera-u8815
 #endif
 
 #TARGET_GLOBAL_LD_DIRS  += -L$(LOCAL_PATH) -Wl${CAMERA_LIB}
