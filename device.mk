@@ -72,7 +72,7 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/prebuilt/system/etc/bluetooth/BCM4330.hcd:system/etc/bluetooth/BCM4330.hcd \
-    device/huawei/u8815/prebuilt/system/etc/bluetooth/init.qcom.bt.sh:system/etc/bluetooth/init.qcom.bt.sh
+    device/huawei/u8815/prebuilt/system/etc/bluetooth/init.bcm.bt.sh:system/etc/bluetooth/init.bcm.bt.sh
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/prebuilt/system/etc/dhcpcd/dhcpcd.conf:system/etc/dhcpcd/dhcpcd.conf \

@@ -220,10 +220,10 @@ service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmc
     user root
     disabled
 
-service hciattach /system/bin/sh /system/etc/bluetooth/init.qcom.bt.sh
+service hciattach /system/bin/sh /system/etc/bluetooth/init.bcm.bt.sh
     class main
     user bluetooth
-    group qcom_oncrpc bluetooth net_bt_admin
+    group qcom_oncrpc bluetooth net_bt_admin system
     disabled
     oneshot
 
