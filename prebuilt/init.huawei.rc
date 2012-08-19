@@ -212,7 +212,7 @@ on post-fs-data
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd
 
-on property:bluetooth.isEnabled=true
+on property:init.svc.bluetoothd=running
     write /sys/class/bluetooth/hci0/idle_timeout 7000
 
 service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmcblk0p11 /dev/block/mmcblk0p17
@@ -220,7 +220,7 @@ service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmc
     user root
     disabled
 
-service hciattach /system/bin/sh /system/etc/init.qcom.bt.sh
+service hciattach /system/bin/sh /system/etc/bluetooth/init.qcom.bt.sh
     class main
     user bluetooth
     group qcom_oncrpc bluetooth net_bt_admin
@@ -342,16 +342,6 @@ service akm8962 /system/bin/akmd8962
     class main
     disabled
     oneshot
-
-#STOPSHIP: Remove logwrapper and -d option before production
-service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -d -n
-    class main
-    socket bluetooth stream 660 bluetooth bluetooth
-    socket dbus_bluetooth stream 660 bluetooth bluetooth
-# init.rc does not yet support applying capabilities, so run as root and
-# let bluetoothd drop uid to bluetooth with the right linux capabilities
-    group bluetooth net_bt_admin misc
-    disabled
 
 service rmt_oeminfo /system/bin/rmt_oeminfo
     class main
