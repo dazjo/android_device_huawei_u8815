@@ -49,7 +49,6 @@ BOARD_USES_QCOM_LIBS := true
 
 TARGET_USES_GENLOCK := true
 TARGET_GRALLOC_USES_ASHMEM := true
-BOARD_USE_SKIA_LCDTEXT := true
 TARGET_FORCE_CPU_UPLOAD := true
 
 # Web Rendering
@@ -59,12 +58,12 @@ JS_ENGINE := v8
 HTTP := chrome
 
 # USB
+TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun%d/file
 BOARD_USE_USB_MASS_STORAGE_SWITCH := true
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun
-TARGET_USE_CUSTOM_SECOND_LUN_NUM := 2
+TARGET_USE_CUSTOM_SECOND_LUN_NUM := 1
 BOARD_VOLD_MAX_PARTITIONS := 19
 BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
-BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun0/file"
+BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun%d/file"
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
