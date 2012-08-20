@@ -12,8 +12,12 @@ TARGET_NO_RADIOIMAGE := true
 
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
+TARGET_CPU_SMP := true
 TARGET_ARCH_VARIANT := armv7-a-neon
 ARCH_ARM_HAVE_TLS_REGISTER := true
+
+TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
+TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 
 TARGET_BOOTLOADER_BOARD_NAME := u8815
 TARGET_OTA_ASSERT_DEVICE := u8815,hwu8815,u8818,hwu8818
@@ -49,13 +53,13 @@ BOARD_USES_QCOM_LIBS := true
 
 TARGET_USES_GENLOCK := true
 TARGET_GRALLOC_USES_ASHMEM := true
-TARGET_FORCE_CPU_UPLOAD := true
 
 # Web Rendering
 WITH_JIT := true
 ENABLE_JSC_JIT := true
 JS_ENGINE := v8
 HTTP := chrome
+TARGET_FORCE_CPU_UPLOAD := true
 
 # USB
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun%d/file
@@ -86,6 +90,7 @@ BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_bcmdhd
 WIFI_DRIVER_FW_PATH_AP := "/system/wifi/fw_4330_b2.bin"
 WIFI_DRIVER_FW_PATH_STA := "/system/wifi/fw_4330_b2.bin"
 WIFI_DRIVER_FW_PATH_P2P := "/system/wifi/fw_4330_b2.bin"
+WIFI_DRIVER_FW_PATH_PARAM := "/sys/module/dhd/parameters/firmware_path"
 WIFI_DRIVER_MODULE_PATH := "/system/wifi/dhd_4330.ko"
 WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/wifi/fw_4330_b2.bin nvram_path=/system/wifi/nvram_4330.txt"
 WIFI_DRIVER_MODULE_NAME := "dhd"
