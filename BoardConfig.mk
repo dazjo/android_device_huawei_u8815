@@ -24,11 +24,6 @@ TARGET_OTA_ASSERT_DEVICE := u8815,hwu8815,u8818,hwu8818
 
 TARGET_SPECIFIC_HEADER_PATH := device/huawei/u8815/include
 
-# Boot Animation
-TARGET_BOOTANIMATION_USE_RGB565 := true
-TARGET_BOOTANIMATION_PRELOAD := false
-TARGET_BOOTANIMATION_TEXTURE_CACHE := true
-
 # Audio
 BOARD_PROVIDES_LIBAUDIO := true
 
@@ -51,23 +46,19 @@ BOARD_USES_QCOM_HARDWARE := true
 BOARD_USES_QCOM_LIBRPC := true
 BOARD_USES_QCOM_LIBS := true
 
-TARGET_USES_GENLOCK := true
-TARGET_GRALLOC_USES_ASHMEM := true
-
 # Web Rendering
 WITH_JIT := true
 ENABLE_JSC_JIT := true
-JS_ENGINE := v8
-HTTP := chrome
 TARGET_FORCE_CPU_UPLOAD := true
+HTTP := chrome
+JS_ENGINE := v8
 
 # USB
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun%d/file
 BOARD_USE_USB_MASS_STORAGE_SWITCH := true
 TARGET_USE_CUSTOM_SECOND_LUN_NUM := 1
 BOARD_VOLD_MAX_PARTITIONS := 19
 BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
-BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun%d/file"
+BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun0/file"
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
