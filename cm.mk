@@ -1,6 +1,3 @@
-# Correct bootanimation size for the screen
-TARGET_BOOTANIMATION_NAME := vertical-480x800
-
 # Inherit device configuration
 $(call inherit-product, device/huawei/u8815/u8815.mk)
 
