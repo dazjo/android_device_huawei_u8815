@@ -27,7 +27,7 @@
 
 on init
     write /sys/class/android_usb/android0/iSerial ${ro.serialno}
-    write /sys/class/android_usb/android0/f_rndis/manufacturer HUAWEI
+    write /sys/class/android_usb/android0/f_rndis/manufacturer ${ro.product.manufacturer}
     write /sys/class/android_usb/android0/f_rndis/vendorID 12d1
     write /sys/class/android_usb/android0/f_rndis/wceis 1
 
@@ -113,7 +113,7 @@ on property:sys.usb.config=ptp,adb
     start adbd
     setprop sys.usb.state ${sys.usb.config}
 
-# Accessory (?)
+# Accessory
 on property:sys.usb.config=accessory
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 18d1

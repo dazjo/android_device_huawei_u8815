@@ -1,8 +1,9 @@
 TODO
 ====
 
-1. Fix mobile data and test RIL to the death (now using QualcommSharedRIL).
-2. Decide which is the best Bluetooth method and pursue it.
-3. Look in to USB weirdness, potentially tidy up some of the USB modes (half way through first boot adbd switches off, killing logcat, etc).
-4. General clean up.
-5. Camera (lol).
+1. Fix Bluetooth.
+2. Fix adbd switching off through boot up (needs enabling manually in developer options on an eng build).
+3. Fix screen turn off.
+4. Stop being lazy about libaudio.
+5. Speed things up.
+6. Camera (lol).
