@@ -54,12 +54,12 @@ HTTP := chrome
 JS_ENGINE := v8
 
 # USB
-TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun0/file
-TARGET_USE_CUSTOM_SECOND_LUN_NUM := 2
+TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun%d/file
+TARGET_USE_CUSTOM_SECOND_LUN_NUM := 1
 BOARD_USE_USB_MASS_STORAGE_SWITCH := true
 BOARD_VOLD_MAX_PARTITIONS := 19
 BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
-BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun0/file"
+BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun%d/file"
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
