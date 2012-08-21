@@ -35,12 +35,13 @@ on boot
     write /sys/class/android_usb/android0/iManufacturer ${ro.product.manufacturer}
     write /sys/class/android_usb/android0/iProduct ${ro.product.model}
 
-# USB google mode configuration
+# Mass Storage
 on property:sys.usb.config=mass_storage
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 12d1
     write /sys/class/android_usb/android0/idProduct 1037
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 2
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index none
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     setprop sys.usb.state ${sys.usb.config}
@@ -49,13 +50,14 @@ on property:sys.usb.config=mass_storage,adb
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 12d1
     write /sys/class/android_usb/android0/idProduct 1038
-    write /sys/class/android_usb/android0/f_mass_storage/nluns 1
+    write /sys/class/android_usb/android0/f_mass_storage/nluns 2
+    write /sys/class/android_usb/android0/f_mass_storage/cdrom_index none
     write /sys/class/android_usb/android0/functions ${sys.usb.config}
     write /sys/class/android_usb/android0/enable 1
     start adbd
     setprop sys.usb.state ${sys.usb.config}
 
-# USB tethering mode configuration
+# Tethering
 on property:sys.usb.config=rndis
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 12d1
@@ -75,7 +77,7 @@ on property:sys.usb.config=rndis,adb
     start adbd
     setprop sys.usb.state ${sys.usb.config}
 
-# USB MTP mode configuration
+# MTP
 on property:sys.usb.config=mtp
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 12d1
@@ -93,7 +95,7 @@ on property:sys.usb.config=mtp,adb
     start adbd
     setprop sys.usb.state ${sys.usb.config}
 
-# USB PTP mode configuration
+# PTP
 on property:sys.usb.config=ptp
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 12d1
@@ -111,8 +113,7 @@ on property:sys.usb.config=ptp,adb
     start adbd
     setprop sys.usb.state ${sys.usb.config}
 
-# modify USB accessory vid and pid to match google
-# USB accessory configuration
+# Accessory (?)
 on property:sys.usb.config=accessory
     write /sys/class/android_usb/android0/enable 0
     write /sys/class/android_usb/android0/idVendor 18d1
