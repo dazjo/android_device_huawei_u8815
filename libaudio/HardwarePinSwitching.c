@@ -220,6 +220,10 @@ FUNCTION:  switch_mode
 */
 extern int switch_mode( int nMode ) {
     int i2cfd = -1, rc= -1 ;
+#ifdef REG_KERNEL_UPDATE
+    //media server doesnt have permissions to update
+    return 0;
+#endif
 #ifdef WITH_QCOM_FM
     i2cfd = open(FM_DEVICE_PATH, O_RDWR);
     if( i2cfd >= 0) {
