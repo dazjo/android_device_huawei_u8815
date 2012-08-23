@@ -23,8 +23,8 @@ PRODUCT_PACKAGES += \
 
 # Audio
 PRODUCT_PACKAGES += \
-    audio.primary.msm7x27a \
-    audio_policy.msm7x27a \
+    audio.primary.u8815 \
+    audio_policy.u8815 \
     audio.a2dp.default \
     libaudioutils
 
