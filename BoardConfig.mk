@@ -39,7 +39,7 @@ BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION := 50000
 BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := u8815
 
 # Graphics
-COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE -DREFRESH_RATE=60 -DICS_CAMERA_BLOB -DQCOM_NO_SECURE_PLAYBACK
+COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE -DICS_CAMERA_BLOB -DQCOM_NO_SECURE_PLAYBACK
 BOARD_EGL_CFG := device/huawei/u8815/prebuilt/system/lib/egl/egl.cfg
 USE_OPENGL_RENDERER := true
 BOARD_USES_QCOM_HARDWARE := true
@@ -59,7 +59,6 @@ TARGET_USE_CUSTOM_SECOND_LUN_NUM := 1
 BOARD_USE_USB_MASS_STORAGE_SWITCH := true
 BOARD_VOLD_MAX_PARTITIONS := 19
 BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
-BOARD_UMS_LUNFILE := "/sys/class/android_usb/android0/f_mass_storage/lun%d/file"
 
 # Bluetooth
 BOARD_HAVE_BLUETOOTH := true
@@ -98,6 +97,7 @@ BOARD_PAGE_SIZE := 2048
 BOARD_CUSTOM_GRAPHICS := ../../../device/huawei/u8815/recovery/graphics.c
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/huawei/u8815/recovery/recovery_ui.c
 TARGET_RECOVERY_INITRC := device/huawei/u8815/recovery/etc/init.rc
+BOARD_UMS_LUNFILE := /sys/class/android_usb/android0/f_mass_storage/lun0/file
 
 # Partitions
 BOARD_DATA_DEVICE := /dev/block/mmcblk0p13

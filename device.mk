@@ -13,7 +13,7 @@ PRODUCT_PACKAGES += \
     libstagefrighthw \
     libmm-omxcore \
     libOmxCore
-    
+
 # Graphics 
 PRODUCT_PACKAGES += \
     copybit.msm7x27a \
@@ -34,15 +34,7 @@ PRODUCT_PACKAGES += \
     lights.u8815 \
     gps.u8815 \
     make_ext4fs \
-    setup_fs
-#   Torch
-
-# Camera
-#PRODUCT_PACKAGES += \
-#    camera.msm7x27a
-
-# Misc
-PRODUCT_PACKAGES += \
+    setup_fs \
     com.android.future.usb.accessory 
 
 # Install the features available on this device.
