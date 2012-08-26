@@ -1,13 +1,15 @@
-# Inherit device configuration
+# Inherit device configuration.
 $(call inherit-product, device/huawei/u8815/u8815.mk)
 
 # Inherit some common CM stuff.
+$(call inherit-product, vendor/cm/config/gsm.mk)
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 
-# Inherit some common CM stuff.
-$(call inherit-product, vendor/cm/config/gsm.mk)
+# Correct boot animation size for the screen.
+TARGET_SCREEN_HEIGHT := 800
+TARGET_SCREEN_WIDTH := 480
 
-# Setup device configuration
+# Setup device configuration.
 PRODUCT_NAME := cm_u8815
 PRODUCT_DEVICE := u8815
 PRODUCT_BRAND := Huawei
