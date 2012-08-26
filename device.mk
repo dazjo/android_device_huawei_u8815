@@ -1,6 +1,6 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 
-# The gps config appropriate for this device
+# The gps config appropriate for this device.
 $(call inherit-product, device/common/gps/gps_as_supl.mk)
 
 $(call inherit-product-if-exists, vendor/huawei/u8815/u8815-vendor.mk)
@@ -18,7 +18,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     copybit.msm7x27a \
     gralloc.msm7x27a \
-    hwcomposer.msm7x27a \
     libtilerenderer
 
 # Audio
