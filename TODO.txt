@@ -1,9 +1,9 @@
 TODO
 ====
 
-1. Fix Bluetooth.
+1. Stop being lazy about libaudio.
 2. Fix adbd switching off through boot up (needs enabling manually in developer options on an eng build).
-3. Fix screen turn off.
-4. Stop being lazy about libaudio.
-5. Speed things up.
-6. Camera (lol).
+3. Fix Bluetooth.
+4. Speed things up.
+5. Camera (lol).
+6. "Un-hack" backlight power off.
