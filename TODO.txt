@@ -1,9 +1,8 @@
 TODO
 ====
 
-1. Stop being lazy about libaudio.
-2. Fix adbd switching off through boot up (needs enabling manually in developer options on an eng build).
+1. Fix adbd switching off through boot up (needs enabling manually in developer options on an eng build).
+2. Speed things up.
 3. Fix Bluetooth.
-4. Speed things up.
+4. Wait for qcom_audio not to be a mess.
 5. Camera (lol).
-6. "Un-hack" backlight power off.
