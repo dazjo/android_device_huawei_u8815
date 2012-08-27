@@ -140,7 +140,7 @@
          Please don't copy them, copy anything else. -->
 
     <!-- Boolean indicating if current platform supports quick switch-on/off of
-Bluetooth module -->
+         Bluetooth module -->
     <bool name="config_bluetooth_adapter_quick_switch">false</bool>
 
     <!-- Flag indicating whether we should enable the automatic brightness in Settings.
