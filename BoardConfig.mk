@@ -40,7 +40,7 @@ BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := u8815
 
 # Graphics
 COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE -DICS_CAMERA_BLOB -DQCOM_NO_SECURE_PLAYBACK
-BOARD_EGL_CFG := device/huawei/u8815/prebuilt/system/lib/egl/egl.cfg
+BOARD_EGL_CFG := device/huawei/u8815/configs/egl.cfg
 USE_OPENGL_RENDERER := true
 BOARD_USES_QCOM_HARDWARE := true
 
