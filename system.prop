@@ -5,7 +5,6 @@ rild.libpath=/system/lib/libril-qc-1.so
 rild.libargs=-d /dev/smd0
 ro.telephony.ril_class=HWQcomRIL
 ril.subscription.types=NV,RUIM
-ro.use_data_netmgrd=true
 keyguard.no_require_sim=true
 
 wifi.interface=eth0
