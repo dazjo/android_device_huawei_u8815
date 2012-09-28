@@ -86,7 +86,7 @@ WIFI_DRIVER_FW_PATH_PARAM := "/sys/module/dhd/parameters/firmware_path"
 
 # Kernel 
 TARGET_KERNEL_SOURCE := kernel/huawei/u8815
-TARGET_KERNEL_CONFIG := cyanogen_u8815_defconfig
+TARGET_KERNEL_CONFIG := cyanogenmod_u8815_defconfig
 BOARD_KERNEL_CMDLINE := console=ttyDDC0 androidboot.hardware=huawei
 BOARD_KERNEL_BASE := 0x00200000
 BOARD_PAGE_SIZE := 2048
