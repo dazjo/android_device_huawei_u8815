@@ -1,6 +1,5 @@
 USE_CAMERA_STUB := false
 
-# inherit from the proprietary version
 -include vendor/huawei/u8815/BoardConfigVendor.mk
 
 # CPU and Platform
@@ -13,11 +12,21 @@ TARGET_NO_RADIOIMAGE := true
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
 TARGET_CPU_SMP := true
+
 TARGET_ARCH_VARIANT := armv7-a-neon
+
 ARCH_ARM_HAVE_TLS_REGISTER := true
 
 TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
+
+TARGET_CORTEX_CACHE_LINE_32 := true
+TARGET_USE_SPARROW_BIONIC_OPTIMIZATION := true
+TARGET_AVOID_DRAW_TEXTURE_EXTENSION := true
+TARGET_USES_16BPPSURFACE_FOR_OPAQUE := true
+
+TARGET_GRALLOC_USES_ASHMEM := true
+TARGET_USES_ION := true
 
 TARGET_BOOTLOADER_BOARD_NAME := u8815
 TARGET_OTA_ASSERT_DEVICE := u8815,hwu8815,u8818,hwu8818
@@ -43,7 +52,6 @@ COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE -DICS_CAMERA_BLOB -DQCOM_NO_SECURE_PLAYB
 BOARD_EGL_CFG := device/huawei/u8815/configs/egl.cfg
 USE_OPENGL_RENDERER := true
 BOARD_USES_QCOM_HARDWARE := true
-TARGET_USES_ION := true
 
 # Web Rendering
 WITH_JIT := true
@@ -65,6 +73,7 @@ BOARD_HAVE_BLUETOOTH_BCM := true
 
 # FM Radio
 BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO -DFM_RADIO
+BOARD_HAVE_QCOM_FM := true
 
 # RIL
 BOARD_PROVIDES_LIBRIL := true
