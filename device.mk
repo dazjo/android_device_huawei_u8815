@@ -34,8 +34,9 @@ PRODUCT_PACKAGES += \
 # Other
 PRODUCT_PACKAGES += \
     dexpreopt \
-    lights.u8815 \
+    camera.msm7x27a \
     gps.u8815 \
+    lights.u8815 \
     make_ext4fs \
     setup_fs \
     com.android.future.usb.accessory 
