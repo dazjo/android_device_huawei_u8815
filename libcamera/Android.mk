@@ -85,8 +85,5 @@ LOCAL_MODULE := camera.$(TARGET_BOARD_PLATFORM)
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_SHARED_LIBRARY)
 
-# Enable only to compile new interfece and HAL files.
-include $(LOCAL_PATH)/QCamera/Android.mk
-
 endif # TARGET_BOOTLOADER_BOARD_NAME
 endif # USE_CAMERA_STUB
