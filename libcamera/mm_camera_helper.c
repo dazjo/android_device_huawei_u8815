@@ -38,7 +38,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "mm_camera_dbg.h"
 #include <time.h>
 #include "mm_camera_interface2.h"
-#include <linux/ion.h>
+#include <linux/msm_ion.h>
 #include "camera.h"
 
 #define MM_CAMERA_PROFILE 1
@@ -102,6 +102,65 @@ int mm_camera_do_munmap(int pmem_fd, void *addr, size_t size)
     return rc;
 }
 
+#ifdef USE_ION
+uint8_t *mm_camera_do_mmap_ion(int ion_fd, struct ion_allocation_data *alloc,
+		     struct ion_fd_data *ion_info_fd, int *mapFd)
+{
+  void *ret; /* returned virtual address */
+  int rc = 0;
+  struct ion_handle_data handle_data;
+
+  /* to make it page size aligned */
+  alloc->len = (alloc->len + 4095) & (~4095);
+
+  rc = ioctl(ion_fd, ION_IOC_ALLOC, alloc);
+  if (rc < 0) {
+    CDBG_ERROR("ION allocation failed\n");
+    goto ION_ALLOC_FAILED;
+  }
+
+  ion_info_fd->handle = alloc->handle;
+  rc = ioctl(ion_fd, ION_IOC_SHARE, ion_info_fd);
+  if (rc < 0) {
+    CDBG_ERROR("ION map failed %s\n", strerror(errno));
+    goto ION_MAP_FAILED;
+  }
+  *mapFd = ion_info_fd->fd;
+  ret = mmap(NULL,
+    alloc->len,
+    PROT_READ  | PROT_WRITE,
+    MAP_SHARED,
+    *mapFd,
+    0);
+
+  if (ret == MAP_FAILED) {
+    CDBG_ERROR("ION_MMAP_FAILED: %s (%d)\n", strerror(errno), errno);
+    goto ION_MAP_FAILED;
+  }
+
+  return ret;
+
+ION_MAP_FAILED:
+  handle_data.handle = ion_info_fd->handle;
+  ioctl(ion_fd, ION_IOC_FREE, &handle_data);
+ION_ALLOC_FAILED:
+  return NULL;
+}
+
+int mm_camera_do_munmap_ion (int ion_fd, struct ion_fd_data *ion_info_fd,
+                   void *addr, size_t size)
+{
+  int rc = 0;
+  rc = munmap(addr, size);
+  close(ion_info_fd->fd);
+
+  struct ion_handle_data handle_data;
+  handle_data.handle = ion_info_fd->handle;
+  ioctl(ion_fd, ION_IOC_FREE, &handle_data);
+  return rc;
+}
+#endif
+
 /*============================================================
    FUNCTION mm_camera_dump_image
    DESCRIPTION:
@@ -132,6 +191,7 @@ uint32_t mm_camera_get_msm_frame_len(cam_format_t fmt_type,
     *num_planes = 0;
     int local_height;
 
+
     switch (fmt_type) {
     case CAMERA_YUV_420_NV12:
     case CAMERA_YUV_420_NV21:
@@ -153,7 +213,28 @@ uint32_t mm_camera_get_msm_frame_len(cam_format_t fmt_type,
             size = plane[0] + plane[1];
         }
         break;
+
+    case CAMERA_YUV_420_YV12:
+
+      if(CAMERA_MODE_3D == mode) {
+
+        *num_planes = 1;
+          size = (uint32_t)(PAD_TO_2K(width*height)*3/2);
+          plane[0] = PAD_TO_WORD(width*height);
+      } else {
+          *num_planes = 3;
+          plane[0] = PAD_TO_2K(CEILING16(width) * height);
+          plane[1] = PAD_TO_2K(CEILING16(width/2) * height/2);
+          plane[2] = PAD_TO_2K(CEILING16(width/2) * height/2);
+          size = plane[0] + plane[1] + plane[2];
+      }
+      break;
     case CAMERA_BAYER_SBGGR10:
+        *num_planes = 1;
+        plane[0] = PAD_TO_WORD(width * height);
+        size = plane[0];
+        break;
+    case CAMERA_YUV_422_YUYV:
         *num_planes = 1;
         plane[0] = PAD_TO_WORD(width * height);
         size = plane[0];
@@ -171,7 +252,7 @@ uint32_t mm_camera_get_msm_frame_len(cam_format_t fmt_type,
         size = plane[0] + plane[1];
         break;
     default:
-        CDBG("%s: format %d not supported.\n",
+        CDBG_ERROR("%s: format %d not supported.\n",
             __func__, fmt_type);
         size = 0;
     }
@@ -190,4 +271,3 @@ void mm_camera_util_profile(const char *str)
     cur_time.tv_sec, cur_time.tv_nsec);
 #endif
 }
-

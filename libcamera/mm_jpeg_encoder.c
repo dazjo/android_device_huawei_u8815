@@ -35,7 +35,7 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include "mm_camera_dbg.h"
 #include <sys/system_properties.h>
 #include "mm_camera_interface2.h"
-//#define JPG_DBG
+
 #ifdef JPG_DBG
 #undef CDBG
   #ifdef _ANDROID_
@@ -44,36 +44,12 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     #define LOG_NIDEBUG 0
     #define LOG_TAG "mm-camera jpeg"
     #include <utils/Log.h>
-    #define CDBG(fmt, args...) LOGE(fmt, ##args)
+    #define CDBG(fmt, args...) ALOGE(fmt, ##args)
     #endif
 #endif
 
 #define JPEG_DEFAULT_MAINIMAGE_QUALITY 75
 #define JPEG_DEFAULT_THUMBNAIL_QUALITY 75
-
-int jpeg_buffer_get_pmem_fd();
-int jpeg_buffer_get_actual_size();
-int jpeg_buffer_set_actual_size();
-int jpege_enqueue_output_buffer();
-int jpege_init();
-int jpege_abort();
-int jpeg_buffer_destroy();
-int exif_destroy();
-int jpege_destroy();
-int exif_init();
-int jpeg_buffer_init();
-int jpeg_buffer_allocate();
-int jpeg_buffer_reset();
-int jpeg_buffer_use_external_buffer();
-int jpeg_buffer_attach_existing();
-int jpeg_buffer_set_start_offset();
-int jpeg_buffer_set_phy_offset();
-int jpege_set_source();
-int jpege_set_destination();
-int jpege_get_default_config();
-int exif_set_tag();
-int jpege_start();
-int jpeg_buffer_get_addr();
 
 int is_encoding = 0;
 pthread_mutex_t jpege_mutex = PTHREAD_MUTEX_INITIALIZER;
@@ -96,9 +72,9 @@ static uint32_t jpegRotation = 0;
 static int8_t usethumbnail = 1;
 static int8_t use_thumbnail_padding = 0;
 #ifdef HW_ENCODE
-static uint8_t hw_encode = 1;
+static uint8_t hw_encode = true;
 #else
-static uint8_t hw_encode = 0;
+static uint8_t hw_encode = false;
 #endif
 static int8_t is_3dmode = 0;
 static cam_3d_frame_format_t img_format_3d;
@@ -344,7 +320,7 @@ int8_t mm_jpeg_encoder_encode(const cam_ctrl_dimension_t * dimension,
   int cbcroffset = 0;
   int actual_size = 0, padded_size = 0;
   usethumbnail = thumbnail_buf ? 1 : 0;
-  int w_scale_factor = (is_3dmode && img_format_3d == (int)SIDE_BY_SIDE_FULL) ? 2 : 1;
+  int w_scale_factor = (is_3dmode && img_format_3d == SIDE_BY_SIDE_FULL) ? 2 : 1;
 
   pthread_mutex_lock(&jpege_mutex);
   //mmcamera_util_profile("encoder configure");
@@ -411,7 +387,7 @@ int8_t mm_jpeg_encoder_encode(const cam_ctrl_dimension_t * dimension,
     tn_img_info.height = dimension->thumbnail_height;
     buf_size = tn_img_info.width * tn_img_info.height * 2;
     tn_img_info.fragment_cnt = 1;
-    tn_img_info.color_format = dimension->thumb_format; //YCRCBLP_H2V2;
+    tn_img_info.color_format = YCRCBLP_H2V2;
     tn_img_info.p_fragments[0].width = tn_img_info.width;
     tn_img_info.p_fragments[0].height = CEILING16(dimension->thumbnail_height);
     jpeg_buffer_reset(tn_img_info.p_fragments[0].color.yuv.luma_buf);
@@ -467,7 +443,7 @@ int8_t mm_jpeg_encoder_encode(const cam_ctrl_dimension_t * dimension,
   main_img_info.height = dimension->orig_picture_dy;
   buf_size = main_img_info.width * main_img_info.height * 2;
   main_img_info.fragment_cnt = 1;
-  main_img_info.color_format = dimension->main_img_format; //YCRCBLP_H2V2;
+  main_img_info.color_format = YCRCBLP_H2V2;
   main_img_info.p_fragments[0].width = main_img_info.width;
   main_img_info.p_fragments[0].height = CEILING16(main_img_info.height);
   jpeg_buffer_reset(main_img_info.p_fragments[0].color.yuv.luma_buf);

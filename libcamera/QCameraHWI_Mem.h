@@ -22,27 +22,18 @@
 #include <binder/MemoryHeapBase.h>
 #include <utils/threads.h>
 #include <stdint.h>
+#include "QCamera_Intf.h"
 
 extern "C" {
 #include <linux/android_pmem.h>
-#include <linux/ion.h>
-#include <camera.h>
-//#include <camera_defs_i.h>
-
+#include <linux/msm_ion.h>
 }
-/*
-#define LOGV ALOGV
-#define LOGI ALOGI
-#define LOGD ALOGD
-#define LOGE ALOGE
-#define LOGW ALOGW
-*/
 
-#define VIDEO_BUFFER_COUNT 5
+
+#define VIDEO_BUFFER_COUNT NUM_RECORDING_BUFFERS
 #define VIDEO_BUFFER_COUNT_LOW_POWER_CAMCORDER 9
 
 #define PREVIEW_BUFFER_COUNT 5
-#define VIDEO_BUFFER_COUNT_LOW_POWER_CAMCORDER 9
 
 namespace android {
 

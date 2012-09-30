@@ -28,7 +28,7 @@
 
 #ifndef MM_OMX_JPEG_ENCODER_H_
 #define MM_OMX_JPEG_ENCODER_H_
-#include <linux/ion.h>
+#include <linux/msm_ion.h>
 #include "camera.h"
 
 typedef struct omx_jpeg_encode_params_t {
@@ -51,7 +51,7 @@ typedef struct omx_jpeg_encode_params_t {
 }omx_jpeg_encode_params;
 
 int8_t omxJpegOpen();
-int8_t omxJpegStart();
+int8_t omxJpegStart(uint8_t hw_encode_enable);
 int8_t omxJpegEncode(omx_jpeg_encode_params *encode_params);
 int8_t omxJpegEncodeNext(omx_jpeg_encode_params *encode_params);
 void omxJpegFinish();

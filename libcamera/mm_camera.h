@@ -85,6 +85,10 @@ typedef enum {
     MM_CAMERA_STREAM_THUMBNAIL,
     MM_CAMERA_STREAM_RAW,
     MM_CAMERA_STREAM_VIDEO_MAIN,
+    MM_CAMERA_STREAM_AEC,
+    MM_CAMERA_STREAM_AWB,
+    MM_CAMERA_STREAM_AF,
+    MM_CAMERA_STREAM_IHIST,
     MM_CAMERA_STREAM_MAX
 } mm_camera_stream_type_t;
 
@@ -143,6 +147,7 @@ typedef struct {
     mm_camera_stream_t main;
     int    delivered_cnt;
     int8_t pending_cnt;
+    uint32_t expected_matching_id;
 } mm_camera_ch_snapshot_t;
 
 typedef struct {
@@ -277,6 +282,8 @@ extern int32_t mm_camera_stream_fsm_fn_vtbl (mm_camera_obj_t * my_obj,
 extern const char *mm_camera_util_get_dev_name(mm_camera_obj_t * my_obj);
 extern int32_t mm_camera_util_s_ctrl( int32_t fd,
                                             uint32_t id, int32_t value);
+extern int32_t mm_camera_util_private_s_ctrl( int32_t fd,
+                                            uint32_t id, void __user *value);
 extern int32_t mm_camera_util_g_ctrl( int32_t fd,
                                             uint32_t id, int32_t *value);
 extern int32_t mm_camera_ch_fn(mm_camera_obj_t * my_obj,
@@ -342,7 +349,6 @@ extern int mm_camera_poll_send_ch_event(mm_camera_obj_t * my_obj, mm_camera_even
 extern void mm_camera_msm_proc_ch_event(mm_camera_obj_t *my_obj, mm_camera_event_t *event);
 extern void mm_camera_dispatch_app_event(mm_camera_obj_t *my_obj, mm_camera_event_t *event);
 extern void mm_camera_dispatch_buffered_frames(mm_camera_obj_t *my_obj, mm_camera_channel_type_t ch_type);
-extern void mm_camera_histo_mmap(mm_camera_obj_t * my_obj, mm_camera_event_t *evt);
 extern void mm_camera_check_pending_zsl_frames(mm_camera_obj_t *my_obj,
                                         mm_camera_channel_type_t ch_type);
 extern int mm_camera_ch_util_get_num_stream(mm_camera_obj_t * my_obj,mm_camera_channel_type_t ch_type);

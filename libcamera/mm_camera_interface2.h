@@ -29,9 +29,8 @@ IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 #ifndef __MM_CAMERA_INTERFACE2_H__
 #define __MM_CAMERA_INTERFACE2_H__
-#include <linux/ion.h>
-#include <camera.h>
-#include "mm_jpeg_encoder.h"
+#include <linux/msm_ion.h>
+#include "mm_omx_jpeg_encoder.h"
 
 #define MM_CAMERA_MAX_NUM_FRAMES        16
 
@@ -68,95 +67,6 @@ typedef enum {
     MM_CAMERA_OP_MODE_MAX
 }mm_camera_op_mode_type_t;
 
-/* Add enumenrations at the bottom but before MM_CAMERA_PARM_MAX */
-typedef enum {
-    MM_CAMERA_PARM_PICT_SIZE,
-    MM_CAMERA_PARM_ZOOM_RATIO,
-    MM_CAMERA_PARM_HISTOGRAM,
-    MM_CAMERA_PARM_DIMENSION,
-    MM_CAMERA_PARM_FPS,
-    MM_CAMERA_PARM_FPS_MODE, /*5*/
-    MM_CAMERA_PARM_EFFECT,
-    MM_CAMERA_PARM_EXPOSURE_COMPENSATION,
-    MM_CAMERA_PARM_EXPOSURE,
-    MM_CAMERA_PARM_SHARPNESS,
-    MM_CAMERA_PARM_CONTRAST, /*10*/
-    MM_CAMERA_PARM_SATURATION,
-    MM_CAMERA_PARM_BRIGHTNESS,
-    MM_CAMERA_PARM_WHITE_BALANCE,
-    MM_CAMERA_PARM_LED_MODE,
-    MM_CAMERA_PARM_ANTIBANDING, /*15*/
-    MM_CAMERA_PARM_ROLLOFF,
-    MM_CAMERA_PARM_CONTINUOUS_AF,
-    MM_CAMERA_PARM_FOCUS_RECT,
-    MM_CAMERA_PARM_AEC_ROI,
-    MM_CAMERA_PARM_AF_ROI, /*20*/
-    MM_CAMERA_PARM_HJR,
-    MM_CAMERA_PARM_ISO,
-    MM_CAMERA_PARM_BL_DETECTION,
-    MM_CAMERA_PARM_SNOW_DETECTION,
-    MM_CAMERA_PARM_BESTSHOT_MODE, /*25*/
-    MM_CAMERA_PARM_ZOOM,
-    MM_CAMERA_PARM_VIDEO_DIS,
-    MM_CAMERA_PARM_VIDEO_ROT,
-    MM_CAMERA_PARM_SCE_FACTOR,
-    MM_CAMERA_PARM_FD, /*30*/
-    MM_CAMERA_PARM_MODE,
-    /* 2nd 32 bits */
-    MM_CAMERA_PARM_3D_FRAME_FORMAT,
-    MM_CAMERA_PARM_CAMERA_ID,
-    MM_CAMERA_PARM_CAMERA_INFO,
-    MM_CAMERA_PARM_PREVIEW_SIZE, /*35*/
-    MM_CAMERA_PARM_QUERY_FLASH4SNAP,
-    MM_CAMERA_PARM_FOCUS_DISTANCES,
-    MM_CAMERA_PARM_BUFFER_INFO,
-    MM_CAMERA_PARM_JPEG_ROTATION,
-    MM_CAMERA_PARM_JPEG_MAINIMG_QUALITY, /* 40 */
-    MM_CAMERA_PARM_JPEG_THUMB_QUALITY,
-    MM_CAMERA_PARM_ZSL_ENABLE,
-    MM_CAMERA_PARM_FOCAL_LENGTH,
-    MM_CAMERA_PARM_HORIZONTAL_VIEW_ANGLE,
-    MM_CAMERA_PARM_VERTICAL_VIEW_ANGLE, /* 45 */
-    MM_CAMERA_PARM_MCE,
-    MM_CAMERA_PARM_RESET_LENS_TO_INFINITY,
-    MM_CAMERA_PARM_SNAPSHOTDATA,
-    MM_CAMERA_PARM_HFR,
-    MM_CAMERA_PARM_REDEYE_REDUCTION, /* 50 */
-    MM_CAMERA_PARM_WAVELET_DENOISE,
-    MM_CAMERA_PARM_3D_DISPLAY_DISTANCE,
-    MM_CAMERA_PARM_3D_VIEW_ANGLE,
-    MM_CAMERA_PARM_PREVIEW_FORMAT,
-    MM_CAMERA_PARM_HFR_SIZE, /* 55 */
-    MM_CAMERA_PARM_3D_EFFECT,
-    MM_CAMERA_PARM_3D_MANUAL_CONV_RANGE,
-    MM_CAMERA_PARM_3D_MANUAL_CONV_VALUE,
-    MM_CAMERA_PARM_ENABLE_3D_MANUAL_CONVERGENCE,
-    /* These are new parameters defined here */
-    MM_CAMERA_PARM_CH_IMAGE_FMT, /* 60 */       // mm_camera_ch_image_fmt_parm_t
-    MM_CAMERA_PARM_OP_MODE,             // camera state, sub state also
-    MM_CAMERA_PARM_SHARPNESS_CAP,       //
-    MM_CAMERA_PARM_SNAPSHOT_BURST_NUM,  // num shots per snapshot action
-    MM_CAMERA_PARM_LIVESHOT_MAIN,       // enable/disable full size live shot
-    MM_CAMERA_PARM_MAXZOOM, /* 65 */
-    MM_CAMERA_PARM_LUMA_ADAPTATION,     // enable/disable
-    MM_CAMERA_PARM_HDR,
-    MM_CAMERA_PARM_CROP,
-    MM_CAMERA_PARM_MAX_PICTURE_SIZE,
-    MM_CAMERA_PARM_MAX_PREVIEW_SIZE, /* 70 */
-    MM_CAMERA_PARM_ASD_ENABLE,
-    MM_CAMERA_PARM_RECORDING_HINT,
-    MM_CAMERA_PARM_CAF_ENABLE,
-    MM_CAMERA_PARM_FULL_LIVESHOT,
-    MM_CAMERA_PARM_DIS_ENABLE, /* 75 */
-    MM_CAMERA_PARM_AEC_LOCK,
-    MM_CAMERA_PARM_AWB_LOCK,
-    MM_CAMERA_PARM_AF_MTR_AREA,
-    MM_CAMERA_PARM_AEC_MTR_AREA,
-    MM_CAMERA_PARM_MAX_HFR_MODE, /* 80 */
-    MM_CAMERA_PARM_FOCUS_MODE,
-    MM_CAMERA_PARM_MAX
-} mm_camera_parm_type_t;
-
 #define MM_CAMERA_PARM_SUPPORT_SET      0x01
 #define MM_CAMERA_PARM_SUPPORT_GET      0x02
 #define MM_CAMERA_PARM_SUPPORT_BOTH     0x03
@@ -182,6 +92,11 @@ typedef enum {
     MM_CAMERA_CH_VIDEO,
     MM_CAMERA_CH_SNAPSHOT,
     MM_CAMERA_CH_RAW,
+    MM_CAMERA_CH_SAEC,
+    MM_CAMERA_CH_SAWB,
+    MM_CAMERA_CH_SAFC,
+    MM_CAMERA_CH_IHST,
+    MM_CAMERA_CH_CSTA,
     MM_CAMERA_CH_MAX
 } mm_camera_channel_type_t;
 
@@ -340,6 +255,7 @@ typedef struct {
     /* how deep the circular frame queue */
     int water_mark;
     int look_back;
+    int interval;  /*skipping n-1 frames*/
 } mm_camera_channel_attr_buffering_frame_t;
 
 typedef struct {
@@ -516,7 +432,7 @@ struct mm_camera {
     mm_camera_jpeg_t *jpeg_ops;         // jpeg config and encoding interface
     camera_info_t camera_info;      // postion, mount_angle, etc.
     enum sensor_type_t sensor_type; // BAYER, YUV, JPEG_SOC, etc.
-    char *video_dev_name;           // device node name, e.g. /dev/video1
+    char video_dev_name[32];           // device node name, e.g. /dev/video1
 };
 
 typedef enum {
@@ -524,6 +440,12 @@ typedef enum {
     MM_CAMERA_PAD_2K,
     MM_CAMERA_PAD_MAX
 } mm_camera_pad_type_t;
+
+typedef struct
+{
+    struct camera_size_type *sizes_tbl;
+    uint32_t tbl_size;
+}default_sizes_tbl_t;
 
 /*configure methods*/
 uint8_t cam_config_is_parm_supported(
@@ -586,9 +508,13 @@ int32_t cam_jpeg_register_event_cb(int cam_id, mm_camera_jpeg_cb_t * evt_cb,
 int32_t cam_jpeg_encode(int cam_id, uint8_t start,
   mm_camera_jpeg_encode_t *data);
 
-mm_camera_t * mm_camera_query(uint8_t *num_cameras);
+extern mm_camera_t * mm_camera_query(uint8_t *num_cameras);
 extern uint8_t *mm_camera_do_mmap(uint32_t size, int *pmemFd);
 extern int mm_camera_do_munmap(int pmem_fd, void *addr, size_t size);
+extern uint8_t *mm_camera_do_mmap_ion(int ion_fd, struct ion_allocation_data *alloc,
+		     struct ion_fd_data *ion_info_fd, int *mapFd);
+extern int mm_camera_do_munmap_ion (int ion_fd, struct ion_fd_data *ion_info_fd,
+                   void *addr, size_t size);
 extern int mm_camera_dump_image(void *addr, uint32_t size, char *filename);
 extern uint32_t mm_camera_get_msm_frame_len(cam_format_t fmt_type,
                                             camera_mode_t mode,
@@ -597,4 +523,9 @@ extern uint32_t mm_camera_get_msm_frame_len(cam_format_t fmt_type,
                                             int image_type,
                                             uint8_t *num_planes,
                                             uint32_t planes[]);
+uint8_t *mm_camera_do_mmap_ion(int ion_fd, struct ion_allocation_data *alloc,
+  struct ion_fd_data *ion_info_fd, int *mapFd);
+int mm_camera_do_munmap_ion (int ion_fd, struct ion_fd_data *ion_info_fd,
+                   void *addr, size_t size);
+extern void mm_camera_util_profile(const char *str);
 #endif /*__MM_CAMERA_INTERFACE2_H__*/
