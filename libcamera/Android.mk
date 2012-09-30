@@ -1,97 +1,89 @@
+ifneq ($(USE_CAMERA_STUB),true)
 ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),u8815)
-    # When zero we link against libmmcamera; when 1, we dlopen libmmcamera.
-    DLOPEN_LIBMMCAMERA:=1
-    MM_STILL_V4L2_DRIVER_LIST := msm7x27a
-    V4L2_BASED_LIBCAM := true
-    LOCAL_PATH:= $(call my-dir)
-    LOCAL_PATH1:= $(call my-dir)
 
-    include $(CLEAR_VARS)
+# When zero we link against libmmcamera; when 1, we dlopen libmmcamera.
+DLOPEN_LIBMMCAMERA := 1
 
-    LOCAL_CFLAGS:= -DDLOPEN_LIBMMCAMERA=$(DLOPEN_LIBMMCAMERA)
+LOCAL_PATH:= $(call my-dir)
 
-    #define BUILD_UNIFIED_CODE
-    BUILD_UNIFIED_CODE := true
-    
-	LOCAL_CFLAGS+= -DVFE_7X27A
-	
-    ifeq ($(strip $(TARGET_USES_ION)),true)
-      LOCAL_CFLAGS += -DUSE_ION
-    endif
+include $(CLEAR_VARS)
 
-    LOCAL_CFLAGS += -DCAMERA_ION_HEAP_ID=ION_CP_MM_HEAP_ID # 8660=SMI, Rest=EBI
-    LOCAL_CFLAGS += -DCAMERA_ZSL_ION_HEAP_ID=ION_CP_MM_HEAP_ID
-    LOCAL_CFLAGS += -DCAMERA_GRALLOC_HEAP_ID=GRALLOC_USAGE_PRIVATE_CAMERA_HEAP
-    LOCAL_CFLAGS += -DCAMERA_GRALLOC_FALLBACK_HEAP_ID=GRALLOC_USAGE_PRIVATE_CAMERA_HEAP # Don't Care
-    LOCAL_CFLAGS += -DCAMERA_GRALLOC_CACHING_ID=GRALLOC_USAGE_PRIVATE_UNCACHED #uncached
-    LOCAL_CFLAGS += -DCAMERA_ION_FALLBACK_HEAP_ID=ION_CAMERA_HEAP_ID
-    LOCAL_CFLAGS += -DCAMERA_ZSL_ION_FALLBACK_HEAP_ID=ION_CAMERA_HEAP_ID
-    LOCAL_CFLAGS += -DNUM_RECORDING_BUFFERS=5
+# hax for libmmjpeg
+$(shell mkdir -p $(OUT)/obj/SHARED_LIBRARIES/libmmjpeg_intermediates)
+$(shell touch $(OUT)/obj/SHARED_LIBRARIES/libmmjpeg_intermediates/export_includes)
 
-    LOCAL_CFLAGS+= -Werror
+LOCAL_CFLAGS := -DDLOPEN_LIBMMCAMERA=$(DLOPEN_LIBMMCAMERA)
 
-	LOCAL_HAL_FILES := QCameraHAL.cpp QCameraHWI_Parm.cpp\
-       QCameraHWI.cpp QCameraHWI_Preview.cpp \
-       QCameraHWI_Record_7x27A.cpp QCameraHWI_Still.cpp \
-       QCameraHWI_Mem.cpp QCameraHWI_Display.cpp \
-       QCameraStream.cpp QualcommCamera2.cpp QCameraParameters.cpp
+LOCAL_CFLAGS += -DHW_ENCODE -DVFE_7X27A
 
-    LOCAL_CFLAGS+= -DHW_ENCODE
+LOCAL_CFLAGS += -include bionic/libc/kernel/common/linux/socket.h
 
-    LOCAL_C_INCLUDES+= $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
-    LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+# To Choose neon/C routines for YV12 conversion
+LOCAL_CFLAGS += -DUSE_NEON_CONVERSION
 
-    # if debug service layer and up , use stub camera!
-    LOCAL_C_INCLUDES += \
-      frameworks/base/services/camera/libcameraservice #
+# Uncomment below line to enable smooth zoom
+#LOCAL_CFLAGS += -DCAMERA_SMOOTH_ZOOM
 
-    LOCAL_SRC_FILES := $(MM_CAM_FILES) $(LOCAL_HAL_FILES)
+# JB log compat
+LOCAL_CFLAGS += -DLOGI=ALOGI -DLOGV=ALOGV -DLOGE=ALOGE -DLOGD=ALOGD -DLOGW=ALOGW
 
-    ifeq ($(call is-chipset-prefix-in-board-platform,msm7x27),true)
-      LOCAL_CFLAGS+= -DNUM_PREVIEW_BUFFERS=6 -D_ANDROID_
-    else
-      LOCAL_CFLAGS+= -DNUM_PREVIEW_BUFFERS=4 -D_ANDROID_
-    endif
+ifeq ($(TARGET_USES_ION),true)
+LOCAL_CFLAGS += -DUSE_ION
+endif
 
-    # To Choose neon/C routines for YV12 conversion
-    LOCAL_CFLAGS+= -DUSE_NEON_CONVERSION
-    # Uncomment below line to enable smooth zoom
-    #LOCAL_CFLAGS+= -DCAMERA_SMOOTH_ZOOM
+ifeq ($(TARGET_BOARD_PLATFORM),msm7x27)
+LOCAL_CFLAGS += -DNUM_PREVIEW_BUFFERS=6 -D_ANDROID_
+else
+LOCAL_CFLAGS += -DNUM_PREVIEW_BUFFERS=4 -D_ANDROID_
+endif
 
-    LOCAL_C_INCLUDES+= \
-      $(TARGET_OUT_HEADERS)/mm-camera \
-      $(TARGET_OUT_HEADERS)/mm-camera/common \
-      $(TARGET_OUT_HEADERS)/mm-still \
-      $(TARGET_OUT_HEADERS)/mm-still/jpeg \
+LOCAL_C_INCLUDES += \
+    $(TARGET_OUT_HEADERS)/mm-camera \
+    $(TARGET_OUT_HEADERS)/mm-camera/common \
+    $(TARGET_OUT_HEADERS)/mm-still \
+    $(TARGET_OUT_HEADERS)/mm-still/jpeg \
 
-    LOCAL_C_INCLUDES+= hardware/qcom/media/mm-core/inc
-    LOCAL_C_INCLUDES+= $(TARGET_OUT_HEADERS)/mm-still/mm-omx
-    LOCAL_C_INCLUDES+= $(LOCAL_PATH)/mm-camera-interface
 
-    LOCAL_C_INCLUDES+= hardware/qcom/display/libgralloc
-    LOCAL_C_INCLUDES+= hardware/qcom/display/libgenlock
-    LOCAL_C_INCLUDES+= hardware/qcom/media/libstagefrighthw
+#yyan if debug service layer and up , use stub camera!
+LOCAL_C_INCLUDES += \
+        frameworks/base/services/camera/libcameraservice \
+        hardware/qcom/display/libgralloc \
+        hardware/qcom/display/libgenlock \
+        hardware/qcom/media/libstagefrighthw
 
-    LOCAL_SHARED_LIBRARIES:= libutils libui libcamera_client liblog libcutils libmmjpeg libmmstillomx libimage-jpeg-enc-omx-comp
-    LOCAL_SHARED_LIBRARIES += libmmcamera_interface2
+# CM doesn't use kernel includes
+#LOCAL_C_INCLUDES+= $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include/media
+#LOCAL_C_INCLUDES+= $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+#LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
 
-    LOCAL_SHARED_LIBRARIES+= libgenlock libbinder libhardware
-    ifneq ($(DLOPEN_LIBMMCAMERA),1)
-      LOCAL_SHARED_LIBRARIES+= liboemcamera
-    else
-      LOCAL_SHARED_LIBRARIES+= libdl
-    endif
+ifeq ($(TARGET_BOARD_PLATFORM),msm7x27a)
+LOCAL_SRC_FILES := mm_camera_interface2.c mm_camera_stream.c \
+                   mm_camera_channel.c mm_camera.c \
+                   mm_camera_poll_thread.c mm_camera_notify.c \
+                   mm_camera_helper.c mm_jpeg_encoder.c \
+                   QCameraHAL.cpp QCameraHWI_Parm.cpp \
+                   QCameraHWI.cpp QCameraHWI_Preview_7x27A.cpp \
+                   QCameraHWI_Record_7x27A.cpp QCameraHWI_Still.cpp \
+                   QCameraHWI_Mem.cpp QCameraHWI_Display.cpp \
+                   QCameraStream.cpp QualcommCamera2.cpp
+                   #mm_camera_sock.c
+else
+LOCAL_SRC_FILES := QualcommCamera.cpp QualcommCameraHardware.cpp
+endif
 
-    LOCAL_CFLAGS += -include bionic/libc/kernel/common/linux/socket.h
+LOCAL_SHARED_LIBRARIES := libgenlock libbinder libutils libui libcamera_client liblog libcutils libmmjpeg
 
-    LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
-    LOCAL_MODULE:= camera.$(TARGET_BOARD_PLATFORM)
-    LOCAL_MODULE_TAGS := optional
-    include $(BUILD_SHARED_LIBRARY)
 
-    include $(LOCAL_PATH)/mm-camera-interface/Android.mk
+ifneq ($(DLOPEN_LIBMMCAMERA),1)
+LOCAL_SHARED_LIBRARIES += liboemcamera
+else
+LOCAL_SHARED_LIBRARIES += libdl
+endif
 
-    #Enable only to compile new interafece and HAL files.
-    include $(LOCAL_PATH1)/QCamera/Android.mk
+LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
+LOCAL_MODULE := camera.$(TARGET_BOARD_PLATFORM)
+LOCAL_MODULE_TAGS := optional
+include $(BUILD_SHARED_LIBRARY)
 
 endif # TARGET_BOOTLOADER_BOARD_NAME
+endif # USE_CAMERA_STUB

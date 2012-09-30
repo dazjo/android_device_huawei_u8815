@@ -1,5 +1,5 @@
 /*
-** Copyright (c) 2011-2012 Code Aurora Forum. All rights reserved.
+** Copyright (c) 2011 Code Aurora Forum. All rights reserved.
 **
 ** Licensed under the Apache License, Version 2.0 (the "License");
 ** you may not use this file except in compliance with the License.
@@ -16,14 +16,17 @@
 
 /*#error uncomment this for compiler test!*/
 
-//#define ALOG_NDEBUG 0
-#define ALOG_NIDEBUG 0
+//#define LOG_NDEBUG 0
+#define LOG_NIDEBUG 0
 #define LOG_TAG "QCameraHWI_Mem"
 #include <utils/Log.h>
 
 #include <utils/Errors.h>
 #include <utils/threads.h>
-//#include <binder/MemoryHeapPmem.h>
+#include <binder/MemoryHeapPmem.h>
+#ifdef USE_ION
+#include <binder/MemoryHeapIon.h>
+#endif
 #include <utils/String16.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -35,7 +38,7 @@
 #include <linux/android_pmem.h>
 #endif
 #include <linux/ioctl.h>
-#include <camera/QCameraParameters.h>
+#include <camera/CameraParameters.h>
 #include <media/mediarecorder.h>
 #include <gralloc_priv.h>
 
@@ -62,13 +65,13 @@ static bool register_buf(int size,
 
 #if 0
 MMCameraDL::MMCameraDL(){
-    ALOGV("MMCameraDL: E");
+    LOGV("MMCameraDL: E");
     libmmcamera = NULL;
 #if DLOPEN_LIBMMCAMERA
     libmmcamera = ::dlopen("liboemcamera.so", RTLD_NOW);
 #endif
-    ALOGV("Open MM camera DL libeomcamera loaded at %p ", libmmcamera);
-    ALOGV("MMCameraDL: X");
+    LOGV("Open MM camera DL libeomcamera loaded at %p ", libmmcamera);
+    LOGV("MMCameraDL: X");
 }
 
 void * MMCameraDL::pointer(){
@@ -76,14 +79,14 @@ void * MMCameraDL::pointer(){
 }
 
 MMCameraDL::~MMCameraDL(){
-    ALOGV("~MMCameraDL: E");
+    LOGV("~MMCameraDL: E");
     LINK_mm_camera_destroy();
     if (libmmcamera != NULL) {
         ::dlclose(libmmcamera);
-        ALOGV("closed MM Camera DL ");
+        LOGV("closed MM Camera DL ");
     }
     libmmcamera = NULL;
-    ALOGV("~MMCameraDL: X");
+    LOGV("~MMCameraDL: X");
 }
 
 
@@ -139,7 +142,7 @@ AshmemPool::AshmemPool(int buffer_size, int num_buffers,
                                     frame_size,
                                     name)
 {
-    ALOGV("constructing MemPool %s backed by ashmem: "
+    LOGV("constructing MemPool %s backed by ashmem: "
          "%d frames @ %d uint8_ts, "
          "buffer size %d",
          mName,
@@ -166,8 +169,6 @@ static bool register_buf(int size,
                          bool vfe_can_write,
                          bool register_buffer)
 {
-    /*TODO*/
-    /*
     struct msm_pmem_info pmemBuf;
     CAMERA_HAL_UNUSED(frame_size);
 
@@ -181,11 +182,12 @@ static bool register_buf(int size,
 
     pmemBuf.active   = vfe_can_write;
 
-    ALOGV("register_buf:  reg = %d buffer = %p",
+    LOGV("register_buf:  reg = %d buffer = %p",
          !register_buffer, buf);
-    if(native_start_ops(register_buffer ? CAMERA_OPS_REGISTER_BUFFER :
+    /*TODO*/
+    /*if(native_start_ops(register_buffer ? CAMERA_OPS_REGISTER_BUFFER :
         CAMERA_OPS_UNREGISTER_BUFFER ,(void *)&pmemBuf) < 0) {
-         ALOGE("register_buf: MSM_CAM_IOCTL_(UN)REGISTER_PMEM  error %s",
+         LOGE("register_buf: MSM_CAM_IOCTL_(UN)REGISTER_PMEM  error %s",
                strerror(errno));
          return false;
          }*/
@@ -196,7 +198,7 @@ static bool register_buf(int size,
 
 #if 0
 bool register_record_buffers(bool register_buffer) {
-    ALOGI("%s: (%d) E", __FUNCTION__, register_buffer);
+    LOGI("%s: (%d) E", __FUNCTION__, register_buffer);
     struct msm_pmem_info pmemBuf;
 
     for (int cnt = 0; cnt < VIDEO_BUFFER_COUNT; ++cnt) {
@@ -217,11 +219,11 @@ bool register_record_buffers(bool register_buffer) {
             pmemBuf.active   = false;
         }
 
-        ALOGV("register_buf:  reg = %d buffer = %p", !register_buffer,
+        LOGV("register_buf:  reg = %d buffer = %p", !register_buffer,
           (void *)pmemBuf.vaddr);
         if(native_start_ops(register_buffer ? CAMERA_OPS_REGISTER_BUFFER :
                 CAMERA_OPS_UNREGISTER_BUFFER ,(void *)&pmemBuf) < 0) {
-            ALOGE("register_buf: MSM_CAM_IOCTL_(UN)REGISTER_PMEM  error %s",
+            LOGE("register_buf: MSM_CAM_IOCTL_(UN)REGISTER_PMEM  error %s",
                 strerror(errno));
             return false;
         }
@@ -229,7 +231,7 @@ bool register_record_buffers(bool register_buffer) {
     return true;
 }
 #endif
-#if 0
+#ifndef USE_ION
 PmemPool::PmemPool(const char *pmem_pool,
                                            int flags,
                                            int pmem_type,
@@ -241,7 +243,7 @@ PmemPool::PmemPool(const char *pmem_pool,
     mCbCrOffset(cbcr_offset),
     myOffset(yOffset)
 {
-    ALOGI("constructing MemPool %s backed by pmem pool %s: "
+    LOGI("constructing MemPool %s backed by pmem pool %s: "
          "%d frames @ %d bytes, buffer size %d",
          mName,
          pmem_pool, num_buffers, frame_size,
@@ -258,7 +260,7 @@ PmemPool::PmemPool(const char *pmem_pool,
         new MemoryHeapBase(pmem_pool, mAlignedSize, flags);
 
     if (masterHeap->getHeapID() < 0) {
-        ALOGE("failed to construct master heap for pmem pool %s", pmem_pool);
+        LOGE("failed to construct master heap for pmem pool %s", pmem_pool);
         masterHeap.clear();
         return;
     }
@@ -272,18 +274,18 @@ PmemPool::PmemPool(const char *pmem_pool,
 
         mFd = mHeap->getHeapID();
         if (::ioctl(mFd, PMEM_GET_SIZE, &mSize)) {
-            ALOGE("pmem pool %s ioctl(PMEM_GET_SIZE) error %s (%d)",
+            LOGE("pmem pool %s ioctl(PMEM_GET_SIZE) error %s (%d)",
                  pmem_pool,
                  ::strerror(errno), errno);
             mHeap.clear();
             return;
         }
 
-        ALOGE("pmem pool %s ioctl(fd = %d, PMEM_GET_SIZE) is %ld",
+        LOGE("pmem pool %s ioctl(fd = %d, PMEM_GET_SIZE) is %ld",
              pmem_pool,
              mFd,
              mSize.len);
-        ALOGE("mBufferSize=%d, mAlignedBufferSize=%d\n", mBufferSize, mAlignedBufferSize);
+        LOGE("mBufferSize=%d, mAlignedBufferSize=%d\n", mBufferSize, mAlignedBufferSize);
 
 #if 0
         // Unregister preview buffers with the camera drivers.  Allow the VFE to write
@@ -292,7 +294,7 @@ PmemPool::PmemPool(const char *pmem_pool,
         if( (strcmp("postview", mName) != 0) ){
             int num_buf = num_buffers;
             if(!strcmp("preview", mName)) num_buf = kPreviewBufferCount;
-            ALOGD("num_buffers = %d", num_buf);
+            LOGD("num_buffers = %d", num_buf);
             for (int cnt = 0; cnt < num_buf; ++cnt) {
                 int active = 1;
                 if(pmem_type == MSM_PMEM_VIDEO){
@@ -310,7 +312,7 @@ PmemPool::PmemPool(const char *pmem_pool,
                          active = 1;
                          pmem_type = MSM_PMEM_VIDEO_VPE;
                      }
-                     ALOGV(" pmempool creating video buffers : active %d ", active);
+                     LOGV(" pmempool creating video buffers : active %d ", active);
                 }
                 else if (pmem_type == MSM_PMEM_PREVIEW){
                     active = (cnt < ACTIVE_PREVIEW_BUFFERS);
@@ -331,15 +333,14 @@ PmemPool::PmemPool(const char *pmem_pool,
 #endif
         completeInitialization();
     }
-    else ALOGE("pmem pool %s error: could not create master heap!",
+    else LOGE("pmem pool %s error: could not create master heap!",
               pmem_pool);
-    ALOGI("%s: (%s) X ", __FUNCTION__, mName);
+    LOGI("%s: (%s) X ", __FUNCTION__, mName);
 }
-#endif
 
 PmemPool::~PmemPool()
 {
-    ALOGI("%s: %s E", __FUNCTION__, mName);
+    LOGI("%s: %s E", __FUNCTION__, mName);
 #if 0
     if (mHeap != NULL) {
         // Unregister preview buffers with the camera drivers.
@@ -364,15 +365,61 @@ PmemPool::~PmemPool()
     }
     mMMCameraDLRef.clear();
 #endif
-    ALOGI("%s: %s X", __FUNCTION__, mName);
+    LOGI("%s: %s X", __FUNCTION__, mName);
 }
+#else
+const char IonPool::mIonDevName[] = "/dev/ion";
+
+IonPool::IonPool(int flags,
+                 int buffer_size,
+                 int num_buffers,
+                 int frame_size,
+                 int cbcr_offset,
+                 int yOffset,
+                 const char *name) :
+    MemPool(buffer_size,num_buffers,frame_size,name),
+    mCbCrOffset(cbcr_offset),
+    myOffset(yOffset)
+{
+    LOGI("constructing MemPool %s backed by ion pool %s: "
+         "%d frames @ %d bytes, buffer size %d",
+         mName,
+         mIonDevName, num_buffers, frame_size,
+         buffer_size);
+
+    // Make a new mmap'ed heap that can be shared across processes.
+    // mAlignedBufferSize is already in 4k aligned.
+    mAlignedSize = mAlignedBufferSize * num_buffers;
+    sp<MemoryHeapIon> ionHeap = new MemoryHeapIon(mIonDevName, mAlignedSize,
+                    flags, (0x1<<ION_CP_MM_HEAP_ID|0x1<<ION_IOMMU_HEAP_ID));
+    if (ionHeap->getHeapID() >= 0) {
+        mHeap = ionHeap;
+        ionHeap.clear();
+
+        mFd = mHeap->getHeapID();
+        LOGE("ion pool %s fd = %d", mIonDevName, mFd);
+        LOGE("mBufferSize=%d, mAlignedBufferSize=%d\n",
+                      mBufferSize, mAlignedBufferSize);
+        completeInitialization();
+    }
+    else
+        LOGE("ion pool %s error: could not create master heap!", mIonDevName);
+    LOGI("%s: (%s) X ", __FUNCTION__, mName);
+}
+
+IonPool::~IonPool()
+{
+    LOGI("%s: %s E", __FUNCTION__, mName);
+    LOGI("%s: %s X", __FUNCTION__, mName);
+}
+#endif
 MemPool::~MemPool()
 {
-    ALOGV("destroying MemPool %s", mName);
+    LOGV("destroying MemPool %s", mName);
     if (mFrameSize > 0)
         delete [] mBuffers;
     mHeap.clear();
-    ALOGV("destroying MemPool %s completed", mName);
+    LOGV("destroying MemPool %s completed", mName);
 }
 
 
