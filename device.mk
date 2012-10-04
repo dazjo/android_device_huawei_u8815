@@ -34,7 +34,6 @@ PRODUCT_PACKAGES += \
 # Other
 PRODUCT_PACKAGES += \
     dexpreopt \
-    camera.msm7x27a \
     gps.u8815 \
     lights.u8815 \
     make_ext4fs \
