@@ -78,118 +78,76 @@
 -->
 <MediaSettings>
     <!-- Each camcorder profile defines a set of predefined configuration parameters -->
-    <!-- DTS2011012202331 zhaoxiang 20110122 begin-->
     <CamcorderProfiles cameraId="0">
-    <!-- DTS2011012202331 zhaoxiang 20110122 end -->
-        <!-- DTS2011011202979 gaoyun 20110111 begin-->
-        <!--DTS2011121504793 zhudengkui 20111219 begin-->
-        <!--DTS2012021507548 zhudengkui 20120215 begin-->
-
-        <!--DTS2012021507548 zhudengkui 20120215 end-->
-        <!--DTS2011121504793 zhudengkui 20111219 begin-->
         <EncoderProfile quality="480p" fileFormat="mp4" duration="30">
-            <!-- DTS2012010503200 zhudengkui 20120105 begin-->
-            <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
             <Video codec="h264"
                    bitRate="5000000"
                    width="640"
                    height="480"
                    frameRate="30" />
-            <!--DTS2012040104048 jiangbinghan 20120406 end-->
-            <!-- DTS2012010503200 zhudengkui 20120105 end-->
-            <!-- DTS2012011204739 zhudengkui 20120112 begin-->
-            <!-- DTS2012010903786 zhudengkui 20120130 begin-->
             <Audio codec="aac"
                    bitRate="156000"
                    sampleRate="48000"
                    channels="1" />
-            <!-- DTS2012010903786 zhudengkui 20120130 end-->
-            <!-- DTS2012011204739 zhudengkui 20120112 end-->
         </EncoderProfile>
-        <!--DTS2011121504793 zhudengkui 20111219 end-->
-        <!--DTS2012010503200 zhudengkui 20120105 begin-->
         <EncoderProfile quality="qcif" fileFormat="mp4" duration="30">
-            <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
             <Video codec="h264"
                    bitRate="192000"
                    width="176"
                    height="144"
                    frameRate="30" />
-            <!--DTS2012040104048 jiangbinghan 20120406 end-->
             <Audio codec="amrnb"
                    bitRate="12200"
                    sampleRate="8000"
                    channels="1" />
         </EncoderProfile>
-        <!--DTS2012010503200 zhudengkui 20120105 end-->
-        <!-- DTS2011011202979 gaoyun 20110111 begin-->
         <EncoderProfile quality="low" fileFormat="mp4" duration="30">
-        <!-- DTS2011011202979 gaoyun 20110111 end -->
-            <!-- DTS2011121700956 zhudengkui 20111217 begin-->
-            <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
             <Video codec="h264"
                    bitRate="192000"
                    width="176"
                    height="144"
                    frameRate="30" />
-            <!--DTS2012040104048 jiangbinghan 20120406 end-->
-            <!-- DTS2011121700956 zhudengkui 20111217 end-->
             <Audio codec="amrnb"
                    bitRate="12200"
                    sampleRate="8000"
                    channels="1" />
 
         </EncoderProfile>
-        <!--DTS2011121504793 zhudengkui 20111219 begin-->
-       <!--DTS2012021507548 zhudengkui 20120215 begin-->
 
-        <!--DTS2012021507548 zhudengkui 20120215 end-->
         <EncoderProfile quality="timelapse480p" fileFormat="mp4" duration="30">
-            <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
             <Video codec="h264"
                    bitRate="5000000"
                    width="720"
                    height="480"
                    frameRate="30" />
-            <!--DTS2012040104048 jiangbinghan 20120406 end-->
-            <!-- DTS2012011204739 zhudengkui 20120112 begin-->
-            <!-- DTS2012010903786 zhudengkui 20120130 begin-->
             <Audio codec="aac"
                    bitRate="156000"
                    sampleRate="48000"
                    channels="1" />
-            <!-- DTS2012010903786 zhudengkui 20120130 end-->
-            <!-- DTS2012011204739 zhudengkui 20120112 end-->
         </EncoderProfile>
-        <!--DTS2012010503200 zhudengkui 20120105 begin-->
         <EncoderProfile quality="timelapseqcif" fileFormat="mp4" duration="30">
-            <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
             <Video codec="h264"
                    bitRate="192000"
                    width="176"
                    height="144"
                    frameRate="30" />
-            <!--DTS2012040104048 jiangbinghan 20120406 end-->
             <Audio codec="amrnb"
                    bitRate="12200"
                    sampleRate="8000"
                    channels="1" />
         </EncoderProfile>
-        <!--DTS2012010503200 zhudengkui 20120105 end-->
+
         <EncoderProfile quality="timelapselow" fileFormat="mp4" duration="30">
-            <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
             <Video codec="h264"
                    bitRate="192000"
                    width="176"
                    height="144"
                    frameRate="30" />
-            <!--DTS2012040104048 jiangbinghan 20120406 end-->
             <Audio codec="amrnb"
                    bitRate="12200"
                    sampleRate="8000"
                    channels="1" />
         </EncoderProfile>
-        <!--DTS2011121504793 zhudengkui 20111219 end-->
         <ImageEncoding quality="90" />
         <ImageEncoding quality="80" />
         <ImageEncoding quality="70" />
@@ -199,57 +157,35 @@
 
     </CamcorderProfiles>
 
-    <!-- DTS2011012202331 zhaoxiang 20110122 begin-->
     <CamcorderProfiles cameraId="1">
-        <!--DTS2011121504793 zhudengkui 20111219 begin-->
-        <!--DTS2012010503200 zhudengkui 20120105 begin-->
         <EncoderProfile quality="480p" fileFormat="mp4" duration="30">
-        <!--DTS2011121504793 zhudengkui 20111219 end-->
-            <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
             <Video codec="h264"
                    bitRate="5000000"
                    width="640"
                    height="480"
                    frameRate="30" />
-            <!--DTS2012040104048 jiangbinghan 20120406 end-->
-            <!-- DTS2012011204739 zhudengkui 20120112 begin-->
-            <!-- DTS2012010903786 zhudengkui 20120130 begin-->
             <Audio codec="aac"
                    bitRate="156000"
                    sampleRate="48000"
                    channels="1" />
-            <!-- DTS2012010903786 zhudengkui 20120130 end-->
-            <!-- DTS2012011204739 zhudengkui 20120112 end-->
         </EncoderProfile>
-        <!--DTS2012010503200 zhudengkui 20120105 end-->
-        <!--DTS2012010503200 zhudengkui 20120105 begin-->
         <EncoderProfile quality="timelapse480p" fileFormat="mp4" duration="30">
-        <!--DTS2012010503200 zhudengkui 20120105 end-->
-            <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
             <Video codec="h264"
                    bitRate="2000000"
                    width="640"
                    height="480"
                    frameRate="30" />
-            <!--DTS2012040104048 jiangbinghan 20120406 end-->
-            <!-- DTS2012011204739 zhudengkui 20120112 begin-->
-            <!-- DTS2012010903786 zhudengkui 20120130 begin-->
             <Audio codec="aac"
                    bitRate="156000"
                    sampleRate="48000"
                    channels="1" />
-            <!-- DTS2012010903786 zhudengkui 20120130 end-->
-            <!-- DTS2012011204739 zhudengkui 20120112 end-->
         </EncoderProfile>
-        <!--DTS2012010503200 zhudengkui 20120105 begin-->
         <EncoderProfile quality="qcif" fileFormat="mp4" duration="30">
-            <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
             <Video codec="h264"
                    bitRate="192000"
                    width="176"
                    height="144"
                    frameRate="30" />
-            <!--DTS2012040104048 jiangbinghan 20120406 end-->
 
             <Audio codec="amrnb"
                    bitRate="12200"
@@ -259,52 +195,42 @@
         </EncoderProfile>
 
         <EncoderProfile quality="timelapseqcif" fileFormat="mp4" duration="30">
-            <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
             <Video codec="h264"
                    bitRate="192000"
                    width="176"
                    height="144"
                    frameRate="30" />
-            <!--DTS2012040104048 jiangbinghan 20120406 end-->
 
             <Audio codec="amrnb"
                    bitRate="12200"
                    sampleRate="8000"
                    channels="1" />
         </EncoderProfile>
-        <!--DTS2012010503200 zhudengkui 20120105 end-->
+        
         <EncoderProfile quality="low" fileFormat="mp4" duration="30">
-            <!-- DTS2011121700956 zhudengkui 20111217 begin-->
-            <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
             <Video codec="h264"
                    bitRate="192000"
                    width="176"
                    height="144"
                    frameRate="30" />
-            <!--DTS2012040104048 jiangbinghan 20120406 end-->
-            <!-- DTS2011121700956 zhudengkui 20111217 end-->
             <Audio codec="amrnb"
                    bitRate="12200"
                    sampleRate="8000"
                    channels="1" />
-
         </EncoderProfile>
-        <!--DTS2011121504793 zhudengkui 20111219 begin-->
+
         <EncoderProfile quality="timelapselow" fileFormat="mp4" duration="30">
-            <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
             <Video codec="h264"
                    bitRate="192000"
                    width="176"
                    height="144"
                    frameRate="30" />
-            <!--DTS2012040104048 jiangbinghan 20120406 end-->
-
             <Audio codec="amrnb"
                    bitRate="12200"
                    sampleRate="8000"
                    channels="1" />
         </EncoderProfile>
-        <!--DTS2011121504793 zhudengkui 20111219 end-->
+        
         <ImageEncoding quality="90" />
         <ImageEncoding quality="80" />
         <ImageEncoding quality="70" />
@@ -313,7 +239,6 @@
         <Camera previewFrameRate="0" />
 
     </CamcorderProfiles>
-    <!-- DTS2011012202331 zhaoxiang 20110122 end -->
 
     <EncoderOutputFileFormat name="3gp" />
     <EncoderOutputFileFormat name="mp4" />
@@ -323,35 +248,30 @@
          In other words, the applications won't be able to use the codec
          or query the capabilities of the codec at all if it is disabled
     -->
-    <!-- DTS2012040104048 jiangbinghan 20120406 begin-->
     <VideoEncoderCap name="h264" enabled="true"
         minBitRate="64000" maxBitRate="20000000"
         minFrameWidth="176" maxFrameWidth="1920"
         minFrameHeight="144" maxFrameHeight="1088"
         minFrameRate="1" maxFrameRate="30" />
-    <!--DTS2012040104048 jiangbinghan 20120406 end-->
     <VideoEncoderCap name="h263" enabled="true"
         minBitRate="192000" maxBitRate="2000000"
         minFrameWidth="176" maxFrameWidth="1280"
         minFrameHeight="144" maxFrameHeight="720"
         minFrameRate="1" maxFrameRate="30" />
-    <!-- DTS2011091404089 zhudengkui 20110920 begin-->
     <VideoEncoderCap name="m4v" enabled="true"
         minBitRate="192000" maxBitRate="14000000"
         minFrameWidth="176" maxFrameWidth="1280"
         minFrameHeight="144" maxFrameHeight="720"
         minFrameRate="1" maxFrameRate="30" />
-    <!-- DTS2011091404089 zhudengkui 20110920 end-->
     <AudioEncoderCap name="amrnb" enabled="true"
         minBitRate="5525" maxBitRate="12200"
         minSampleRate="8000" maxSampleRate="8000"
         minChannels="1" maxChannels="1" />
-    <!-- DTS2012011204739 zhudengkui 20120112 begin-->
     <AudioEncoderCap name="aac" enabled="true"
         minBitRate="8000" maxBitRate="156000"
         minSampleRate="8000" maxSampleRate="48000"
         minChannels="1" maxChannels="2" />
-    <!-- DTS2012011204739 zhudengkui 20120112 end-->
+
     <!--
         FIXME:
         We do not check decoder capabilities at present
@@ -359,8 +279,7 @@
         for TEST applications. For other applications, we do
         not perform any checks at all.
     -->
-    <!-- DTS2012031702489  xieronghua 20120326 begin -->
+
     <VideoDecoderCap name="wmv" enabled="false"/>
     <AudioDecoderCap name="wma" enabled="false"/>
-    <!-- DTS2012031702489  xieronghua 20120326 end -->
 </MediaSettings>
