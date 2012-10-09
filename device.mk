@@ -11,13 +11,13 @@ PRODUCT_AAPT_CONFIG := normal hdpi
 PRODUCT_AAPT_PREF_CONFIG := hdpi
 PRODUCT_LOCALES += hdpi
 
-# Video decoding
+# Video
 PRODUCT_PACKAGES += \
     libstagefrighthw \
     libmm-omxcore \
     libOmxCore
 
-# Graphics 
+# Graphics
 PRODUCT_PACKAGES += \
     copybit.msm7x27a \
     gralloc.msm7x27a \
@@ -26,16 +26,19 @@ PRODUCT_PACKAGES += \
 
 # Audio
 PRODUCT_PACKAGES += \
-    audio.primary.msm7x27a \
-    audio_policy.msm7x27a \
+    audio.primary.u8815 \
+    audio_policy.u8815 \
     audio.a2dp.default \
     libaudioutils
+
+# GPS and Lights
+PRODUCT_PACKAGES += \
+    gps.u8815 \
+    lights.u8815
 
 # Other
 PRODUCT_PACKAGES += \
     dexpreopt \
-    gps.u8815 \
-    lights.u8815 \
     make_ext4fs \
     setup_fs \
     com.android.future.usb.accessory 
