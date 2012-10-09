@@ -31,12 +31,13 @@ PRODUCT_PACKAGES += \
     audio.a2dp.default \
     libaudioutils
 
-# GPS and Lights
+# Other HALs
 PRODUCT_PACKAGES += \
+    power.msm7x27a \
     gps.u8815 \
     lights.u8815
 
-# Other
+# Other Packages
 PRODUCT_PACKAGES += \
     dexpreopt \
     make_ext4fs \
