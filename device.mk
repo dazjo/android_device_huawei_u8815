@@ -52,13 +52,10 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/prebuilt/dhd_4330.ko:system/wifi/dhd_4330.ko \
     device/huawei/u8815/prebuilt/fw_4330_b2.bin:system/wifi/fw_4330_b2.bin \
+    device/huawei/u8815/prebuilt/BCM4330.hcd:system/etc/bluetooth/BCM4330.hcd \
     device/huawei/u8815/configs/nvram_4330.txt:system/wifi/nvram_4330.txt \
     device/huawei/u8815/configs/dhcpcd.conf:system/etc/dhcpcd/dhcpcd.conf \
     device/huawei/u8815/configs/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
-
-PRODUCT_COPY_FILES += \
-    device/huawei/u8815/prebuilt/BCM4330.hcd:system/etc/bluetooth/BCM4330.hcd \
-    device/huawei/u8815/configs/init.bcm.bt.sh:system/etc/bluetooth/init.bcm.bt.sh
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/configs/AudioFilter.csv:system/etc/AudioFilter.csv \
