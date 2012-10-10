@@ -230,7 +230,7 @@ service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmc
     user root
     disabled
 
-service hciattach /system/bin/brcm_patchram_plus --enable_hci --enable_lpm --baudrate 3000000 --patchram /system/etc/bluetooth/BCM4330.hcd /dev/ttyHS0
+service hciattach /system/bin/sh /system/etc/bluetooth/init.bcm.bt.sh
     class main
     user bluetooth
     group qcom_oncrpc bluetooth net_bt_admin system
