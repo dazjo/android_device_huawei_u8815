@@ -3,7 +3,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
 # The gps config appropriate for this device.
 $(call inherit-product, device/common/gps/gps_as_supl.mk)
 
-$(call inherit-product-if-exists, vendor/huawei/u8815/u8815-vendor.mk)
+$(call inherit-product, vendor/huawei/u8815/u8815-vendor.mk)
 
 DEVICE_PACKAGE_OVERLAYS += device/huawei/u8815/overlay
 
