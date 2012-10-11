@@ -64,7 +64,7 @@ public class HWQcomRIL extends QualcommSharedRIL implements CommandsInterface {
 
     @Override
     public void
-    iccIO (int command, int fileid, String path, int p1, int p2, int p3,
+    iccIO(int command, int fileid, String path, int p1, int p2, int p3,
             String data, String pin2, Message result) {
         //Note: This RIL request has not been renamed to ICC,
         //       but this request is also valid for SIM and RUIM
@@ -90,6 +90,63 @@ public class HWQcomRIL extends QualcommSharedRIL implements CommandsInterface {
                     + p1 + "," + p2 + "," + p3);
 
         send(rr);
+    }
+
+    @Override
+    protected Object
+    responseIccCardStatus(Parcel p) {
+        IccCardApplication ca;
+
+        IccCardStatus status = new IccCardStatus();
+        status.setCardState(p.readInt());
+        status.setUniversalPinState(p.readInt());
+        status.setGsmUmtsSubscriptionAppIndex(p.readInt());
+        status.setCdmaSubscriptionAppIndex(p.readInt());
+
+        status.setImsSubscriptionAppIndex(p.readInt());
+
+        int numApplications = p.readInt();
+
+        // limit to maximum allowed applications
+        if (numApplications > IccCardStatus.CARD_MAX_APPS) {
+            numApplications = IccCardStatus.CARD_MAX_APPS;
+        }
+        status.setNumApplications(numApplications);
+
+        for (int i = 0; i < numApplications; i++) {
+            ca = new IccCardApplication();
+            ca.app_type = ca.AppTypeFromRILInt(p.readInt());
+            ca.app_state = ca.AppStateFromRILInt(p.readInt());
+            ca.perso_substate = ca.PersoSubstateFromRILInt(p.readInt());
+            ca.aid = p.readString();
+            ca.app_label = p.readString();
+            ca.pin1_replaced = p.readInt();
+            ca.pin1 = ca.PinStateFromRILInt(p.readInt());
+            ca.pin2 = ca.PinStateFromRILInt(p.readInt());
+            status.addApplication(ca);
+        }
+        int appIndex = -1;
+        if (mPhoneType == RILConstants.CDMA_PHONE) {
+            appIndex = status.getCdmaSubscriptionAppIndex();
+            Log.d(LOG_TAG, "This is a CDMA PHONE " + appIndex);
+        } else {
+            appIndex = status.getGsmUmtsSubscriptionAppIndex();
+            Log.d(LOG_TAG, "This is a GSM PHONE " + appIndex);
+        }
+
+        if (numApplications > 0) {
+            IccCardApplication application = status.getApplication(appIndex);
+            mAid = application.aid;
+            mUSIM = application.app_type
+                      == IccCardApplication.AppType.APPTYPE_USIM;
+            mSetPreferredNetworkType = mPreferredNetworkType;
+
+            if (TextUtils.isEmpty(mAid))
+               mAid = "";
+            Log.d(LOG_TAG, "mAid " + mAid);
+        }
+
+        return status;
     }
 
     @Override
@@ -232,50 +289,5 @@ public class HWQcomRIL extends QualcommSharedRIL implements CommandsInterface {
         }
 
         setRadioState (radioState);
-    }
-
-    @Override
-    protected void
-    processUnsolicited(Parcel p) {
-        Object ret;
-        int dataPosition = p.dataPosition(); // save off position within the Parcel
-        int response = p.readInt();
-
-        switch(response) {
-            case RIL_UNSOL_RESPONSE_RADIO_STATE_CHANGED: ret =  responseVoid(p); break;
-            case RIL_UNSOL_RIL_CONNECTED: ret = responseInts(p); break;
-            case 1035: ret = responseVoid(p); break; // RIL_UNSOL_VOICE_RADIO_TECH_CHANGED
-            case 1036: ret = responseVoid(p); break; // RIL_UNSOL_RESPONSE_IMS_NETWORK_STATE_CHANGED
-            case 1037: ret = responseVoid(p); break; // RIL_UNSOL_EXIT_EMERGENCY_CALLBACK_MODE
-            case 1038: ret = responseVoid(p); break; // RIL_UNSOL_DATA_NETWORK_STATE_CHANGED
-
-            default:
-                // Rewind the Parcel
-                p.setDataPosition(dataPosition);
-
-                // Forward responses that we are not overriding to the super class
-                super.processUnsolicited(p);
-                return;
-        }
-
-        switch(response) {
-            case RIL_UNSOL_RESPONSE_RADIO_STATE_CHANGED:
-                int state = p.readInt();
-                setRadioStateFromRILInt(state);
-                break;
-            case 1035:
-            case 1036:
-                break;
-            case 1037: // RIL_UNSOL_EXIT_EMERGENCY_CALLBACK_MODE
-                if (RILJ_LOGD) unsljLogRet(response, ret);
-
-                if (mExitEmergencyCallbackModeRegistrants != null) {
-                    mExitEmergencyCallbackModeRegistrants.notifyRegistrants(
-                                        new AsyncResult (null, null, null));
-                }
-                break;
-            case 1038:
-                break;
-        }
     }
 }
