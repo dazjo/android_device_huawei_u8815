@@ -58,7 +58,7 @@ start_hciattach ()
   echo 1 > $BLUETOOTH_SLEEP_PATH
   # /* DTS2011022104132 xuhui 20110221 end >*/
   #echo "start_hciattach pid"
-  /system/bin/brcm_patchram_plus -d --enable_hci --enable_lpm --baudrate 3000000 --use_baudrate_for_download --no2bytes --bd_addr 00:18:82:23:76:1d --patchram /system/etc/bluetooth/BCM4330.hcd /dev/ttyHS0 &
+  /system/bin/brcm_patchram_plus -d --enable_hci --enable_lpm --baudrate 3000000 --patchram /system/etc/bluetooth/BCM4330.hcd /dev/ttyHS0 &
   hciattach_pid=$!
   loge "start_hciattach: pid = $hciattach_pid"
   #echo "start_hciattach -"
