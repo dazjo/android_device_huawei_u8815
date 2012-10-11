@@ -29,6 +29,7 @@ import android.telephony.SmsMessage;
 import android.os.SystemProperties;
 import android.text.TextUtils;
 import android.util.Log;
+import java.util.ArrayList;
 
 import com.android.internal.telephony.RILConstants;
 import com.android.internal.telephony.gsm.SmsBroadcastConfigInfo;
@@ -58,6 +59,7 @@ public class HWQcomRIL extends QualcommSharedRIL implements CommandsInterface {
 
     public HWQcomRIL(Context context, int networkMode, int cdmaSubscription) {
         super(context, networkMode, cdmaSubscription);
+        mQANElements = 4;
     }
 
     @Override
@@ -69,7 +71,6 @@ public class HWQcomRIL extends QualcommSharedRIL implements CommandsInterface {
         RILRequest rr
                 = RILRequest.obtain(RIL_REQUEST_SIM_IO, result);
 
-        rr.mp.writeString(mAid);
         rr.mp.writeInt(command);
         rr.mp.writeInt(fileid);
         rr.mp.writeString(path);
@@ -78,6 +79,7 @@ public class HWQcomRIL extends QualcommSharedRIL implements CommandsInterface {
         rr.mp.writeInt(p3);
         rr.mp.writeString(data);
         rr.mp.writeString(pin2);
+        rr.mp.writeString(mAid);
 
         if (RILJ_LOGD) riljLog(rr.serialString() + "> iccIO: "
                     + " aid: " + mAid + " "
