@@ -1,6 +1,6 @@
 TODO
 ====
-
+1. Figure out how stock gets the network display name (any remaining SIM issues will have to be verified through a released build)
 1. Fix adbd switching off through boot up (needs enabling manually in developer options on an eng build).
 2. Look at Panorama mode preview
 3. OMX
