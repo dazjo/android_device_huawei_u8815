@@ -2,7 +2,7 @@ TODO
 ====
 
 1. Fix adbd switching off through boot up (needs enabling manually in developer options on an eng build).
-2. Speed things up.
-3. Fix Bluetooth.
-4. Wait for qcom_audio not to be a mess.
-5. Camera (lol).
+2. Look at Panorama mode preview
+3. OMX
+4. Capacitive key lights behaving odd -- try stock liblights
+5. Use stock android gadget driver?
