@@ -1,8 +1,8 @@
 TODO
 ====
 1. Figure out how stock gets the network display name (any remaining SIM issues will have to be verified through a released build)
-1. Fix adbd switching off through boot up (needs enabling manually in developer options on an eng build).
-2. Look at Panorama mode preview
-3. OMX
-4. Capacitive key lights behaving odd -- try stock liblights
-5. Use stock android gadget driver?
+2. Fix adbd switching off through boot up (needs enabling manually in developer options on an eng build).
+3. Look at Panorama mode preview
+4. OMX
+5. Capacitive key lights behaving odd -- try stock liblights
+6. Use stock android gadget driver?
