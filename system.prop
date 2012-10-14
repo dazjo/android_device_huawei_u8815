@@ -32,12 +32,11 @@ ro.additionalmounts=/storage/sdcard0
 ro.vold.switchablepair=/storage/sdcard1,/storage/sdcard0
 ro.emmc.sdcard.partition=19
 
-persist.sys.use_dithering=2
+persist.sys.use_dithering=1
 com.qc.hardware=true
-gfx.highend_override=yes
 
 ro.telephony.call_ring.delay=3000
 
-ro.confg.hw_appsbootversion=U8815VCM10_APPSBOOT
-ro.confg.hw_appversion=U8815VCM10_KERNEL
-ro.confg.hw_appfsversion=U8815VCM10_SYSIMG
+ro.confg.hw_appsbootversion=U8815VCM9_APPSBOOT
+ro.confg.hw_appversion=U8815VCM9_KERNEL
+ro.confg.hw_appfsversion=U8815VCM9_SYSIMG
