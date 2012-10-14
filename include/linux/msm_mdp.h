@@ -25,7 +25,7 @@
 #define MSMFB_RESUME_SW_REFRESHER _IOW(MSMFB_IOCTL_MAGIC, 129, unsigned int)
 #define MSMFB_CURSOR _IOW(MSMFB_IOCTL_MAGIC, 130, struct fb_cursor)
 #define MSMFB_SET_LUT _IOW(MSMFB_IOCTL_MAGIC, 131, struct fb_cmap)
-#define MSMFB_HISTOGRAM _IOWR(MSMFB_IOCTL_MAGIC, 132, struct mdp_histogram_data)
+#define MSMFB_HISTOGRAM _IOWR(MSMFB_IOCTL_MAGIC, 132, struct mdp_histogram)
 /* new ioctls's for set/get ccs matrix */
 #define MSMFB_GET_CCS_MATRIX  _IOWR(MSMFB_IOCTL_MAGIC, 133, struct mdp_ccs)
 #define MSMFB_SET_CCS_MATRIX  _IOW(MSMFB_IOCTL_MAGIC, 134, struct mdp_ccs)
@@ -50,15 +50,18 @@
 
 #define MSMFB_OVERLAY_3D       _IOWR(MSMFB_IOCTL_MAGIC, 147, \
 						struct msmfb_overlay_3d)
+/*< DTS2011072500979 jiaoshuangwei 20110725 begin */
 /* add the code for dynamic gamma function  */
 #ifdef CONFIG_FB_DYNAMIC_GAMMA
 #define MSMFB_DYNAMIC_GAMMA       _IOWR(MSMFB_IOCTL_MAGIC, 147, \
 						 unsigned  int)
 #endif
 
+/*< DTS2011081800466 pengyu 20110818 begin */
 #ifdef CONFIG_FB_AUTO_CABC
 #define MSMFB_AUTO_CABC           _IOWR(MSMFB_IOCTL_MAGIC, 148, struct msmfb_cabc_config)
 #endif
+/* DTS2011081800466 pengyu 20110818 end >*/
 
 #define MDP_IMGTYPE2_START 0x10000
 
@@ -70,6 +73,7 @@ enum danymic_gamma_mode {
     LOW_LIGHT,
  };
 #endif
+/* DTS2011072500979 jiaoshuangwei 20110725 end >*/
 
 #define MSMFB_MIXER_INFO       _IOWR(MSMFB_IOCTL_MAGIC, 148, \
 						struct msmfb_mixer_info_req)
@@ -84,11 +88,6 @@ enum danymic_gamma_mode {
 						struct msmfb_data)
 #define MSMFB_WRITEBACK_TERMINATE _IO(MSMFB_IOCTL_MAGIC, 155)
 #define MSMFB_MDP_PP _IOWR(MSMFB_IOCTL_MAGIC, 156, struct msmfb_mdp_pp)
-
-#define MSMFB_OVERLAY_VSYNC_CTRL  _IOW(MSMFB_IOCTL_MAGIC, 160, unsigned int)
-#define MSMFB_VSYNC_CTRL  _IOW(MSMFB_IOCTL_MAGIC, 161, unsigned int)
-#define MSMFB_METADATA_SET  _IOW(MSMFB_IOCTL_MAGIC, 162, struct msmfb_metadata)
-#define MSMFB_OVERLAY_COMMIT      _IOW(MSMFB_IOCTL_MAGIC, 163, unsigned int)
 
 #define FB_TYPE_3D_PANEL 0x10101010
 #define MDP_IMGTYPE2_START 0x10000
@@ -165,7 +164,6 @@ enum {
 #define MDP_OV_PLAY_NOWAIT		0x00200000
 #define MDP_SOURCE_ROTATED_90		0x00100000
 #define MDP_DPP_HSIC			0x00080000
-#define MDP_BACKEND_COMPOSITION		0x00040000
 #define MDP_BORDERFILL_SUPPORTED	0x00010000
 #define MDP_SECURE_OVERLAY_SESSION      0x00008000
 #define MDP_MEMORY_ID_TYPE_FB		0x00001000
@@ -444,28 +442,13 @@ struct msmfb_mdp_pp {
 	} data;
 };
 
-enum {
-	metadata_op_none,
-	metadata_op_base_blend,
-	metadata_op_max
-};
 
-struct mdp_blend_cfg {
-	uint32_t is_premultiplied;
-};
-
-struct msmfb_metadata {
-	uint32_t op;
-	uint32_t flags;
-	union {
-		struct mdp_blend_cfg blend_cfg;
-	} data;
-};
 struct mdp_page_protection {
 	uint32_t page_protection;
 };
 
 
+/*< DTS2011081800466 pengyu 20110818 begin */
 #ifdef CONFIG_FB_AUTO_CABC
 enum cabc_mode {
     CABC_MODE_OFF,
@@ -480,6 +463,7 @@ struct msmfb_cabc_config {
     uint32_t mov_det_on;
 };
 #endif
+/* DTS2011081800466 pengyu 20110818 end >*/
 struct mdp_mixer_info {
 	int pndx;
 	int pnum;

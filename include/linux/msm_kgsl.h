@@ -146,7 +146,9 @@ struct kgsl_device_platform_data {
 	int num_levels;
 	int (*set_grp_async)(void);
 	unsigned int idle_timeout;
+	/*< DTS2012041906630 zhangxiangdang 20120423 begin */
 	bool strtstp_sleepwake;
+	/* DTS2012041906630 zhangxiangdang 20120423 end > */
 	unsigned int nap_allowed;
 	unsigned int clk_map;
 	unsigned int idle_needed;

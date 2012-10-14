@@ -1,9 +1,0 @@
-TODO
-====
-1. Fix video encoding
-2. Fix Panorama mode preview
-3. Wi-Fi hotspot tethering - p2p_supplicant needs adding
-4. Figure out how stock gets the network display name (any remaining SIM issues will have to be verified through a released build)
-5. Capacitive key lights behaving odd -- try stock liblights
-6. Use stock android gadget driver?
-7. Fix adbd switching off through boot up (needs enabling manually in developer options on an eng build).
