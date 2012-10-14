@@ -59,7 +59,6 @@ public class HWQcomRIL extends QualcommSharedRIL implements CommandsInterface {
 
     public HWQcomRIL(Context context, int networkMode, int cdmaSubscription) {
         super(context, networkMode, cdmaSubscription);
-        mQANElements = 4;
     }
 
     @Override
@@ -252,6 +251,32 @@ public class HWQcomRIL extends QualcommSharedRIL implements CommandsInterface {
         return dataCall;
     }
 
+    @Override
+    protected Object
+    responseOperatorInfos(Parcel p) {
+        String strings[] = (String [])responseStrings(p);
+        ArrayList<OperatorInfo> ret;
+
+        if (strings.length % 4 != 0) {
+            throw new RuntimeException(
+                "RIL_REQUEST_QUERY_AVAILABLE_NETWORKS: invalid response. Got "
+                + strings.length + " strings, expected multible of 4");
+        }
+
+        ret = new ArrayList<OperatorInfo>(strings.length / 4);
+
+        for (int i = 0 ; i < strings.length ; i += 4) {
+            ret.add (
+                new OperatorInfo(
+                    strings[i+0],
+                    strings[i+1],
+                    strings[i+2],
+                    strings[i+3]));
+        }
+
+        return ret;
+    }
+
     private void setRadioStateFromRILInt(int stateCode) {
         CommandsInterface.RadioState radioState;
         HandlerThread handlerThread;
@@ -282,7 +307,11 @@ public class HWQcomRIL extends QualcommSharedRIL implements CommandsInterface {
                     mIccHandler = new IccHandler(this,looper);
                     mIccHandler.run();
                 }
-                radioState = CommandsInterface.RadioState.RADIO_ON;
+                if (mPhoneType == RILConstants.CDMA_PHONE) {
+				    radioState = CommandsInterface.RadioState.RUIM_NOT_READY;
+				} else {
+				    radioState = CommandsInterface.RadioState.SIM_NOT_READY;
+				}
                 break;
             default:
                 throw new RuntimeException("Unrecognized RIL_RadioState: " + stateCode);
