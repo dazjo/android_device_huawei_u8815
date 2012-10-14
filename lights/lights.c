@@ -110,7 +110,7 @@ write_int(char const* path, int value)
         return amt == -1 ? -errno : 0;
     } else {
         if (already_warned == 0) {
-            ALOGE("write_int failed to open %s\n", path);
+            LOGE("write_int failed to open %s\n", path);
             already_warned = 1;
         }
         return -errno;
@@ -131,7 +131,7 @@ handle_trackball_light_locked(struct light_device_t* dev)
     if (mode == 7 && g_backlight) {
         mode = 0;
     }
-    ALOGV("%s g_backlight = %d, mode = %d, g_attention = %d\n",
+    LOGV("%s g_backlight = %d, mode = %d, g_attention = %d\n",
         __func__, g_backlight, mode, g_attention);
 
     // If the value isn't changing, don't set it, because this
@@ -217,7 +217,7 @@ set_speaker_light_locked(struct light_device_t* dev,
     colorRGB = state->color;
 
 #if 0
-    ALOGD("set_speaker_light_locked colorRGB=%08X, onMS=%d, offMS=%d\n",
+    LOGD("set_speaker_light_locked colorRGB=%08X, onMS=%d, offMS=%d\n",
             colorRGB, onMS, offMS);
 #endif
 
@@ -307,7 +307,7 @@ set_light_notifications(struct light_device_t* dev,
 {
     pthread_mutex_lock(&g_lock);
     g_notification = *state;
-    ALOGV("set_light_notifications g_trackball=%d color=0x%08x",
+    LOGV("set_light_notifications g_trackball=%d color=0x%08x",
             g_trackball, state->color);
     if (g_haveTrackballLight) {
         handle_trackball_light_locked(dev);
@@ -322,7 +322,7 @@ set_light_attention(struct light_device_t* dev,
         struct light_state_t const* state)
 {
     pthread_mutex_lock(&g_lock);
-    ALOGV("set_light_attention g_trackball=%d color=0x%08x",
+    LOGV("set_light_attention g_trackball=%d color=0x%08x",
             g_trackball, state->color);
     if (state->flashMode == LIGHT_FLASH_HARDWARE) {
         g_attention = state->flashOnMS;
@@ -406,7 +406,7 @@ static struct hw_module_methods_t lights_module_methods = {
 /*
  * The lights Module
  */
-struct hw_module_t HAL_MODULE_INFO_SYM = {
+const struct hw_module_t HAL_MODULE_INFO_SYM = {
     .tag = HARDWARE_MODULE_TAG,
     .version_major = 1,
     .version_minor = 0,
