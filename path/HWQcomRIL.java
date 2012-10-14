@@ -308,10 +308,10 @@ public class HWQcomRIL extends QualcommSharedRIL implements CommandsInterface {
                     mIccHandler.run();
                 }
                 if (mPhoneType == RILConstants.CDMA_PHONE) {
-				    radioState = CommandsInterface.RadioState.RUIM_NOT_READY;
-				} else {
-				    radioState = CommandsInterface.RadioState.SIM_NOT_READY;
-				}
+                    radioState = CommandsInterface.RadioState.RUIM_NOT_READY;
+                } else {
+                    radioState = CommandsInterface.RadioState.SIM_NOT_READY;
+                }
                 break;
             default:
                 throw new RuntimeException("Unrecognized RIL_RadioState: " + stateCode);
