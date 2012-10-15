@@ -47,7 +47,7 @@ import java.util.ArrayList;
  * {@hide}
  */
 
-public class HWQcomRIL extends QualcommSharedRIL implements CommandsInterface {
+public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInterface {
     boolean RILJ_LOGV = true;
     boolean RILJ_LOGD = true;
 
@@ -57,7 +57,7 @@ public class HWQcomRIL extends QualcommSharedRIL implements CommandsInterface {
     private final int RIL_INT_RADIO_ON_NG = 10;
     private final int RIL_INT_RADIO_ON_HTC = 13;
 
-    public HWQcomRIL(Context context, int networkMode, int cdmaSubscription) {
+    public HuaweiQualcommRIL(Context context, int networkMode, int cdmaSubscription) {
         super(context, networkMode, cdmaSubscription);
         mQANElements = 4;
     }
