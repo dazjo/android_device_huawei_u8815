@@ -2,8 +2,8 @@
 $(call inherit-product, device/huawei/u8815/u8815.mk)
 
 # Inherit some common CM stuff.
-$(call inherit-product, vendor/cm/config/gsm.mk)
 $(call inherit-product, vendor/cm/config/common_full_phone.mk)
+$(call inherit-product, vendor/cm/config/gsm.mk)
 
 # Correct boot animation size for the screen.
 TARGET_SCREEN_HEIGHT := 800
