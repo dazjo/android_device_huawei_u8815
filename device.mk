@@ -47,8 +47,7 @@ PRODUCT_PACKAGES += \
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/ramdisk/init.huawei.rc:root/init.huawei.rc \
     device/huawei/u8815/ramdisk/ueventd.huawei.rc:root/ueventd.huawei.rc \
-    device/huawei/u8815/ramdisk/init.huawei.usb.rc:root/init.huawei.usb.rc \
-    device/huawei/u8815/ramdisk/init.qcom.sh:root/init.qcom.sh
+    device/huawei/u8815/ramdisk/init.huawei.usb.rc:root/init.huawei.usb.rc
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/prebuilt/dhd_4330.ko:system/wifi/dhd_4330.ko \
