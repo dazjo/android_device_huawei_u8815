@@ -27,8 +27,8 @@ dalvik.vm.dexopt-flags=m=y,o=a,u=y
 
 
 # Mount the internal SD card, too
-ro.additionalmounts=/storage/sdcard0
-ro.vold.switchablepair=/storage/sdcard1,/storage/sdcard0
+ro.additionalmounts=/mnt/emmc
+ro.vold.switchablepair=/mnt/sdcard,/mnt/emmc
 ro.emmc.sdcard.partition=19
 
 persist.sys.use_dithering=1
