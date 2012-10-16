@@ -158,7 +158,7 @@ static int switch_pins( int fd, int nPath )
         for( reg = BT_PCM_BCLK_MODE; reg <= BT_PCM_SYNC_MODE; reg++ ) {
 #ifdef DEBUG_CHK
             retval = marimba_read(fd, reg,&value, 1);
-            ALOGD("value read is:%d\n",value);
+            LOGD("value read is:%d\n",value);
 #endif
             retval = marimba_write(fd, reg, &set,1);
             if (retval < 0) {
@@ -168,7 +168,7 @@ static int switch_pins( int fd, int nPath )
         for( reg = FM_I2S_SD_MODE; reg <= FM_I2S_SCK_MODE; reg++ ) {
 #ifdef DEBUG_CHK
             retval = marimba_read(fd, reg,&value, 1);
-            ALOGD("value read is:%d\n",value);
+            LOGD("value read is:%d\n",value);
 #endif
             retval = marimba_write(fd, reg, &unset,1);
             if (retval < 0) {
@@ -182,7 +182,7 @@ static int switch_pins( int fd, int nPath )
         for( reg = FM_I2S_SD_MODE; reg <= FM_I2S_SCK_MODE; reg++ ) {
 #ifdef DEBUG_CHK
             retval = marimba_read(fd, reg,&value, 1);
-            ALOGD("value read is:%d\n",value);
+            LOGD("value read is:%d\n",value);
 #endif
             retval = marimba_write(fd, reg, &set,1);
             if (retval < 0) {
@@ -192,7 +192,7 @@ static int switch_pins( int fd, int nPath )
         for( reg = BT_PCM_BCLK_MODE; reg <= BT_PCM_SYNC_MODE; reg++ ) {
 #ifdef DEBUG_CHK
             retval = marimba_read(fd, reg,&value, 1);
-            ALOGD("value read is:%d\n",value);
+            LOGD("value read is:%d\n",value);
 #endif
             retval = marimba_write(fd, reg, &unset,1);
             if (retval < 0) {
@@ -200,7 +200,7 @@ static int switch_pins( int fd, int nPath )
             }
         }
     }
-    ALOGD("switch pin called with : %d\n",nPath);
+    LOGD("switch pin called with : %d\n",nPath);
     return 0;
 
 err_all:
@@ -231,10 +231,10 @@ extern int switch_mode( int nMode ) {
         close(i2cfd);
     }
     if( 0 != rc ) {
-        ALOGE("switch mode failed with error:%d",rc);
+        LOGE("switch mode failed with error:%d",rc);
     }
 #else
-    ALOGE("switch mode failed because QCOM_FM feature is not available");
+    LOGE("switch mode failed because QCOM_FM feature is not available");
 #endif
     return rc;
 }

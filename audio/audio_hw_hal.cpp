@@ -66,7 +66,7 @@ static int out_set_sample_rate(struct audio_stream *stream, uint32_t rate)
     struct qcom_stream_out *out =
         reinterpret_cast<struct qcom_stream_out *>(stream);
 
-    ALOGE("(%s:%d) %s: Implement me!", __FILE__, __LINE__, __func__);
+    LOGE("(%s:%d) %s: Implement me!", __FILE__, __LINE__, __func__);
     /* TODO: implement this */
     return 0;
 }
@@ -96,7 +96,7 @@ static int out_set_format(struct audio_stream *stream, audio_format_t format)
 {
     struct qcom_stream_out *out =
         reinterpret_cast<struct qcom_stream_out *>(stream);
-    ALOGE("(%s:%d) %s: Implement me!", __FILE__, __LINE__, __func__);
+    LOGE("(%s:%d) %s: Implement me!", __FILE__, __LINE__, __func__);
     /* TODO: implement me */
     return 0;
 }
@@ -192,7 +192,7 @@ static int in_set_sample_rate(struct audio_stream *stream, uint32_t rate)
     struct qcom_stream_in *in =
         reinterpret_cast<struct qcom_stream_in *>(stream);
 
-    ALOGE("(%s:%d) %s: Implement me!", __FILE__, __LINE__, __func__);
+    LOGE("(%s:%d) %s: Implement me!", __FILE__, __LINE__, __func__);
     /* TODO: implement this */
     return 0;
 }
@@ -222,7 +222,7 @@ static int in_set_format(struct audio_stream *stream, audio_format_t format)
 {
     struct qcom_stream_in *in =
         reinterpret_cast<struct qcom_stream_in *>(stream);
-    ALOGE("(%s:%d) %s: Implement me!", __FILE__, __LINE__, __func__);
+    LOGE("(%s:%d) %s: Implement me!", __FILE__, __LINE__, __func__);
     /* TODO: implement me */
     return 0;
 }

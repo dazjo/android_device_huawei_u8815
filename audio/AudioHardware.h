@@ -427,7 +427,7 @@ private:
                                 uint32_t *pRate,
                                 AudioSystem::audio_in_acoustics acoustics);
         virtual size_t      bufferSize() const { return 320; }
-        virtual uint32_t    channels() const {ALOGD(" AudioStreamInVoip: channels %d \n",mChannels); return mChannels; }
+        virtual uint32_t    channels() const {LOGD(" AudioStreamInVoip: channels %d \n",mChannels); return mChannels; }
         virtual int         format() const { return AUDIO_HW_IN_FORMAT; }
         virtual uint32_t    sampleRate() const { return 8000; }
         virtual status_t    setGain(float gain) { return INVALID_OPERATION; }
