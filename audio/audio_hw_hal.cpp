@@ -345,11 +345,13 @@ static int adev_set_master_volume(struct audio_hw_device *dev, float volume)
     return qadev->hwif->setMasterVolume(volume);
 }
 
+#ifdef FM_RADIO
 static int adev_set_fm_volume(struct audio_hw_device *dev, float volume)
 {
     struct qcom_audio_device *qadev = to_ladev(dev);
     return qadev->hwif->setFmVolume(volume);
 }
+#endif
 
 static int adev_set_mode(struct audio_hw_device *dev, int mode)
 {
