@@ -268,81 +268,6 @@ audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strate
     return (audio_devices_t)device;
 }
 
-uint32_t AudioPolicyManager::checkDeviceMuteStrategies(AudioOutputDescriptor *outputDesc,
-                                                       audio_devices_t prevDevice,
-                                                       uint32_t delayMs)
-{
-    // mute/unmute strategies using an incompatible device combination
-    // if muting, wait for the audio in pcm buffer to be drained before proceeding
-    // if unmuting, unmute only after the specified delay
-    if (outputDesc->isDuplicated()) {
-        return 0;
-    }
-
-    uint32_t muteWaitMs = 0;
-    audio_devices_t device = outputDesc->device();
-#ifdef QCOM_FM_ENABLED
-    bool shouldMute = (outputDesc->refCount() != 0) &&
-                    (AudioSystem::popCount(device) >= (device & AUDIO_DEVICE_OUT_FM ? 3 : 2));
-#else
-    bool shouldMute = (outputDesc->refCount() != 0);
-#endif
-    // temporary mute output if device selection changes to avoid volume bursts due to
-    // different per device volumes
-    bool tempMute = (outputDesc->refCount() != 0) && (getDeviceForVolume(device) != getDeviceForVolume(prevDevice));
-
-    for (size_t i = 0; i < NUM_STRATEGIES; i++) {
-        audio_devices_t curDevice = getDeviceForStrategy((routing_strategy)i, false /*fromCache*/);
-        bool mute = shouldMute && (curDevice & device) && (curDevice != device);
-        bool doMute = false;
-
-        if (mute && !outputDesc->mStrategyMutedByDevice[i]) {
-            doMute = true;
-            outputDesc->mStrategyMutedByDevice[i] = true;
-        } else if (!mute && outputDesc->mStrategyMutedByDevice[i]){
-            doMute = true;
-            outputDesc->mStrategyMutedByDevice[i] = false;
-        }
-        if (doMute || tempMute) {
-            for (size_t j = 0; j < mOutputs.size(); j++) {
-                AudioOutputDescriptor *desc = mOutputs.valueAt(j);
-                if ((desc->supportedDevices() & outputDesc->supportedDevices()) == 0) {
-                    continue;
-                }
-                audio_io_handle_t curOutput = mOutputs.keyAt(j);
-                ALOGVV("checkDeviceMuteStrategies() %s strategy %d (curDevice %04x) on output %d",
-                      mute ? "muting" : "unmuting", i, curDevice, curOutput);
-                setStrategyMute((routing_strategy)i, mute, curOutput, mute ? 0 : delayMs);
-                if (desc->strategyRefCount((routing_strategy)i) != 0) {
-                    if (tempMute) {
-                        setStrategyMute((routing_strategy)i, true, curOutput);
-                        setStrategyMute((routing_strategy)i, false, curOutput,
-                                            desc->latency() * 2, device);
-                    }
-                    if (tempMute || mute) {
-                        if (muteWaitMs < desc->latency()) {
-                            muteWaitMs = desc->latency();
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // FIXME: should not need to double latency if volume could be applied immediately by the
-    // audioflinger mixer. We must account for the delay between now and the next time
-    // the audioflinger thread for this output will process a buffer (which corresponds to
-    // one buffer size, usually 1/2 or 1/4 of the latency).
-    muteWaitMs *= 2;
-    // wait for the PCM output buffers to empty before proceeding with the rest of the command
-    if (muteWaitMs > delayMs) {
-        muteWaitMs -= delayMs;
-        usleep(muteWaitMs * 1000);
-        return muteWaitMs;
-    }
-    return 0;
-}
-
 status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices device,
                                                       AudioSystem::device_connection_state state,
                                                       const char *device_address)
@@ -482,7 +407,7 @@ status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices
             return BAD_VALUE;
         }
 
-        audio_devices_t newDevice = AudioPolicyManagerBase::getNewDevice(mPrimaryOutput, false /*fromCache*/);
+        audio_devices_t NewDevice = AudioPolicyManagerBase::getNewDevice(mPrimaryOutput, false /*fromCache*/);
 #ifdef QCOM_FM_ENABLED
         if (device == AudioSystem::DEVICE_OUT_FM) {
             if (state == AudioSystem::DEVICE_STATE_AVAILABLE) {
@@ -491,12 +416,8 @@ status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices
             else {
                 mOutputs.valueFor(mPrimaryOutput)->changeRefCount(AudioSystem::FM, -1);
             }
-            if (newDevice == 0) {
-                newDevice = getDeviceForStrategy(STRATEGY_MEDIA, false);
-            }
         }
 #endif
-        setOutputDevice(mPrimaryOutput, newDevice);
         checkA2dpSuspend();
         AudioPolicyManagerBase::checkOutputForAllStrategies();
         // outputs must be closed after checkOutputForAllStrategies() is executed
@@ -891,41 +812,6 @@ uint32_t AudioPolicyManager::setOutputDevice(audio_io_handle_t output, audio_dev
     return muteWaitMs;
 }
 
-audio_devices_t AudioPolicyManager::getDeviceForVolume(audio_devices_t device)
-{
-    if (device == 0) {
-        // this happens when forcing a route update and no track is active on an output.
-        // In this case the returned category is not important.
-        device =  AUDIO_DEVICE_OUT_SPEAKER;
-    } else if (AudioSystem::popCount(device) > 1) {
-        // Multiple device selection is either:
-        //  - speaker + one other device: give priority to speaker in this case.
-        //  - one A2DP device + another device: happens with duplicated output. In this case
-        // retain the device on the A2DP output as the other must not correspond to an active
-        // selection if not the speaker.
-        if (device & AUDIO_DEVICE_OUT_SPEAKER) {
-            device = AUDIO_DEVICE_OUT_SPEAKER;
-        }
-#ifdef QCOM_FM_ENABLED
-        else if (device & AUDIO_DEVICE_OUT_FM) {
-            device = AUDIO_DEVICE_OUT_FM;
-        }
-#endif
-        else if((device & AUDIO_DEVICE_OUT_WIRED_HEADSET) != 0) {
-            device = AUDIO_DEVICE_OUT_WIRED_HEADSET;
-        }
-        else {
-            device = (audio_devices_t)(device & AUDIO_DEVICE_OUT_ALL_A2DP);
-        }
-    }
-
-    ALOGW_IF(AudioSystem::popCount(device) != 1,
-            "getDeviceForVolume() invalid device combination: %08x",
-            device);
-
-    return device;
-}
-
 status_t AudioPolicyManager::checkAndSetVolume(int stream, int index, audio_io_handle_t output, audio_devices_t device, int delayMs, bool force)
 {
     // do not change actual stream volume if the stream is muted
@@ -951,7 +837,7 @@ status_t AudioPolicyManager::checkAndSetVolume(int stream, int index, audio_io_h
 #ifdef QCOM_FM_ENABLED
             || (stream == AudioSystem::FM) 
 #endif
-			|| force) {
+            || force) {
         mOutputs.valueFor(output)->mCurVolume[stream] = volume;
         ALOGVV("checkAndSetVolume() for output %d stream %d, volume %f, delay %d", output, stream, volume, delayMs);
         if (stream == AudioSystem::VOICE_CALL ||
@@ -980,25 +866,23 @@ status_t AudioPolicyManager::checkAndSetVolume(int stream, int index, audio_io_h
             voiceVolume = 1.0;
         }
 
-        if ((voiceVolume != mLastVoiceVolume && output == mPrimaryOutput) &&
-            (!(mAvailableOutputDevices 
+        if ((voiceVolume != mLastVoiceVolume && output == mPrimaryOutput) 
 #ifdef QCOM_FM_ENABLED
-			& AudioSystem::DEVICE_OUT_FM
+	    && (!(mAvailableOutputDevices & AudioSystem::DEVICE_OUT_FM))
 #endif
-			))) {
+            ) {
             mpClientInterface->setVoiceVolume(voiceVolume, delayMs);
             mLastVoiceVolume = voiceVolume;
         }
-    }
 #ifdef QCOM_FM_ENABLED
-    else if ((stream == AudioSystem::FM) && (mAvailableOutputDevices & AudioSystem::DEVICE_OUT_FM)) {
+    } else if ((stream == AudioSystem::FM) && (mAvailableOutputDevices & AudioSystem::DEVICE_OUT_FM)) {
         float fmVolume = -1.0;
         fmVolume = (float)index/(float)mStreams[stream].mIndexMax;
         if (fmVolume >= 0 && output == mPrimaryOutput) {
             mpClientInterface->setFmVolume(fmVolume, delayMs);
         }
-      }
 #endif
+      }
     return NO_ERROR;
 }
 
