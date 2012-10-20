@@ -272,7 +272,7 @@ int wifi_load_driver()
 #endif
 
     property_get(DRIVER_PROP_MAC_PARAM, module_mac_param, NULL);
-	sprintf(module_arg, "%s %s", DRIVER_MODULE_ARG, module_mac_param);
+    sprintf(module_arg, "%s %s", DRIVER_MODULE_ARG, module_mac_param);
 
 #ifdef SAMSUNG_WIFI
     char* type = get_samsung_wifi_type();
