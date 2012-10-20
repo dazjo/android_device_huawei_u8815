@@ -118,7 +118,7 @@ static const char P2P_CONFIG_FILE[]     = "/data/misc/wifi/p2p_supplicant.conf";
 static const char CONTROL_IFACE_PATH[]  = "/data/misc/wifi/sockets";
 static const char MODULE_FILE[]         = "/proc/modules";
 
-static const char DRIVER_PROP_MODULE_ARG_ADDITIONS[] = "wlan.module.arg";
+static const char DRIVER_PROP_MODULE_ARG[] = "wlan.module.arg";
 
 static const char SUPP_ENTROPY_FILE[]   = WIFI_ENTROPY_FILE;
 static unsigned char dummy_key[21] = { 0x02, 0x11, 0xbe, 0x33, 0x43, 0x35,
@@ -267,7 +267,6 @@ int wifi_load_driver()
     char driver_status[PROPERTY_VALUE_MAX];
     int count = 100; /* wait at most 20 seconds for completion */
     char module_arg[PROPERTY_VALUE_MAX];
-    char module_arg_additions[PROPERTY_VALUE_MAX];
     char module_arg2[256];
 #ifdef SAMSUNG_WIFI
     char* type = get_samsung_wifi_type();
@@ -279,13 +278,13 @@ int wifi_load_driver()
     usleep(200000);
 #endif
 
+    property_get(DRIVER_PROP_MODULE_ARG, module_arg, DRIVER_MODULE_ARG);
+
 #ifdef SAMSUNG_WIFI
     snprintf(module_arg2, sizeof(module_arg2), "%s%s", DRIVER_MODULE_ARG, type == NULL ? "" : type);
 
     if (insmod(DRIVER_MODULE_PATH, module_arg2) < 0) {
 #else
-    property_get(DRIVER_PROP_MODULE_ARG_ADDITIONS, module_arg_additions, NULL);
-    sprintf(module_arg, "%s %s", DRIVER_MODULE_ARG, module_arg_additions);
     if (insmod(DRIVER_MODULE_PATH, module_arg) < 0) {
 #endif
 
