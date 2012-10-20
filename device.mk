@@ -39,6 +39,7 @@ PRODUCT_PACKAGES += \
 
 # Other Packages
 PRODUCT_PACKAGES += \
+    setmac \
     dexpreopt \
     make_ext4fs \
     setup_fs \
