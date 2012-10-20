@@ -266,8 +266,8 @@ int wifi_load_driver()
 #ifdef WIFI_DRIVER_MODULE_PATH
     char driver_status[PROPERTY_VALUE_MAX];
     int count = 100; /* wait at most 20 seconds for completion */
-    char module_arg_additions[PROPERTY_VALUE_MAX];
     char module_arg[PROPERTY_VALUE_MAX];
+    char module_arg_additions[PROPERTY_VALUE_MAX];
     char module_arg2[256];
 #ifdef SAMSUNG_WIFI
     char* type = get_samsung_wifi_type();
@@ -285,8 +285,8 @@ int wifi_load_driver()
     if (insmod(DRIVER_MODULE_PATH, module_arg2) < 0) {
 #else
     property_get(DRIVER_PROP_MODULE_ARG_ADDITIONS, module_arg_additions, NULL);
-	sprintf(module_arg, "%s %s", DRIVER_MODULE_ARG, module_arg_additions);
-	if (insmod(DRIVER_MODULE_PATH, module_arg) < 0) {
+    sprintf(module_arg, "%s %s", DRIVER_MODULE_ARG, module_arg_additions);
+    if (insmod(DRIVER_MODULE_PATH, module_arg) < 0) {
 #endif
 
 #ifdef WIFI_EXT_MODULE_NAME
