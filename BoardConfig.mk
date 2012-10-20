@@ -94,6 +94,8 @@ WIFI_DRIVER_MODULE_NAME := "dhd"
 WIFI_EXT_MODULE_PATH := "/system/lib/modules/cfg80211.ko"
 WIFI_EXT_MODULE_NAME := "cfg80211"
 
+TARGET_CUSTOM_WIFI := ../../device/huawei/u8815/libhardware_legacy/wifi/wifi.c
+
 # Kernel 
 TARGET_KERNEL_SOURCE := kernel/huawei/u8815
 TARGET_KERNEL_CONFIG := cyanogenmod_u8815_defconfig
