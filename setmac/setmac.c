@@ -21,7 +21,7 @@
 /* In libhwrpc.so */
 extern void huawei_oem_rapi_streaming_function(int n, int p1, int p2, int p3, int *v1, int *v2, char *v3);
 
-static const char DRIVER_PROP_MODULE_ARG[] = "wlan.module.arg";
+static const char DRIVER_PROP_MAC_PARAM[] = "wlan.module.mac_param";
 
 void SetMAC(void);
 
@@ -47,5 +47,5 @@ void SetMAC(void)
 		mac_bits[2], mac_bits[1], mac_bits[0]);
 	printf("%s\n", wlan_mac_arg);
 
-	property_set(DRIVER_PROP_MODULE_ARG, wlan_mac_arg);
+	property_set(DRIVER_PROP_MAC_PARAM, wlan_mac_arg);
 }
