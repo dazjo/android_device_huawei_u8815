@@ -11,9 +11,7 @@ if [ $recovery == 0 ] ; then
 fi
 
 # Turn on soft keys light for recovery mode.
-if [ $recovery == 1 ] ; then
- echo 255 > /sys/class/leds/button-backlight/brightness
-fi
+echo 255 > /sys/class/leds/button-backlight/brightness
 
 # We haven't exited, start recovery.
 /sbin/recovery
