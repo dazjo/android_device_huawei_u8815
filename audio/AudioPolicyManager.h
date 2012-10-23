@@ -45,7 +45,12 @@ public:
                                                           AudioSystem::device_connection_state state,
                                                           const char *device_address);
 
+        virtual audio_devices_t getDeviceForVolume(audio_devices_t device);
+
         virtual audio_devices_t getDeviceForStrategy(routing_strategy strategy, bool fromCache = true);
+        virtual uint32_t  checkDeviceMuteStrategies(AudioOutputDescriptor *outputDesc,
+                                            audio_devices_t prevDevice,
+                                            uint32_t delayMs);
         virtual void setForceUse(AudioSystem::force_use usage, AudioSystem::forced_config config);
 protected:
         fm_modes fmMode;

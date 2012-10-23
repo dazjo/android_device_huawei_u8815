@@ -16,6 +16,9 @@
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
 
+$(shell mkdir -p $(OUT)/obj/SHARED_LIBRARIES/libhwrpc_intermediates)
+$(shell touch $(OUT)/obj/SHARED_LIBRARIES/libhwrpc_intermediates/export_includes)
+
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_SRC_FILES := setmac.c
