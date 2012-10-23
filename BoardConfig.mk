@@ -28,6 +28,9 @@ TARGET_USE_SPARROW_BIONIC_OPTIMIZATION := true
 TARGET_AVOID_DRAW_TEXTURE_EXTENSION := true
 TARGET_USES_16BPPSURFACE_FOR_OPAQUE := true
 
+# Need to merge the vsync sysfs stuff. Proving pretty difficult.
+TARGET_NO_HW_VSYNC := true
+
 # We can't use ION because of nasty liboemcamera problems. :(
 #TARGET_USES_ION := true
 
