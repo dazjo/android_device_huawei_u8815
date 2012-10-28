@@ -31,7 +31,7 @@ PRODUCT_PACKAGES += \
     libaudioutils
 
 PRODUCT_COPY_FILES += \
-        device/huawei/u8815/audio/audio_policy.conf:system/etc/audio_policy.conf
+    device/huawei/u8815/audio/audio_policy.conf:system/etc/audio_policy.conf
 
 # Other HALs
 PRODUCT_PACKAGES += \
