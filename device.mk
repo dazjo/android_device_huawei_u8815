@@ -30,9 +30,6 @@ PRODUCT_PACKAGES += \
     audio.a2dp.default \
     libaudioutils
 
-PRODUCT_COPY_FILES += \
-    device/huawei/u8815/audio/audio_policy.conf:system/etc/audio_policy.conf
-
 # Other HALs
 PRODUCT_PACKAGES += \
     power.msm7x27a \
@@ -64,6 +61,7 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8815/configs/init.bcm.bt.sh:system/etc/bluetooth/init.bcm.bt.sh
 
 PRODUCT_COPY_FILES += \
+    device/huawei/u8815/configs/audio_policy.conf:system/etc/audio_policy.conf \
     device/huawei/u8815/configs/AudioFilter.csv:system/etc/AudioFilter.csv \
     device/huawei/u8815/configs/AutoVolumeControl.txt:system/etc/AutoVolumeControl.txt \
     device/huawei/u8815/configs/media_codecs.xml:system/etc/media_codecs.xml \
