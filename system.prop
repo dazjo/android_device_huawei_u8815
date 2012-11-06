@@ -7,7 +7,7 @@ ro.telephony.ril_class=HuaweiQualcommRIL
 ril.subscription.types=NV,RUIM
 
 wifi.interface=eth0
-wifi.supplicant_scan_interval=60
+wifi.supplicant_scan_interval=15
 
 ro.sf.lcd_density=240
 ro.opengles.version=131072
