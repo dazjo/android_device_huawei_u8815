@@ -18,14 +18,6 @@ ro.cwm.enable_key_repeat=true
 
 persist.sys.usb.config=mass_storage,adb
 
-dalvik.vm.dexopt-data-only=1
-dalvik.vm.execution-mode=int:jit
-dalvik.vm.heapstartsize=5m
-dalvik.vm.heapgrowthlimit=36m
-dalvik.vm.heapsize=128m
-dalvik.vm.dexopt-flags=m=y,o=a,u=y
-
-
 # Mount the internal SD card, too
 ro.additionalmounts=/mnt/emmc
 ro.vold.switchablepair=/mnt/sdcard,/mnt/emmc
