@@ -16,10 +16,10 @@ ro.cwm.enable_key_repeat=true
 
 persist.sys.usb.config=mass_storage,adb
 
-# Mount the internal SD card, too
 ro.additionalmounts=/mnt/emmc
-ro.vold.switchablepair=/mnt/sdcard,/mnt/emmc
 ro.emmc.sdcard.partition=19
+ro.vold.switchablepair=/mnt/sdcard,/mnt/emmc
+ro.vold.umsdirtyratio=50
 
 persist.sys.use_dithering=1
 com.qc.hardware=true
