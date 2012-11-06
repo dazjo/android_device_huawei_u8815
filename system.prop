@@ -7,9 +7,7 @@ ro.telephony.ril_class=HuaweiQualcommRIL
 ril.subscription.types=NV,RUIM
 
 wifi.interface=eth0
-wifi.supplicant_scan_interval=60
-
-#debug.camcorder.disablemeta=1
+wifi.supplicant_scan_interval=15
 
 ro.sf.lcd_density=240
 ro.opengles.version=131072
@@ -18,18 +16,10 @@ ro.cwm.enable_key_repeat=true
 
 persist.sys.usb.config=mass_storage,adb
 
-dalvik.vm.dexopt-data-only=1
-dalvik.vm.execution-mode=int:jit
-dalvik.vm.heapstartsize=5m
-dalvik.vm.heapgrowthlimit=36m
-dalvik.vm.heapsize=128m
-dalvik.vm.dexopt-flags=m=y,o=a,u=y
-
-
-# Mount the internal SD card, too
 ro.additionalmounts=/storage/sdcard0
-ro.vold.switchablepair=/storage/sdcard1,/storage/sdcard0
 ro.emmc.sdcard.partition=19
+ro.vold.switchablepair=/storage/sdcard1,/storage/sdcard0
+ro.vold.umsdirtyratio=50
 
 persist.sys.use_dithering=2
 com.qc.hardware=true
