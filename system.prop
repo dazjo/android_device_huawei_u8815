@@ -9,8 +9,6 @@ ril.subscription.types=NV,RUIM
 wifi.interface=eth0
 wifi.supplicant_scan_interval=60
 
-#debug.camcorder.disablemeta=1
-
 ro.sf.lcd_density=240
 ro.opengles.version=131072
 
