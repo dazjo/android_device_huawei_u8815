@@ -59,7 +59,6 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
 
     public HuaweiQualcommRIL(Context context, int networkMode, int cdmaSubscription) {
         super(context, networkMode, cdmaSubscription);
-        mQANElements = 4;
     }
 
     @Override
