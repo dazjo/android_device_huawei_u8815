@@ -25,6 +25,8 @@ persist.sys.use_dithering=2
 com.qc.hardware=true
 gfx.highend_override=yes
 
+headset.hook.delay=500
+
 ro.telephony.call_ring.delay=3000
 
 ro.confg.hw_appsbootversion=U8815VCM10_APPSBOOT
