@@ -25,7 +25,6 @@
 # OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
-# /*< DTS2011012004291 xuhui 20110120 begin */
 
 BLUETOOTH_SLEEP_PATH=/proc/bluetooth/sleep/proto
 LOG_TAG="bcm-bluetooth"
@@ -51,18 +50,11 @@ failed ()
 
 start_hciattach ()
 {
-  # /* < DTS2011052000022 xuhui 20110725 begin */
-  #echo "start_hciattach +"
-  # /*< DTS2011022104132  xuhui 20110221 begin */
   # 1 means enable bluetooth driver sleep
   echo 1 > $BLUETOOTH_SLEEP_PATH
-  # /* DTS2011022104132 xuhui 20110221 end >*/
-  #echo "start_hciattach pid"
-  /system/bin/brcm_patchram_plus -d --enable_hci --enable_lpm --baudrate 3000000 --patchram /system/etc/bluetooth/BCM4330.hcd /dev/ttyHS0 &
+  /system/bin/brcm_patchram_plus -d --enable_hci --enable_lpm --baudrate 3000000 --bd_addr 00:00:00:00:00:00 --patchram /system/etc/bluetooth/BCM4330.hcd /dev/ttyHS0 &
   hciattach_pid=$!
   loge "start_hciattach: pid = $hciattach_pid"
-  #echo "start_hciattach -"
-  #/* DTS2011052000022 xuhui 20110725 end > */
 }
 
 kill_hciattach ()
@@ -86,5 +78,3 @@ wait $hciattach_pid
 logi "Bluetooth stopped"
 
 exit 0
-# /* DTS2011012004291 xuhui 20110120 end >*/
-
