@@ -173,7 +173,7 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
     @Override
     protected Object
     responseSetupDataCall(Parcel p) {
-         int ver = p.readInt();
+        int ver = p.readInt();
         int num = p.readInt();
         if (RILJ_LOGV) riljLog("responseSetupDataCall ver=" + ver + " num=" + num);
 
