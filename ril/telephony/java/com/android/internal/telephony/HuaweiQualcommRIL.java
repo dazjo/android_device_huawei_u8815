@@ -64,6 +64,7 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
         RILRequest rr
                 = RILRequest.obtain(RIL_REQUEST_SIM_IO, result);
 
+        rr.mp.writeString(mAid);
         rr.mp.writeInt(command);
         rr.mp.writeInt(fileid);
         rr.mp.writeString(path);
@@ -72,7 +73,6 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
         rr.mp.writeInt(p3);
         rr.mp.writeString(data);
         rr.mp.writeString(pin2);
-        rr.mp.writeString(mAid);
 
         if (RILJ_LOGD) riljLog(rr.serialString() + "> iccIO: "
                     + " aid: " + mAid + " "
@@ -316,4 +316,92 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
 
         return ret;
     }
+
+    private void setRadioStateFromRILInt (int stateCode) {
+        CommandsInterface.RadioState radioState;
+        HandlerThread handlerThread;
+        Looper looper;
+        IccHandler iccHandler;
+
+        switch (stateCode) {
+            case RIL_INT_RADIO_OFF:
+                radioState = CommandsInterface.RadioState.RADIO_OFF;
+                if (mIccHandler != null) {
+                    mIccThread = null;
+                    mIccHandler = null;
+                }
+                break;
+            case RIL_INT_RADIO_UNAVALIABLE:
+                radioState = CommandsInterface.RadioState.RADIO_UNAVAILABLE;
+                break;
+            case RIL_INT_RADIO_ON:
+            case RIL_INT_RADIO_ON_NG:
+            case RIL_INT_RADIO_ON_HTC:
+                if (mIccHandler == null) {
+                    handlerThread = new HandlerThread("IccHandler");
+                    mIccThread = handlerThread;
+
+                    mIccThread.start();
+
+                    looper = mIccThread.getLooper();
+                    mIccHandler = new IccHandler(this,looper);
+                    mIccHandler.run();
+                }
+                if (mPhoneType == RILConstants.CDMA_PHONE) {
+                    radioState = CommandsInterface.RadioState.RUIM_NOT_READY;
+                } else {
+                    radioState = CommandsInterface.RadioState.SIM_NOT_READY;
+                }
+                setRadioState(radioState);
+                break;
+            default:
+                throw new RuntimeException("Unrecognized RIL_RadioState: " + stateCode);
+        }
+
+        setRadioState (radioState);
+    }
+
+    @Override
+    protected void
+    processUnsolicited(Parcel p) {
+        Object ret;
+        int dataPosition = p.dataPosition(); // save off position within the Parcel
+        int response = p.readInt();
+
+        switch(response) {
+            case RIL_UNSOL_RESPONSE_RADIO_STATE_CHANGED: ret =  responseVoid(p); break;
+            case RIL_UNSOL_RIL_CONNECTED: ret = responseInts(p); break;
+            case 1035: ret = responseVoid(p); break; // RIL_UNSOL_VOICE_RADIO_TECH_CHANGED
+            case 1036: ret = responseVoid(p); break; // RIL_UNSOL_RESPONSE_IMS_NETWORK_STATE_CHANGED
+            case 1037: ret = responseVoid(p); break; // RIL_UNSOL_EXIT_EMERGENCY_CALLBACK_MODE
+            case 1038: ret = responseVoid(p); break; // RIL_UNSOL_DATA_NETWORK_STATE_CHANGED
+
+            default:
+                // Rewind the Parcel
+                p.setDataPosition(dataPosition);
+
+                // Forward responses that we are not overriding to the super class
+                super.processUnsolicited(p);
+                return;
+        }
+
+        switch(response) {
+            case RIL_UNSOL_RESPONSE_RADIO_STATE_CHANGED:
+                int state = p.readInt();
+                setRadioStateFromRILInt(state);
+                break;
+            case 1035:
+            case 1036:
+                break;
+            case 1037: // RIL_UNSOL_EXIT_EMERGENCY_CALLBACK_MODE
+                if (RILJ_LOGD) unsljLogRet(response, ret);
+
+                if (mExitEmergencyCallbackModeRegistrants != null) {
+                    mExitEmergencyCallbackModeRegistrants.notifyRegistrants(
+                                        new AsyncResult (null, null, null));
+                }
+                break;
+            case 1038:
+                break;
+        }
 }
