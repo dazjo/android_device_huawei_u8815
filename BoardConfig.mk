@@ -58,9 +58,6 @@ USE_OPENGL_RENDERER := true
 TARGET_GRALLOC_USES_ASHMEM := true
 BOARD_USE_SKIA_LCDTEXT := true
 
-# Touchscreen
-BOARD_USE_LEGACY_TOUCHSCREEN := true
-
 # Web Rendering
 WITH_JIT := true
 ENABLE_JSC_JIT := true
