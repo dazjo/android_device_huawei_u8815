@@ -404,4 +404,5 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
             case 1038:
                 break;
         }
+    }
 }
