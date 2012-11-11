@@ -59,7 +59,7 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
 
     public HuaweiQualcommRIL(Context context, int networkMode, int cdmaSubscription) {
         super(context, networkMode, cdmaSubscription);
-		mQANElements = 4;
+        mQANElements = 4;
     }
 
     @Override
@@ -177,10 +177,10 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
         return dataCall;
     }
 
-	@Override
+    @Override
     protected Object
     responseSetupDataCall(Parcel p) {
- 		int ver = p.readInt();
+         int ver = p.readInt();
         int num = p.readInt();
         if (RILJ_LOGV) riljLog("responseSetupDataCall ver=" + ver + " num=" + num);
 
