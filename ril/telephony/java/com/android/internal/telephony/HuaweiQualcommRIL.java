@@ -51,6 +51,12 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
     boolean RILJ_LOGV = true;
     boolean RILJ_LOGD = true;
 
+    private final int RIL_INT_RADIO_OFF = 0;
+    private final int RIL_INT_RADIO_UNAVAILABLE = 1;
+    private final int RIL_INT_RADIO_ON = 2;
+    private final int RIL_INT_RADIO_ON_NG = 10;
+    private final int RIL_INT_RADIO_ON_HTC = 13;
+
     public HuaweiQualcommRIL(Context context, int networkMode, int cdmaSubscription) {
         super(context, networkMode, cdmaSubscription);
     }
@@ -317,7 +323,7 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
         return ret;
     }
 
-    private void setRadioStateFromRILInt (int stateCode) {
+    protected void setRadioStateFromRILInt (int stateCode) {
         CommandsInterface.RadioState radioState;
         HandlerThread handlerThread;
         Looper looper;
@@ -331,7 +337,7 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
                     mIccHandler = null;
                 }
                 break;
-            case RIL_INT_RADIO_UNAVALIABLE:
+            case RIL_INT_RADIO_UNAVAILABLE:
                 radioState = CommandsInterface.RadioState.RADIO_UNAVAILABLE;
                 break;
             case RIL_INT_RADIO_ON:
