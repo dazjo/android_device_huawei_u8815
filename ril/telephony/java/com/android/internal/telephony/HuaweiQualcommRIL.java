@@ -145,15 +145,8 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
     @Override
     protected DataCallState getDataCallState(Parcel p, int version) {
         DataCallState dataCall = new DataCallState();
-
-        boolean oldRil = needsOldRilFeature("datacall");
-
-        if (!oldRil && version < 5) {
-            return super.getDataCallState(p, version);
-        } else if (!oldRil) {
             dataCall.version = version;
             dataCall.status = p.readInt();
-            dataCall.suggestedRetryTime = p.readInt();
             dataCall.cid = p.readInt();
             dataCall.active = p.readInt();
             dataCall.type = p.readString();
@@ -174,73 +167,53 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
             if (!TextUtils.isEmpty(gateways)) {
                 dataCall.gateways = gateways.split(" ");
             }
-        } else {
-            dataCall.version = 4; // was dataCall.version = version;
-            dataCall.cid = p.readInt();
-            dataCall.active = p.readInt();
-            dataCall.type = p.readString();
-            dataCall.ifname = mLastDataIface[dataCall.cid];
-            p.readString(); // skip APN
-
-            if (TextUtils.isEmpty(dataCall.ifname)) {
-                dataCall.ifname = mLastDataIface[0];
-            }
-
-            String addresses = p.readString();
-            if (!TextUtils.isEmpty(addresses)) {
-                dataCall.addresses = addresses.split(" ");
-            }
-            p.readInt(); // RadioTechnology
-            p.readInt(); // inactiveReason
-
-            dataCall.dnses = new String[2];
-            dataCall.dnses[0] = SystemProperties.get("net."+dataCall.ifname+".dns1");
-            dataCall.dnses[1] = SystemProperties.get("net."+dataCall.ifname+".dns2");
-        }
-
         return dataCall;
     }
 
-    @Override
+	@Override
     protected Object
     responseSetupDataCall(Parcel p) {
+ 		int ver = p.readInt();
+        int num = p.readInt();
+        if (RILJ_LOGV) riljLog("responseSetupDataCall ver=" + ver + " num=" + num);
+
         DataCallState dataCall;
 
-        boolean oldRil = needsOldRilFeature("datacall");
-
-        if (!oldRil)
-           return super.responseSetupDataCall(p);
-
-        dataCall = new DataCallState();
-        dataCall.version = 4;
-
-        dataCall.cid = 0; // Integer.parseInt(p.readString());
-        p.readString();
-        dataCall.ifname = p.readString();
-        if ((dataCall.status == DataConnection.FailCause.NONE.getErrorCode()) &&
-             TextUtils.isEmpty(dataCall.ifname) && dataCall.active != 0) {
-            throw new RuntimeException(
-                    "RIL_REQUEST_SETUP_DATA_CALL response, no ifname");
+        if (ver < 5) {
+            dataCall = new DataCallState();
+            dataCall.version = ver;
+            dataCall.cid = Integer.parseInt(p.readString());
+            dataCall.ifname = p.readString();
+            if (TextUtils.isEmpty(dataCall.ifname)) {
+                throw new RuntimeException(
+                        "RIL_REQUEST_SETUP_DATA_CALL response, no ifname");
+            }
+            String addresses = p.readString();
+            if (!TextUtils.isEmpty(addresses)) {
+              dataCall.addresses = addresses.split(" ");
+            }
+            if (num >= 4) {
+                String dnses = p.readString();
+                if (RILJ_LOGD) riljLog("responseSetupDataCall got dnses=" + dnses);
+                if (!TextUtils.isEmpty(dnses)) {
+                    dataCall.dnses = dnses.split(" ");
+                }
+            }
+            if (num >= 5) {
+                String gateways = p.readString();
+                if (RILJ_LOGD) riljLog("responseSetupDataCall got gateways=" + gateways);
+                if (!TextUtils.isEmpty(gateways)) {
+                    dataCall.gateways = gateways.split(" ");
+                }
+            }
+        } else {
+            if (num != 1) {
+                throw new RuntimeException(
+                        "RIL_REQUEST_SETUP_DATA_CALL response expecting 1 RIL_Data_Call_response_v5"
+                        + " got " + num);
+            }
+            dataCall = getDataCallState(p, ver);
         }
-        /* Use the last digit of the interface id as the cid */
-        if (!needsOldRilFeature("singlepdp")) {
-            dataCall.cid =
-                Integer.parseInt(dataCall.ifname.substring(dataCall.ifname.length() - 1));
-        }
-
-        mLastDataIface[dataCall.cid] = dataCall.ifname;
-
-
-        String addresses = p.readString();
-        if (!TextUtils.isEmpty(addresses)) {
-          dataCall.addresses = addresses.split(" ");
-        }
-
-        dataCall.dnses = new String[2];
-        dataCall.dnses[0] = SystemProperties.get("net."+dataCall.ifname+".dns1");
-        dataCall.dnses[1] = SystemProperties.get("net."+dataCall.ifname+".dns2");
-        dataCall.active = 1;
-        dataCall.status = 0;
 
         return dataCall;
     }
@@ -251,15 +224,15 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
         String strings[] = (String [])responseStrings(p);
         ArrayList<OperatorInfo> ret;
 
-        if (strings.length % 5 != 0) {
+        if (strings.length % 4 != 0) {
             throw new RuntimeException(
                 "RIL_REQUEST_QUERY_AVAILABLE_NETWORKS: invalid response. Got "
-                + strings.length + " strings, expected multiple of 5");
+                + strings.length + " strings, expected multiple of 4");
         }
 
-        ret = new ArrayList<OperatorInfo>(strings.length / 5);
+        ret = new ArrayList<OperatorInfo>(strings.length / 4);
 
-        for (int i = 0 ; i < strings.length ; i += 5) {
+        for (int i = 0 ; i < strings.length ; i += 4) {
             ret.add (
                 new OperatorInfo(
                     strings[i+0],
