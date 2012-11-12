@@ -14,7 +14,7 @@ ro.opengles.version=131072
 
 ro.cwm.enable_key_repeat=true
 
-persist.sys.usb.config=mass_storage,adb
+persist.sys.usb.config=mtp,adb
 
 ro.additionalmounts=/mnt/emmc
 ro.emmc.sdcard.partition=19
