@@ -51,12 +51,6 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
     boolean RILJ_LOGV = true;
     boolean RILJ_LOGD = true;
 
-    private final int RIL_INT_RADIO_OFF = 0;
-    private final int RIL_INT_RADIO_UNAVAILABLE = 1;
-    private final int RIL_INT_RADIO_ON = 2;
-    private final int RIL_INT_RADIO_ON_NG = 10;
-    private final int RIL_INT_RADIO_ON_HTC = 13;
-
     public HuaweiQualcommRIL(Context context, int networkMode, int cdmaSubscription) {
         super(context, networkMode, cdmaSubscription);
     }
@@ -93,24 +87,6 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
 
     @Override
     public void
-    setPreferredNetworkType(int networkType , Message response) {
-        RILRequest rr = RILRequest.obtain(
-                RILConstants.RIL_REQUEST_SET_PREFERRED_NETWORK_TYPE, response);
-
-        rr.mp.writeInt(1);
-        rr.mp.writeInt(networkType);
-
-        mSetPreferredNetworkType = networkType;
-        mPreferredNetworkType = networkType;
-
-        if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest)
-                + " : " + networkType);
-
-        send(rr);
-    }
-
-    @Override
-    public void
     setNetworkSelectionModeManual(String operatorNumeric, Message response) {
         RILRequest rr
                 = RILRequest.obtain(RIL_REQUEST_SET_NETWORK_SELECTION_MANUAL,
@@ -120,17 +96,6 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
                     + " " + operatorNumeric);
 
         rr.mp.writeString(operatorNumeric);
-
-        send(rr);
-    }
-
-    @Override
-    public void
-    getNeighboringCids(Message response) {
-        RILRequest rr = RILRequest.obtain(
-                RILConstants.RIL_REQUEST_GET_NEIGHBORING_CELL_IDS, response);
-
-        if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest));
 
         send(rr);
     }
@@ -193,6 +158,32 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
     }
 
     @Override
+    protected Object
+    responseOperatorInfos(Parcel p) {
+        String strings[] = (String [])responseStrings(p);
+        ArrayList<OperatorInfo> ret;
+
+        if (strings.length % 4 != 0) {
+            throw new RuntimeException(
+                "RIL_REQUEST_QUERY_AVAILABLE_NETWORKS: invalid response. Got "
+                + strings.length + " strings, expected multiple of 4");
+        }
+
+        ret = new ArrayList<OperatorInfo>(strings.length / 4);
+
+        for (int i = 0 ; i < strings.length ; i += 4) {
+            ret.add (
+                new OperatorInfo(
+                    strings[i+0],
+                    strings[i+1],
+                    strings[i+2],
+                    strings[i+3]));
+        }
+
+        return ret;
+    }
+
+    @Override
     protected DataCallState
     getDataCallState(Parcel p, int version) {
         DataCallState dataCall = new DataCallState();
@@ -251,164 +242,5 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
         }
 
         return dataCall;
-    }
-
-    @Override
-    protected Object
-    responseSetupDataCall(Parcel p) {
-        DataCallState dataCall;
-
-        boolean oldRil = needsOldRilFeature("datacall");
-
-        if (!oldRil)
-           return super.responseSetupDataCall(p);
-
-        dataCall = new DataCallState();
-        dataCall.version = 4;
-
-        dataCall.cid = 0; // Integer.parseInt(p.readString());
-        p.readString();
-        dataCall.ifname = p.readString();
-        if ((dataCall.status == DataConnection.FailCause.NONE.getErrorCode()) &&
-             TextUtils.isEmpty(dataCall.ifname) && dataCall.active != 0) {
-            throw new RuntimeException(
-                    "RIL_REQUEST_SETUP_DATA_CALL response, no ifname");
-        }
-        /* Use the last digit of the interface id as the cid */
-        if (!needsOldRilFeature("singlepdp")) {
-            dataCall.cid =
-                Integer.parseInt(dataCall.ifname.substring(dataCall.ifname.length() - 1));
-        }
-
-        mLastDataIface[dataCall.cid] = dataCall.ifname;
-
-
-        String addresses = p.readString();
-        if (!TextUtils.isEmpty(addresses)) {
-          dataCall.addresses = addresses.split(" ");
-        }
-
-        dataCall.dnses = new String[2];
-        dataCall.dnses[0] = SystemProperties.get("net."+dataCall.ifname+".dns1");
-        dataCall.dnses[1] = SystemProperties.get("net."+dataCall.ifname+".dns2");
-        dataCall.active = 1;
-        dataCall.status = 0;
-
-        return dataCall;
-    }
-
-    @Override
-    protected Object
-    responseOperatorInfos(Parcel p) {
-        String strings[] = (String [])responseStrings(p);
-        ArrayList<OperatorInfo> ret;
-
-        if (strings.length % 4 != 0) {
-            throw new RuntimeException(
-                "RIL_REQUEST_QUERY_AVAILABLE_NETWORKS: invalid response. Got "
-                + strings.length + " strings, expected multiple of 4");
-        }
-
-        ret = new ArrayList<OperatorInfo>(strings.length / 4);
-
-        for (int i = 0 ; i < strings.length ; i += 4) {
-            ret.add (
-                new OperatorInfo(
-                    strings[i+0],
-                    strings[i+1],
-                    strings[i+2],
-                    strings[i+3]));
-        }
-
-        return ret;
-    }
-
-    protected void setRadioStateFromRILInt (int stateCode) {
-        CommandsInterface.RadioState radioState;
-        HandlerThread handlerThread;
-        Looper looper;
-        IccHandler iccHandler;
-
-        switch (stateCode) {
-            case RIL_INT_RADIO_OFF:
-                radioState = CommandsInterface.RadioState.RADIO_OFF;
-                if (mIccHandler != null) {
-                    mIccThread = null;
-                    mIccHandler = null;
-                }
-                break;
-            case RIL_INT_RADIO_UNAVAILABLE:
-                radioState = CommandsInterface.RadioState.RADIO_UNAVAILABLE;
-                break;
-            case RIL_INT_RADIO_ON:
-            case RIL_INT_RADIO_ON_NG:
-            case RIL_INT_RADIO_ON_HTC:
-                if (mIccHandler == null) {
-                    handlerThread = new HandlerThread("IccHandler");
-                    mIccThread = handlerThread;
-
-                    mIccThread.start();
-
-                    looper = mIccThread.getLooper();
-                    mIccHandler = new IccHandler(this,looper);
-                    mIccHandler.run();
-                }
-                if (mPhoneType == RILConstants.CDMA_PHONE) {
-                    radioState = CommandsInterface.RadioState.RUIM_NOT_READY;
-                } else {
-                    radioState = CommandsInterface.RadioState.SIM_NOT_READY;
-                }
-                setRadioState(radioState);
-                break;
-            default:
-                throw new RuntimeException("Unrecognized RIL_RadioState: " + stateCode);
-        }
-
-        setRadioState (radioState);
-    }
-
-    @Override
-    protected void
-    processUnsolicited(Parcel p) {
-        Object ret;
-        int dataPosition = p.dataPosition(); // save off position within the Parcel
-        int response = p.readInt();
-
-        switch(response) {
-            case RIL_UNSOL_RESPONSE_RADIO_STATE_CHANGED: ret =  responseVoid(p); break;
-            case RIL_UNSOL_RIL_CONNECTED: ret = responseInts(p); break;
-            case 1035: ret = responseVoid(p); break; // RIL_UNSOL_VOICE_RADIO_TECH_CHANGED
-            case 1036: ret = responseVoid(p); break; // RIL_UNSOL_RESPONSE_IMS_NETWORK_STATE_CHANGED
-            case 1037: ret = responseVoid(p); break; // RIL_UNSOL_EXIT_EMERGENCY_CALLBACK_MODE
-            case 1038: ret = responseVoid(p); break; // RIL_UNSOL_DATA_NETWORK_STATE_CHANGED
-
-            default:
-                // Rewind the Parcel
-                p.setDataPosition(dataPosition);
-
-                // Forward responses that we are not overriding to the super class
-                super.processUnsolicited(p);
-                return;
-        }
-
-        switch(response) {
-            case RIL_UNSOL_RESPONSE_RADIO_STATE_CHANGED:
-                int state = p.readInt();
-                setRadioStateFromRILInt(state);
-                break;
-            case 1035:
-            case 1036:
-                break;
-            case 1037: // RIL_UNSOL_EXIT_EMERGENCY_CALLBACK_MODE
-                if (RILJ_LOGD) unsljLogRet(response, ret);
-
-                if (mExitEmergencyCallbackModeRegistrants != null) {
-                    mExitEmergencyCallbackModeRegistrants.notifyRegistrants(
-                                        new AsyncResult (null, null, null));
-                }
-                break;
-            case 1038:
-                break;
-        }
     }
 }
