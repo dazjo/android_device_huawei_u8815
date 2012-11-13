@@ -43,6 +43,3 @@ ro.vold.umsdirtyratio=50
 # Wi-Fi
 wifi.interface=eth0
 wifi.supplicant_scan_interval=15
-
-# zRam
-ro.zram.default=18
