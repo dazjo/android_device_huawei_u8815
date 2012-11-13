@@ -211,6 +211,23 @@ on property:init.svc.wpa_supplicant=stopped
 on property:init.svc.bluetoothd=running
     write /sys/class/bluetooth/hci0/idle_timeout 7000
 
+
+on property:persist.service.zram=10
+    start compcache
+
+on property:persist.service.zram=18
+    start compcache
+
+on property:persist.service.zram=26
+    start compcache
+
+# compcache - handle at boot
+service compcache /system/bin/handle_compcache
+    class main
+    user root
+    group root
+    disabled
+
 service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmcblk0p11 /dev/block/mmcblk0p17
     class main
     user root
