@@ -262,6 +262,9 @@ on property:ro.baseband="msm"
 on property:ro.baseband="unknown"
     start port-bridge
 
+on property:wlan.driver.status=loading
+    start setmac
+
 service pcm-bridge /system/bin/pcm-bridge /dev/smd7 /dev/ttyGS1
 
 service qmuxd /system/bin/qmuxd
@@ -273,8 +276,7 @@ service netmgrd /system/bin/netmgrd
     class main
 
 service setmac /system/bin/setmac
-    class main
-    user root
+    disabled
     oneshot
 
 service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -ieth0 -puse_p2p_group_interface=1 -W -c/data/misc/wifi/wpa_supplicant.conf
