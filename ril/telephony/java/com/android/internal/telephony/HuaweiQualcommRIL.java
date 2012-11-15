@@ -64,7 +64,6 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
         RILRequest rr
                 = RILRequest.obtain(RIL_REQUEST_SIM_IO, result);
 
-        rr.mp.writeString(mAid);
         rr.mp.writeInt(command);
         rr.mp.writeInt(fileid);
         rr.mp.writeString(path);
@@ -73,6 +72,7 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
         rr.mp.writeInt(p3);
         rr.mp.writeString(data);
         rr.mp.writeString(pin2);
+        rr.mp.writeString(mAid);
 
         if (RILJ_LOGD) riljLog(rr.serialString() + "> iccIO: "
                     + " aid: " + mAid + " "
