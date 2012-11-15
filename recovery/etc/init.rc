@@ -36,21 +36,16 @@ on boot
 service ueventd /sbin/ueventd
     critical
 
-service charge /sbin/charge
+service recovery /sbin/sh /sbin/charge.sh
     oneshot
 
-service recovery /sbin/sh /sbin/charge.sh
+service charge /sbin/charge
     oneshot
 
 service rmt_storage /sbin/rmt_storage
 
 service adbd /sbin/adbd recovery
-
-on property:persist.service.adb.enable=1
-    start adbd
-
-on property:persist.service.adb.enable=0
-    stop adbd
+    disabled
 
 on property:sys.usb.config=mass_storage,adb
     write /sys/class/android_usb/android0/enable 0
@@ -62,7 +57,16 @@ on property:sys.usb.config=mass_storage,adb
     write /sys/class/android_usb/android0/enable 1
     start adbd
     setprop sys.usb.state $sys.usb.config
+    
+on property:sys.usb.config=mtp,adb
+    write /sys/class/android_usb/android0/enable 0
+    write /sys/class/android_usb/android0/idVendor 12d1
+    write /sys/class/android_usb/android0/idProduct 1052
+    write /sys/class/android_usb/android0/functions $sys.usb.config
+    write /sys/class/android_usb/android0/enable 1
+    start adbd
+    setprop sys.usb.state $sys.usb.config
 
 on property:persist.sys.usb.config=*
-    setprop sys.usb.config $persist.sys.usb.config
+    setprop sys.usb.config mass_storage,adb
 
