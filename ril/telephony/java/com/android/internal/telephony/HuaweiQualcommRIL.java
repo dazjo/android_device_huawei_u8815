@@ -240,8 +240,9 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
         } else if (!oldRil) {
             dataCall.version = version;
             dataCall.status = p.readInt();
-            // Disable the following line for Gingerbread basebands and proprietaries.
-            dataCall.suggestedRetryTime = p.readInt();
+            if(!needsOldRilFeature("skipsuggestedretrytime")) {
+                dataCall.suggestedRetryTime = p.readInt();
+            }
             dataCall.cid = p.readInt();
             dataCall.active = p.readInt();
             dataCall.type = p.readString();
