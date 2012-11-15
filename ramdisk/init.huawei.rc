@@ -263,7 +263,11 @@ on property:ro.baseband="unknown"
     start port-bridge
 
 on property:wlan.driver.status=loading
+    start wifi_sdio_loader 1
     start setmac
+
+on property:wlan.driver.status=unloaded
+    start wifi_sdio_loader 0
 
 service pcm-bridge /system/bin/pcm-bridge /dev/smd7 /dev/ttyGS1
 
@@ -278,6 +282,9 @@ service netmgrd /system/bin/netmgrd
 service setmac /system/bin/setmac
     disabled
     oneshot
+
+service wifi_sdio_loader /etc/init.qcom.sdio.sh
+    disabled
 
 service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -ieth0 -puse_p2p_group_interface=1 -W -c/data/misc/wifi/wpa_supplicant.conf
     class main
