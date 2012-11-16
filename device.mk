@@ -60,8 +60,7 @@ PRODUCT_COPY_FILES += \
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/prebuilt/BCM4330.hcd:system/etc/bluetooth/BCM4330.hcd \
-    device/huawei/u8815/configs/init.bcm.bt.sh:system/etc/bluetooth/init.bcm.bt.sh \
-    device/huawei/u8815/configs/init.qcom.sdio.sh:system/etc/init.qcom.sdio.sh
+    device/huawei/u8815/configs/init.bcm.bt.sh:system/etc/bluetooth/init.bcm.bt.sh
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/configs/audio_policy.conf:system/etc/audio_policy.conf \
