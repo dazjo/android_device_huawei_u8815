@@ -32,7 +32,12 @@
 # SDIO slot on the MSM target (e.g. slot 3 on 7x30 surf).
 
 arg=$1
-
+# Huawei lovingly added this.
 echo "$arg" > /sys/devices/platform/msm_sdcc.3/polling
+
+# The original file, also did this on our target.
+echo "$arg" > /sys/devices/platform/msm_sdcc.2/polling
+
+# ??? Which SDIO slot do we use? I could've sworn the original DHD polled on 2. What difference does it even make?
 
 exit 0
