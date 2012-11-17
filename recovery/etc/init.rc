@@ -22,6 +22,11 @@ on init
     chown root shell /tmp
     chmod 0775 /tmp
 
+on emmc-fs
+    # mount mmc partitions
+    wait /dev/block/mmcblk0p12
+    mount ext4 /dev/block/mmcblk0p12 /system ro barrier=1,nodelalloc
+
 on boot
 
     ifup lo
@@ -41,8 +46,6 @@ service recovery /sbin/sh /sbin/charge.sh
 
 service charge /sbin/charge
     oneshot
-
-service rmt_storage /sbin/rmt_storage
 
 service adbd /sbin/adbd recovery
     disabled
