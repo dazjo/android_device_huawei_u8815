@@ -35,11 +35,6 @@ on emmc-fs
     mount ext4 /dev/block/mmcblk0p12 /system
     mount ext4 /dev/block/mmcblk0p12 /system ro remount barrier=1,nodelalloc
 
-
-    # Imported from init.msm7627a.rc
-    write /sys/module/block2mtd/parameters/block2mtd /dev/block/mmcblk0p17
-    
-
 on boot
 
     ifup lo
