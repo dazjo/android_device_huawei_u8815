@@ -86,12 +86,12 @@ BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd
 BOARD_HOSTAPD_DRIVER := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_bcmdhd
-WIFI_DRIVER_FW_PATH_AP := "/system/wifi/fw_4330_b2.bin"
-WIFI_DRIVER_FW_PATH_STA := "/system/wifi/fw_4330_b2.bin"
-WIFI_DRIVER_FW_PATH_P2P := "/system/wifi/fw_4330_b2.bin"
+WIFI_DRIVER_FW_PATH_AP := "/system/etc/fw_4330_b2.bin"
+WIFI_DRIVER_FW_PATH_STA := "/system/etc/fw_4330_b2.bin"
+WIFI_DRIVER_FW_PATH_P2P := "/system/etc/fw_4330_b2.bin"
 WIFI_DRIVER_FW_PATH_PARAM := "/sys/module/dhd/parameters/firmware_path"
 WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/dhd.ko"
-WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/wifi/fw_4330_b2.bin nvram_path=/system/wifi/nvram_4330.txt dhd_watchdog_prio=0 dhd_dpc_prio=1"
+WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/etc/fw_4330_b2.bin nvram_path=/system/etc/nvram_4330.txt dhd_watchdog_prio=0 dhd_dpc_prio=1"
 WIFI_DRIVER_MODULE_NAME := "dhd"
 WIFI_EXT_MODULE_PATH := "/system/lib/modules/cfg80211.ko"
 WIFI_EXT_MODULE_NAME := "cfg80211"
