@@ -40,15 +40,11 @@ on init
     symlink /storage/sdcard0 /HWUserData
 
 on boot
-    exec system/bin/btnvtool -O
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
     chown bluetooth bluetooth /proc/bluetooth/sleep/proto
-    chown system system /sys/module/sco/parameters/disable_esco
-    chown bluetooth bluetooth /sys/module/hci_smd/parameters/hcismd_set
     chmod 0660 /sys/module/bluetooth_power/parameters/power
-    chmod 0660 /sys/module/hci_smd/parameters/hcismd_set
     chmod 0660 /sys/class/rfkill/rfkill0/state
     chmod 0660 /proc/bluetooth/sleep/proto
     chmod 0660 /proc/bluetooth/clock/proto
@@ -174,16 +170,6 @@ on post-fs-data
     mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
 
     chmod 0666 /sys/class/rfkill/rfkill0/state
-    mkdir /data/misc/bluetoothd/bluedroid 0776 bluetooth system 
-
-    rm /data/misc/bluetoothd/bluedroid/bluedroid_ref 
-    write /data/misc/bluetoothd/bluedroid/bluedroid_ref  0
-    chown bluetooth system /data/misc/bluetoothd/bluedroid/bluedroid_ref
-    chmod 0776 /data/misc/bluetoothd/bluedroid/bluedroid_ref
-
-    write /data/btaddr 0
-    chown bluetooth system /data/btaddr
-    chmod 0660 /data/btaddr
 
     # Create the directories used by the Wireless subsystem
     mkdir /data/misc/wifi/load 0770 wifi wifi
