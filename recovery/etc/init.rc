@@ -32,8 +32,7 @@ on init
 on emmc-fs
     # mount mmc partitions
     wait /dev/block/mmcblk0p12
-    mount ext4 /dev/block/mmcblk0p12 /system
-    mount ext4 /dev/block/mmcblk0p12 /system remount barrier=1,nodelalloc
+    mount ext4 /dev/block/mmcblk0p12 /system -o nodiratime -o nodev -o noatime
 
 on boot
 
