@@ -32,7 +32,6 @@ on init
     mkdir /storage 0775 system sdcard_r
     mkdir /storage/sdcard1 0000 system system
     mkdir /storage/sdcard0 0000 system system
-    mkdir /HWUserData 0000 system system
     export EXTERNAL_STORAGE /storage/sdcard1
 
     symlink /storage/sdcard1 /mnt/sdcard
