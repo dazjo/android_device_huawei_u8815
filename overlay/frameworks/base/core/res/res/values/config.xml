@@ -165,8 +165,8 @@
     </integer-array>
 
     <!-- Flag indicating whether we should enable automatic brightness for
-         the button and keyboard backlights. -->
-    <bool name="config_autoBrightnessButtonKeyboard">false</bool>
+         the button and keyboard backlights.
+    <bool name="config_autoBrightnessButtonKeyboard">false</bool> -->
 
     <!-- Array of output values for button backlight corresponding to the LUX values
          in the config_autoBrightnessLevels array.  This array should have size one greater
@@ -194,15 +194,15 @@
         <item>0</item>
     </integer-array>
 
-    <!-- Package name providing network location support. -->
-    <string name="config_networkLocationProviderPackageName">com.google.android.location.NetworkLocationProvider</string>
+    <!-- Package name providing network location support.
+    <string name="config_networkLocationProviderPackageName">com.google.android.location.NetworkLocationProvider</string> -->
 
-    <!-- Package name providing geocoder API support. -->
-    <string name="config_geocodeProviderPackageName">com.google.android.location.GeocodeProvider</string>
+    <!-- Package name providing geocoder API support.
+    <string name="config_geocodeProviderPackageName">com.google.android.location.GeocodeProvider</string> -->
 
     <!-- Boolean indicating if current platform supports quick switch-on/off of
-         Bluetooth Module -->
-    <bool name="config_bluetooth_adapter_quick_switch">false</bool>
+         Bluetooth Module
+    <bool name="config_bluetooth_adapter_quick_switch">false</bool> -->
 
     <!-- Hardware 'face' keys present on the device, stored as a bit field.
          This integer should equal the sum of the corresponding value for each
@@ -213,7 +213,7 @@
              8 - Assistant (search)
             16 - App switch
          For example, a device with Home, Back and Menu keys would set this
-         config to 7. -->
-    <integer name="config_deviceHardwareKeys">7</integer>
+         config to 7.
+    <integer name="config_deviceHardwareKeys">7</integer> -->
 
 </resources>
