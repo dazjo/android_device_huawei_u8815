@@ -76,8 +76,17 @@ enum ion_heap_ids {
 	ION_MM_FIRMWARE_HEAP_ID = 29,
 	ION_SYSTEM_HEAP_ID = 30,
 
-	ION_HEAP_ID_RESERVED = 31 /** Bit reserved for ION_SECURE flag */
+	ION_HEAP_ID_RESERVED = 31, /** Bit reserved for ION_SECURE flag */
+	ION_HEAP_SYSTEM_ID,
+	ION_HEAP_SYSTEM_CONTIG_ID,
+	ION_HEAP_EBI_ID,
+	ION_HEAP_SMI_ID,
+	ION_HEAP_ADSP_ID,
+	ION_HEAP_AUDIO_ID,
+	ION_HEAP_IOMMU_ID,
 };
+
+#define ION_KMALLOC_HEAP_NAME	"kmalloc"
 
 enum ion_fixed_position {
 	NOT_FIXED,
@@ -680,6 +689,7 @@ static inline int msm_ion_do_cache_op(struct ion_client *client,
 struct ion_allocation_data {
 	size_t len;
 	size_t align;
+	unsigned int heap_mask;
 	unsigned int flags;
 	struct ion_handle *handle;
 };
@@ -800,7 +810,7 @@ struct ion_flag_data {
  * descriptor obtained from ION_IOC_SHARE and returns the struct with the handle
  * filed set to the corresponding opaque handle.
  */
-#define ION_IOC_IMPORT		_IOWR(ION_IOC_MAGIC, 5, int)
+#define ION_IOC_IMPORT		_IOWR(ION_IOC_MAGIC, 5, struct ion_fd_data)
 
 /**
  * DOC: ION_IOC_CUSTOM - call architecture specific ion ioctl
@@ -816,21 +826,21 @@ struct ion_flag_data {
  *
  * Clean the caches of the handle specified.
  */
-#define ION_IOC_CLEAN_CACHES	_IOWR(ION_IOC_MAGIC, 7, \
+#define ION_IOC_CLEAN_CACHES	_IOWR(ION_IOC_MAGIC, 20, \
 						struct ion_flush_data)
 /**
  * DOC: ION_MSM_IOC_INV_CACHES - invalidate the caches
  *
  * Invalidate the caches of the handle specified.
  */
-#define ION_IOC_INV_CACHES	_IOWR(ION_IOC_MAGIC, 8, \
+#define ION_IOC_INV_CACHES	_IOWR(ION_IOC_MAGIC, 21, \
 						struct ion_flush_data)
 /**
  * DOC: ION_MSM_IOC_CLEAN_CACHES - clean and invalidate the caches
  *
  * Clean and invalidate the caches of the handle specified.
  */
-#define ION_IOC_CLEAN_INV_CACHES	_IOWR(ION_IOC_MAGIC, 9, \
+#define ION_IOC_CLEAN_INV_CACHES	_IOWR(ION_IOC_MAGIC, 22, \
 						struct ion_flush_data)
 
 /**
@@ -839,6 +849,6 @@ struct ion_flag_data {
  * Gets the flags of the current handle which indicate cachability,
  * secure state etc.
  */
-#define ION_IOC_GET_FLAGS		_IOWR(ION_IOC_MAGIC, 10, \
+#define ION_IOC_GET_FLAGS		_IOWR(ION_IOC_MAGIC, 23, \
 						struct ion_flag_data)
 #endif /* _LINUX_ION_H */
