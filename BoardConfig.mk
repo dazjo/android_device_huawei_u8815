@@ -3,6 +3,7 @@ USE_CAMERA_STUB := false
 -include vendor/huawei/u8815/BoardConfigVendor.mk
 
 # CPU and Platform
+TARGET_ARCH := arm
 TARGET_BOARD_PLATFORM := msm7x27a
 TARGET_BOARD_PLATFORM_GPU := qcom-adreno200
 
