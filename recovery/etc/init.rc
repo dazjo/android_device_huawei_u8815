@@ -29,11 +29,6 @@ on init
     write /sys/class/android_usb/android0/f_mass_storage/cdrom_index none
     write /sys/class/android_usb/android0/functions mass_storage,adb
 
-on emmc-fs
-    # mount mmc partitions
-    wait /dev/block/mmcblk0p12
-    mount ext4 /dev/block/mmcblk0p12 /system -o nodiratime -o nodev -o noatime
-
 on boot
 
     ifup lo
@@ -53,6 +48,20 @@ service charge /sbin/charge
 
 service adbd /sbin/adbd recovery
     disabled
+
+service rmt_storage /sbin/rmt_storage
+    class main
+    user root
+    disabled
+
+service rmt_oeminfo /sbin/rmt_oeminfo
+    class main
+    user root
+    oneshot
+
+on property:ro.emmc=1
+    start rmt_oeminfo
+    start rmt_storage
 
 # Always start adbd on userdebug and eng builds
 on property:ro.debuggable=1
