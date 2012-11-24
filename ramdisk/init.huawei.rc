@@ -29,15 +29,23 @@ import init.huawei.usb.rc
 
 on init
     mkdir /cust
-    mkdir /storage 0775 system sdcard_r
-    mkdir /storage/sdcard1 0000 system system
-    mkdir /storage/sdcard0 0000 system system
-    export EXTERNAL_STORAGE /storage/sdcard1
+    mkdir /mnt/shell/emulated 0700 shell shell
 
-    symlink /storage/sdcard1 /mnt/sdcard
+    mkdir /storage 0550 system sdcard_r
+    mkdir /storage/emulated 0555 root root
+
+    export EXTERNAL_STORAGE /storage/emulated/legacy
+    export SECONDARY_STORAGE /storage/sdcard1
+    export EMULATED_STORAGE_SOURCE /mnt/shell/emulated
+    export EMULATED_STORAGE_TARGET /storage/emulated
+
+    symlink /storage/emulated/legacy /emmc
+    symlink /storage/emulated/legacy /mnt/emmc
+    symlink /storage/emulated/legacy /HWUserData
+    symlink /storage/emulated/legacy /storage/sdcard0
+    symlink /mnt/shell/emulated/0 /storage/emulated/legacy
     symlink /storage/sdcard1 /sdcard
-    symlink /storage/sdcard0 /mnt/emmc
-    symlink /storage/sdcard0 /HWUserData
+    symlink /storage/sdcard1 /mnt/sdcard
 
 on boot
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
@@ -154,7 +162,7 @@ on emmc-fs
     mount vfat loop@/data/iq.img.vfat /data/app_iq_archive rw nosuid nodev
     
     wait /dev/block/mmcblk0p19
-    mount vfat /dev/block/mmcblk0p19 /storage/sdcard0  uid=1000,gid=1015,umask=0002,utf8
+    mount vfat /dev/block/mmcblk0p19 /storage/emulated/legacy  uid=1000,gid=1015,umask=0002,utf8
     mount ext4 /dev/block/mmcblk0p18 /cust ro
 
     # Imported from init.msm7627a.rc
