@@ -529,13 +529,6 @@ struct mdp_blend_cfg {
 	uint32_t is_premultiplied;
 };
 
-struct msmfb_metadata {
-	uint32_t op;
-	uint32_t flags;
-	union {
-		struct mdp_blend_cfg blend_cfg;
-	} data;
-};
 struct mdp_buf_fence {
 	uint32_t flags;
 	uint32_t acq_fen_fd_cnt;
