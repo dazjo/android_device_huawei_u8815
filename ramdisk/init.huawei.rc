@@ -146,7 +146,7 @@ on boot
     chmod 0644 /sys/devices/system/cpu/cpufreq/ondemand/boostpulse
     chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/boostpulse
 
-on emmc-fs
+on fs
     # mount mmc partitions
     wait /dev/block/mmcblk0p12
     mount ext4 /dev/block/mmcblk0p12 /system ro barrier=1,nodelalloc
