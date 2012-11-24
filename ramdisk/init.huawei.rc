@@ -32,7 +32,6 @@ on init
     mkdir /storage 0775 system sdcard_r
     mkdir /storage/sdcard1 0000 system system
     mkdir /storage/sdcard0 0000 system system
-    mkdir /HWUserData 0000 system system
     export EXTERNAL_STORAGE /storage/sdcard1
 
     symlink /storage/sdcard1 /mnt/sdcard
@@ -41,15 +40,11 @@ on init
     symlink /storage/sdcard0 /HWUserData
 
 on boot
-    exec system/bin/btnvtool -O
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
     chown bluetooth bluetooth /proc/bluetooth/sleep/proto
-    chown system system /sys/module/sco/parameters/disable_esco
-    chown bluetooth bluetooth /sys/module/hci_smd/parameters/hcismd_set
     chmod 0660 /sys/module/bluetooth_power/parameters/power
-    chmod 0660 /sys/module/hci_smd/parameters/hcismd_set
     chmod 0660 /sys/class/rfkill/rfkill0/state
     chmod 0660 /proc/bluetooth/sleep/proto
     chmod 0660 /proc/bluetooth/clock/proto
@@ -175,22 +170,9 @@ on post-fs-data
     mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
 
     chmod 0666 /sys/class/rfkill/rfkill0/state
-    mkdir /data/misc/bluetoothd/bluedroid 0776 bluetooth system 
-
-    rm /data/misc/bluetoothd/bluedroid/bluedroid_ref 
-    write /data/misc/bluetoothd/bluedroid/bluedroid_ref  0
-    chown bluetooth system /data/misc/bluetoothd/bluedroid/bluedroid_ref
-    chmod 0776 /data/misc/bluetoothd/bluedroid/bluedroid_ref
-
-    write /data/btaddr 0
-    chown bluetooth system /data/btaddr
-    chmod 0660 /data/btaddr
-
-    # <Dazzozo> Hack! That path seems hardcoded.
-    mkdir /data/misc/wifi/load 0770 wifi wifi
-    cp /system/wifi/fw_4330_b2.bin /data/misc/wifi/load/firmware.bin
 
     # Create the directories used by the Wireless subsystem
+    mkdir /data/misc/wifi/load 0770 wifi wifi
     mkdir /data/misc/wifi/sockets 0770 wifi wifi
     mkdir /data/misc/dhcp 0770 dhcp dhcp
 
@@ -276,6 +258,9 @@ on property:ro.baseband="msm"
 on property:ro.baseband="unknown"
     start port-bridge
 
+on property:wlan.driver.status=loading
+    start setmac
+
 service pcm-bridge /system/bin/pcm-bridge /dev/smd7 /dev/ttyGS1
 
 service qmuxd /system/bin/qmuxd
@@ -287,7 +272,7 @@ service netmgrd /system/bin/netmgrd
     class main
 
 service setmac /system/bin/setmac
-    class main
+    disabled
     oneshot
 
 service wpa_supplicant /system/bin/wpa_supplicant -Dnl80211 -ieth0 -puse_p2p_group_interface=1 -W -c/data/misc/wifi/wpa_supplicant.conf

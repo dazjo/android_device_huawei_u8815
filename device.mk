@@ -38,8 +38,8 @@ PRODUCT_COPY_FILES += \
 # Other HALs
 PRODUCT_PACKAGES += \
     power.msm7x27a \
-    gps.u8815 \
-    lights.u8815
+    gps.u8815
+#   lights.u8815
 
 # Other Packages
 PRODUCT_PACKAGES += \
@@ -56,8 +56,8 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8815/ramdisk/init.huawei.usb.rc:root/init.huawei.usb.rc
 
 PRODUCT_COPY_FILES += \
-    device/huawei/u8815/prebuilt/fw_4330_b2.bin:system/wifi/fw_4330_b2.bin \
-    device/huawei/u8815/configs/nvram_4330.txt:system/wifi/nvram_4330.txt \
+    device/huawei/u8815/prebuilt/fw_4330_b2.bin:system/etc/fw_4330_b2.bin \
+    device/huawei/u8815/configs/nvram_4330.txt:system/etc/nvram_4330.txt \
     device/huawei/u8815/configs/dhcpcd.conf:system/etc/dhcpcd/dhcpcd.conf \
     device/huawei/u8815/configs/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
 

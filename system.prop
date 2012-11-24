@@ -1,34 +1,49 @@
 #
 # system.prop for u8815
 #
-rild.libpath=/system/lib/libril-qc-1.so
-rild.libargs=-d /dev/smd0
-ro.telephony.ril_class=HuaweiQualcommRIL
-ril.subscription.types=NV,RUIM
 
-wifi.interface=eth0
-wifi.supplicant_scan_interval=15
+# Audio
+headset.hook.delay=500
 
+# CWM
+ro.cwm.enable_key_repeat=true
+
+# Dalvik
+dalvik.vm.dexopt-data-only=1
+dalvik.vm.execution-mode=int:jit
+dalvik.vm.heapgrowthlimit=32m
+dalvik.vm.heapsize=76m
+dalvik.vm.heapstartsize=5m
+
+# Display
+gfx.highend_override=yes
+persist.sys.use_dithering=2
 ro.sf.lcd_density=240
 ro.opengles.version=131072
 
-ro.cwm.enable_key_repeat=true
+# Huawei
+ro.confg.hw_appfsversion=U8815VCM10_SYSIMG
+ro.confg.hw_appsbootversion=U8815VCM10_APPSBOOT
+ro.confg.hw_appversion=U8815VCM10_KERNEL
 
-persist.sys.usb.config=mass_storage,adb
+# Qualcomm
+com.qc.hardware=true
+ro.vendor.extension_library=/system/lib/libqc-opt.so
 
+# Telephony
+rild.libargs=-d /dev/smd0
+rild.libpath=/system/lib/libril-qc-1.so
+ril.subscription.types=NV,RUIM
+ro.telephony.call_ring.delay=3000
+ro.telephony.ril_class=HuaweiQualcommRIL
+
+# USB
+persist.sys.usb.config=mtp,adb
 ro.additionalmounts=/storage/sdcard0
 ro.emmc.sdcard.partition=19
 ro.vold.switchablepair=/storage/sdcard1,/storage/sdcard0
 ro.vold.umsdirtyratio=50
 
-persist.sys.use_dithering=2
-com.qc.hardware=true
-gfx.highend_override=yes
-
-headset.hook.delay=500
-
-ro.telephony.call_ring.delay=3000
-
-ro.confg.hw_appsbootversion=U8815VCM10_APPSBOOT
-ro.confg.hw_appversion=U8815VCM10_KERNEL
-ro.confg.hw_appfsversion=U8815VCM10_SYSIMG
+# Wi-Fi
+wifi.interface=eth0
+wifi.supplicant_scan_interval=15

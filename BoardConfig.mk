@@ -54,8 +54,8 @@ BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := u8815
 COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE -DQCOM_NO_SECURE_PLAYBACK
 BOARD_EGL_CFG := device/huawei/u8815/configs/egl.cfg
 USE_OPENGL_RENDERER := true
+BOARD_AVOID_DRAW_TEXTURE_EXTENSION := true
 TARGET_GRALLOC_USES_ASHMEM := true
-BOARD_USE_SKIA_LCDTEXT := true
 
 # Web Rendering
 WITH_JIT := true
@@ -77,7 +77,9 @@ BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
 
 # FM Radio
-BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO -DFM_RADIO
+BOARD_HAVE_FM_RADIO := true
+BOARD_FM_DEVICE := bcm4330
+BOARD_GLOBAL_CFLAGS += -DHAVE_FM_RADIO
 
 # Wi-Fi
 BOARD_WLAN_DEVICE := bcmdhd
@@ -86,12 +88,12 @@ BOARD_WPA_SUPPLICANT_DRIVER := NL80211
 BOARD_WPA_SUPPLICANT_PRIVATE_LIB := lib_driver_cmd_bcmdhd
 BOARD_HOSTAPD_DRIVER := NL80211
 BOARD_HOSTAPD_PRIVATE_LIB := lib_driver_cmd_bcmdhd
-WIFI_DRIVER_FW_PATH_AP := "/system/wifi/fw_4330_b2.bin"
-WIFI_DRIVER_FW_PATH_STA := "/system/wifi/fw_4330_b2.bin"
-WIFI_DRIVER_FW_PATH_P2P := "/system/wifi/fw_4330_b2.bin"
+WIFI_DRIVER_FW_PATH_AP := "/system/etc/fw_4330_b2.bin"
+WIFI_DRIVER_FW_PATH_STA := "/system/etc/fw_4330_b2.bin"
+WIFI_DRIVER_FW_PATH_P2P := "/system/etc/fw_4330_b2.bin"
 WIFI_DRIVER_FW_PATH_PARAM := "/sys/module/dhd/parameters/firmware_path"
 WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/dhd.ko"
-WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/wifi/fw_4330_b2.bin nvram_path=/system/wifi/nvram_4330.txt dhd_watchdog_prio=0 dhd_dpc_prio=1"
+WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/etc/fw_4330_b2.bin nvram_path=/system/etc/nvram_4330.txt"
 WIFI_DRIVER_MODULE_NAME := "dhd"
 WIFI_EXT_MODULE_PATH := "/system/lib/modules/cfg80211.ko"
 WIFI_EXT_MODULE_NAME := "cfg80211"
@@ -101,7 +103,7 @@ TARGET_CUSTOM_WIFI := ../../device/huawei/u8815/libhardware_legacy/wifi/wifi.c
 # Kernel 
 TARGET_KERNEL_SOURCE := kernel/huawei/u8815
 TARGET_KERNEL_CONFIG := cyanogenmod_u8815_defconfig
-BOARD_KERNEL_CMDLINE := console=ttyDDC0 androidboot.hardware=huawei
+BOARD_KERNEL_CMDLINE := androidboot.hardware=huawei
 BOARD_KERNEL_BASE := 0x00200000
 BOARD_PAGE_SIZE := 2048
 
@@ -110,7 +112,6 @@ BOARD_PAGE_SIZE := 2048
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 BOARD_CUSTOM_GRAPHICS := ../../../device/huawei/u8815/recovery/graphics.c
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/huawei/u8815/recovery/recovery-keys.c
-#TARGET_PREBUILT_RECOVERY_KERNEL := device/huawei/u8815/recovery_kernel
 TARGET_RECOVERY_INITRC := device/huawei/u8815/recovery/etc/init.rc
 BOARD_UMS_LUNFILE := /sys/class/android_usb/android0/f_mass_storage/lun%d/file
 
