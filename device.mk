@@ -5,8 +5,6 @@ $(call inherit-product, device/common/gps/gps_eu_supl.mk)
 
 $(call inherit-product, vendor/huawei/u8815/u8815-vendor.mk)
 
-FRAMEWORKS_BASE_SUBDIRS += ../../$(LOCAL_PATH)/ril/
-
 DEVICE_PACKAGE_OVERLAYS += device/huawei/u8815/overlay
 
 PRODUCT_AAPT_CONFIG := normal hdpi

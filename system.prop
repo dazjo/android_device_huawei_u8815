@@ -35,7 +35,7 @@ rild.libargs=-d /dev/smd0
 rild.libpath=/system/lib/libril-qc-1.so
 ril.subscription.types=NV,RUIM
 ro.telephony.call_ring.delay=3000
-ro.telephony.ril_class=HuaweiQualcommRIL
+#ro.telephony.ril_class=HuaweiQualcommRIL
 
 # USB
 persist.sys.usb.config=mtp,adb
