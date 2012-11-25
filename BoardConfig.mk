@@ -54,7 +54,6 @@ BOARD_EGL_CFG := device/huawei/u8815/configs/egl.cfg
 BOARD_ADRENO_DECIDE_TEXTURE_TARGET := true
 BOARD_AVOID_DRAW_TEXTURE_EXTENSION := true
 TARGET_GRALLOC_USES_ASHMEM := true
-BOARD_USE_SKIA_LCDTEXT := true
 
 # Web Rendering
 WITH_JIT := true
