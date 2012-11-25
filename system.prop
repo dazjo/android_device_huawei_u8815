@@ -37,6 +37,9 @@ ril.subscription.types=NV,RUIM
 ro.telephony.call_ring.delay=3000
 #ro.telephony.ril_class=HuaweiQualcommRIL
 
+# Temporary
+debug.sf.no_hw_vsync=1
+
 # USB
 persist.sys.usb.config=mtp,adb
 ro.additionalmounts=/storage/sdcard0
