@@ -25,10 +25,11 @@ PRODUCT_PACKAGES += \
 
 # Audio
 PRODUCT_PACKAGES += \
+    audio.primary.u8815 \
+    audio_policy.u8815 \
     audio.a2dp.default \
+    audio.usb.default \
     libaudioutils
-#   audio.primary.u8815 \
-#   audio_policy.u8815
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/audio/audio_policy.conf:system/etc/audio_policy.conf
