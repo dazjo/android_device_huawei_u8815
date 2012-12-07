@@ -146,12 +146,6 @@ on emmc-fs
     exec /system/bin/e2fsck -p /dev/block/mmcblk0p13
     mount ext4 /dev/block/mmcblk0p13 /data nosuid nodev barrier=1 noauto_da_alloc,nodelalloc
     mount ext4 /dev/block/mmcblk0p6 /cache nosuid nodev barrier=1,nodelalloc
-    exec /system/bin/iqcopy /system/etc/iq.img.vfat /data/iq.img.vfat
-    chown system system /data/iq.img.vfat
-    mkdir /data/app_iq_archive
-    chown system system /data/app_iq_archive
-    chmod 0640 /data/app_iq_archive
-    mount vfat loop@/data/iq.img.vfat /data/app_iq_archive rw nosuid nodev
     
     wait /dev/block/mmcblk0p19
     mount vfat /dev/block/mmcblk0p19 /storage/sdcard0  uid=1000,gid=1015,umask=0002,utf8
