@@ -164,7 +164,7 @@ on fs
     mount vfat loop@/data/iq.img.vfat /data/app_iq_archive rw nosuid nodev
     
     wait /dev/block/mmcblk0p19
-    mount vfat /dev/block/mmcblk0p19 /storage/sdcard0  uid=1000,gid=1015,umask=0002,utf8
+    mount vfat /dev/block/mmcblk0p19 /storage/emulated/legacy  uid=1000,gid=1015,umask=0002,utf8
     mount ext4 /dev/block/mmcblk0p18 /cust ro
 
     # Imported from init.msm7627a.rc
