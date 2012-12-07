@@ -331,3 +331,19 @@ service map1 /system/bin/sdptool add --channel=17 MAS1
     group bluetooth net_bt_admin
     disabled
     oneshot
+
+# compcache - handle at boot
+service compcache /system/bin/handle_compcache
+    class main
+    user root
+    group root
+    disabled
+
+on property:persist.service.zram=10
+    start compcache
+
+on property:persist.service.zram=18
+    start compcache
+
+on property:persist.service.zram=26
+    start compcache
