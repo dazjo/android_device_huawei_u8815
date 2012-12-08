@@ -3,6 +3,8 @@
 #
 
 # Audio
+dev.pm.dyn_sample_period=700000
+dev.pm.dyn_samplingrate=1
 headset.hook.delay=500
 
 # CWM
@@ -11,15 +13,20 @@ ro.cwm.enable_key_repeat=true
 # Dalvik
 dalvik.vm.dexopt-data-only=1
 dalvik.vm.execution-mode=int:jit
-dalvik.vm.heapgrowthlimit=32m
-dalvik.vm.heapsize=76m
+dalvik.vm.heapgrowthlimit=36m
+dalvik.vm.heapsize=128m
 dalvik.vm.heapstartsize=5m
 
 # Display
+debug.composition.type=mdp
+debug.hwc.dynThreshold=1.9
+debug.sf.hw=1
 gfx.highend_override=yes
+hwui.render_dirty_regions=true
 persist.sys.use_dithering=2
-ro.sf.lcd_density=240
+ro.max.fling_velocity=4000
 ro.opengles.version=131072
+ro.sf.lcd_density=240
 
 # Huawei
 ro.confg.hw_appfsversion=U8815VCM10_SYSIMG
@@ -28,6 +35,9 @@ ro.confg.hw_appversion=U8815VCM10_KERNEL
 
 # Qualcomm
 com.qc.hardware=true
+debug.composition.7x27A.type=mdp
+hwui.render_dirty_regions.7x27A=true
+ro.hw_plat=7x27A
 ro.vendor.extension_library=/system/lib/libqc-opt.so
 
 # Telephony
