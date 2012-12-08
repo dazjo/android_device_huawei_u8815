@@ -51,6 +51,12 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
     boolean RILJ_LOGV = true;
     boolean RILJ_LOGD = true;
 
+    private final int RIL_INT_RADIO_OFF = 0;
+    private final int RIL_INT_RADIO_UNAVAILABLE = 1;
+    private final int RIL_INT_RADIO_ON = 2;
+    private final int RIL_INT_RADIO_ON_NG = 10;
+    private final int RIL_INT_RADIO_ON_HTC = 13;
+
     public HuaweiQualcommRIL(Context context, int networkMode, int cdmaSubscription) {
         super(context, networkMode, cdmaSubscription);
         mQANElements = 4;
@@ -144,6 +150,45 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
             case 1038:
                 break;
         }
+    }
+
+    private void setRadioStateFromRILInt (int stateCode) {
+        CommandsInterface.RadioState radioState;
+        HandlerThread handlerThread;
+        Looper looper;
+        IccHandler iccHandler;
+
+        switch (stateCode) {
+            case RIL_INT_RADIO_OFF:
+                radioState = CommandsInterface.RadioState.RADIO_OFF;
+                if (mIccHandler != null) {
+                    mIccThread = null;
+                    mIccHandler = null;
+                }
+                break;
+            case RIL_INT_RADIO_UNAVAILABLE:
+                radioState = CommandsInterface.RadioState.RADIO_UNAVAILABLE;
+                break;
+            case RIL_INT_RADIO_ON:
+            case RIL_INT_RADIO_ON_NG:
+            case RIL_INT_RADIO_ON_HTC:
+                if (mIccHandler == null) {
+                    handlerThread = new HandlerThread("IccHandler");
+                    mIccThread = handlerThread;
+
+                    mIccThread.start();
+
+                    looper = mIccThread.getLooper();
+                    mIccHandler = new IccHandler(this,looper);
+                    mIccHandler.run();
+                }
+                radioState = CommandsInterface.RadioState.RADIO_ON;
+                break;
+            default:
+                throw new RuntimeException("Unrecognized RIL_RadioState: " + stateCode);
+        }
+
+        setRadioState (radioState);
     }
 
     @Override
