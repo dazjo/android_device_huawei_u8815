@@ -59,7 +59,7 @@ service rmt_oeminfo /sbin/rmt_oeminfo
     user root
     oneshot
 
-on property:ro.emmc=1
+on property:ro.boot.emmc=1
     start rmt_oeminfo
     start rmt_storage
 
