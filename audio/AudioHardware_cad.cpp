@@ -608,11 +608,11 @@ status_t AudioHardware::setParameters(const String8& keyValuePairs)
         } else {
             mTtyMode = TTY_OFF;
         }
-        if(!isInCall()){
+        if(mMode != AudioSystem::MODE_IN_CALL){
            return NO_ERROR;
         }
         ALOGI("Changed TTY Mode=%s", value.string());
-        if((isInCall()) &&
+        if((mMode == AudioSystem::MODE_IN_CALL) &&
            (mCurSndDevice == SND_DEVICE_HEADSET))
            doRouting(NULL);
     }
@@ -780,7 +780,7 @@ String8 AudioHardware::getParameters(const String8& keys)
     key = String8("tunneled-input-formats");
     if ( param.get(key,value) == NO_ERROR ) {
         param.addInt(String8("AMR"), true );
-        if (isInCall()) {
+        if (mMode == AudioSystem::MODE_IN_CALL) {
             param.addInt(String8("QCELP"), true );
             param.addInt(String8("EVRC"), true );
         }
@@ -1162,7 +1162,7 @@ status_t AudioHardware::doAudioRouteOrMute(uint32_t device)
         mMicMute = false;
     } else
 #endif
-    if (isInCall())
+    if (mMode == AudioSystem::MODE_IN_CALL)
         nEarmute = false;
 #ifdef QCOM_VOIP_ENABLED
     else if(mMode == AudioSystem::MODE_IN_COMMUNICATION){
@@ -1266,7 +1266,7 @@ status_t AudioHardware::doRouting(AudioStreamInMSM72xx *input)
             }
         }
 
-        if ((mTtyMode != TTY_OFF) && (isInCall()) &&
+        if ((mTtyMode != TTY_OFF) && (mMode == AudioSystem::MODE_IN_CALL) &&
                 (outputDevices & AudioSystem::DEVICE_OUT_WIRED_HEADSET)) {
             if (mTtyMode == TTY_FULL) {
                 ALOGI("Routing audio to TTY FULL Mode\n");
@@ -1326,7 +1326,7 @@ status_t AudioHardware::doRouting(AudioStreamInMSM72xx *input)
         }
     }
 
-    if (mDualMicEnabled && (isInCall() || mMode == AudioSystem::MODE_IN_COMMUNICATION)) {
+    if (mDualMicEnabled && (mMode == AudioSystem::MODE_IN_CALL || mMode == AudioSystem::MODE_IN_COMMUNICATION)) {
         if (new_snd_device == SND_DEVICE_HANDSET) {
             ALOGI("Routing audio to handset with DualMike enabled\n");
             new_snd_device = SND_DEVICE_IN_S_SADC_OUT_HANDSET;
@@ -1427,7 +1427,7 @@ status_t AudioHardware::disableFM()
 status_t AudioHardware::checkMicMute()
 {
     Mutex::Autolock lock(mLock);
-    if (!isInCall()) {
+    if (mMode != AudioSystem::MODE_IN_CALL) {
         setMicMute_nosync(true);
     }
 
