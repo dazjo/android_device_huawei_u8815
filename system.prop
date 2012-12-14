@@ -19,7 +19,7 @@ dalvik.vm.heapstartsize=5m
 
 # Display
 debug.composition.type=mdp
-debug.hwc.dynThreshold=1.9
+debug.hwc.dynThreshold=1.91
 debug.sf.hw=1
 gfx.highend_override=yes
 hwui.render_dirty_regions=true
