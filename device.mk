@@ -14,6 +14,7 @@ PRODUCT_AAPT_PREF_CONFIG := hdpi
 
 # Video
 PRODUCT_PACKAGES += \
+    libI420colorconvert \
     libstagefrighthw \
     libmm-omxcore \
     libOmxCore
