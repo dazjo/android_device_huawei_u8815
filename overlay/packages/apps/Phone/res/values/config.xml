@@ -27,4 +27,10 @@
          are routed through the android.media.AudioManager class (true) or through
          the com.android.internal.telephony.Phone interface (false). -->
     <bool name="send_mic_mute_to_AudioManager">true</bool>
+
+    <!-- Determines if device implements a noise suppression device for in call audio-->
+    <bool name="has_in_call_noise_suppression">true</bool>
+
+    <!-- Audio parameter for setting noise suppression-->
+    <string name="in_call_noise_suppression_audioparameter">noise_suppression=on=off</string>
 </resources>
