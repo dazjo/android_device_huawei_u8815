@@ -60,13 +60,12 @@ BOARD_USE_SKIA_LCDTEXT := true
 TARGET_GRALLOC_USES_ASHMEM := true
 
 # Web Rendering
-DYNAMIC_SHARED_LIBV8SO := true
+WITH_JIT := true
 ENABLE_JSC_JIT := true
 ENABLE_WEBGL := true
+TARGET_FORCE_CPU_UPLOAD := true
 HTTP := chrome
 JS_ENGINE := v8
-TARGET_FORCE_CPU_UPLOAD := true
-WITH_JIT := true
 
 # USB
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun%d/file
