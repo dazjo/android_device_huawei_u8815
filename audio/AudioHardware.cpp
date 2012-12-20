@@ -1574,9 +1574,10 @@ status_t AudioHardware::setVoiceVolume(float v)
         ALOGW("setVoiceVolume(%f) over 1.0, assuming 1.0\n", v);
         v = 1.0;
     }
-    // Added 0.4 to current volume, as in voice call Mute cannot be set as minimum volume(0.00)
+    // Huawei sets volume range lower, change it to 0.2
+    // Added 0.2 to current volume, as in voice call Mute cannot be set as minimum volume(0.00)
     // setting Rx volume level as 2 for minimum and 7 as max level.
-    v = 0.4 + v;
+    v = 0.2 + v;
 
     int vol = lrint(v * 5.0);
     ALOGD("setVoiceVolume(%f)\n", v);

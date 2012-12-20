@@ -953,7 +953,7 @@ status_t AudioPolicyManager::checkAndSetVolume(int stream, int index, audio_io_h
 #ifdef QCOM_FM_ENABLED
             || (stream == AudioSystem::FM) 
 #endif
-			|| force) {
+            || force) {
         mOutputs.valueFor(output)->mCurVolume[stream] = volume;
         ALOGVV("checkAndSetVolume() for output %d stream %d, volume %f, delay %d", output, stream, volume, delayMs);
         if (stream == AudioSystem::VOICE_CALL ||
@@ -982,25 +982,23 @@ status_t AudioPolicyManager::checkAndSetVolume(int stream, int index, audio_io_h
             voiceVolume = 1.0;
         }
 
-        if ((voiceVolume != mLastVoiceVolume && output == mPrimaryOutput) &&
-            (!(mAvailableOutputDevices 
+        if ((voiceVolume != mLastVoiceVolume && output == mPrimaryOutput) 
 #ifdef QCOM_FM_ENABLED
-			& AudioSystem::DEVICE_OUT_FM
+	    && (!(mAvailableOutputDevices & AudioSystem::DEVICE_OUT_FM))
 #endif
-			))) {
+            ) {
             mpClientInterface->setVoiceVolume(voiceVolume, delayMs);
             mLastVoiceVolume = voiceVolume;
         }
-    }
 #ifdef QCOM_FM_ENABLED
-    else if ((stream == AudioSystem::FM) && (mAvailableOutputDevices & AudioSystem::DEVICE_OUT_FM)) {
+    } else if ((stream == AudioSystem::FM) && (mAvailableOutputDevices & AudioSystem::DEVICE_OUT_FM)) {
         float fmVolume = -1.0;
         fmVolume = (float)index/(float)mStreams[stream].mIndexMax;
         if (fmVolume >= 0 && output == mPrimaryOutput) {
             mpClientInterface->setFmVolume(fmVolume, delayMs);
         }
-      }
 #endif
+      }
     return NO_ERROR;
 }
 
