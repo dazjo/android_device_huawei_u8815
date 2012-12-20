@@ -1576,12 +1576,12 @@ status_t AudioHardware::setVoiceVolume(float v)
     }
     // Huawei sets volume range lower, change it to 0.2
     // Added 0.2 to current volume, as in voice call Mute cannot be set as minimum volume(0.00)
-    // setting Rx volume level as 2 for minimum and 7 as max level.
+    // setting Rx volume level as 1 for minimum and 6 as max level.
     v = 0.2 + v;
 
     int vol = lrint(v * 5.0);
     ALOGD("setVoiceVolume(%f)\n", v);
-    ALOGI("Setting in-call volume to %d (available range is 2 to 7)\n", vol);
+    ALOGI("Setting in-call volume to %d (available range is 1 to 6)\n", vol);
 
     if ((mCurSndDevice != -1) && ((mCurSndDevice == SND_DEVICE_TTY_HEADSET) || (mCurSndDevice == SND_DEVICE_TTY_VCO)))
     {
