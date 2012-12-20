@@ -254,6 +254,14 @@ audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strate
          }
       }
 #endif
+      // Do not play media stream if in call and the requested device would change the hardware
+      // output routing
+      if (mPhoneState == AudioSystem::MODE_IN_CALL &&
+         !AudioSystem::isA2dpDevice((AudioSystem::audio_devices)device) &&
+          device != getDeviceForStrategy(STRATEGY_PHONE)) {
+          device = getDeviceForStrategy(STRATEGY_PHONE);
+          ALOGV("getDeviceForStrategy() incompatible media and phone devices");
+      }
       if (device == 0) {
         ALOGE("getDeviceForStrategy() no device found for STRATEGY_MEDIA");
       }
@@ -505,8 +513,11 @@ status_t AudioPolicyManager::setDeviceConnectionState(AudioSystem::audio_devices
                 // close unused outputs after device disconnection or direct outputs that have been
                 // opened by checkOutputsForDevice() to query dynamic parameters
                 if ((state == AudioSystem::DEVICE_STATE_UNAVAILABLE) ||
-                        (mOutputs.valueFor(outputs[i])->mFlags & AUDIO_OUTPUT_FLAG_DIRECT)) {
-                    closeOutput(outputs[i]);
+                    ((mOutputs.valueFor(outputs[i])->mFlags & AUDIO_OUTPUT_FLAG_DIRECT) &&
+                    !((mOutputs.valueFor(outputs[i])->mFlags & AUDIO_OUTPUT_FLAG_LPA)||
+                     (mOutputs.valueFor(outputs[i])->mFlags & AUDIO_OUTPUT_FLAG_TUNNEL) ||
+                     (mOutputs.valueFor(outputs[i])->mFlags & AUDIO_OUTPUT_FLAG_VOIP_RX)))) {
+                          closeOutput(outputs[i]);
                 }
             }
         }
@@ -996,6 +1007,7 @@ status_t AudioPolicyManager::checkAndSetVolume(int stream, int index, audio_io_h
         fmVolume = (float)index/(float)mStreams[stream].mIndexMax;
         if (fmVolume >= 0 && output == mPrimaryOutput) {
             mpClientInterface->setFmVolume(fmVolume, delayMs);
+            mLastVoiceVolume = fmVolume;
         }
 #endif
       }
