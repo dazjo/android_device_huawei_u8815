@@ -28,7 +28,6 @@
 import init.huawei.usb.rc
 
 on init
-    mkdir /cust
     mkdir /storage 0775 system sdcard_r
     mkdir /storage/sdcard1 0000 system system
     mkdir /storage/sdcard0 0000 system system
@@ -40,6 +39,8 @@ on init
     symlink /storage/sdcard0 /HWUserData
 
 on boot
+    mount debugfs /sys/kernel/debug /sys/kernel/debug
+
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
@@ -53,24 +54,11 @@ on boot
     chown bluetooth bluetooth /sys/devices/platform/msm_serial_hs.0/clock
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
-    setprop wifi.interface eth0
-
     # port-bridge
     chmod 0660 /dev/smd0
     chown system system /dev/smd0
 
     chmod 0444 /sys/devices/platform/msm_hsusb/gadget/usb_state
-
-    # create symlink for fb1 as HDMI
-    symlink /dev/graphics/fb1 /dev/graphics/hdmi
-
-    # Remove write permissions to video related nodes
-    chmod 0664 /sys/devices/virtual/graphics/fb1/hpd
-    chmod 0664 /sys/devices/virtual/graphics/fb1/video_mode
-    chmod 0664 /sys/devices/virtual/graphics/fb1/format_3d
-
-    # Change owner and group for media server and surface flinger
-    chown system system /sys/devices/virtual/graphics/fb1/format_3d
 
     # For bridgemgr daemon to inform the USB driver of the correct transport
     chown radio radio /sys/class/android_usb/f_rmnet_smd_sdio/transport
@@ -98,10 +86,6 @@ on boot
     chmod 0664 /dev/accel
     chmod 0664 /dev/compass_aot
     chmod 0664 /dev/akm8975_dev
-    chmod 0664 /dev/compass_dev
-    chmod 0664 /dev/gyro
-
-    chown radio system /sys/class/leds/ptt_led/brightness
 
     chown system system /sys/kernel/logger/log_main/enable
     chown system system /sys/kernel/logger/log_events/enable
@@ -146,24 +130,12 @@ on fs
     exec /system/bin/e2fsck -p /dev/block/mmcblk0p13
     mount ext4 /dev/block/mmcblk0p13 /data nosuid nodev barrier=1 noauto_da_alloc,nodelalloc
     mount ext4 /dev/block/mmcblk0p6 /cache nosuid nodev barrier=1,nodelalloc
-    exec /system/bin/iqcopy /system/etc/iq.img.vfat /data/iq.img.vfat
-    chown system system /data/iq.img.vfat
-    mkdir /data/app_iq_archive
-    chown system system /data/app_iq_archive
-    chmod 0640 /data/app_iq_archive
-    mount vfat loop@/data/iq.img.vfat /data/app_iq_archive rw nosuid nodev
     
     wait /dev/block/mmcblk0p19
-    mount vfat /dev/block/mmcblk0p19 /storage/sdcard0  uid=1000,gid=1015,umask=0002,utf8
-    mount ext4 /dev/block/mmcblk0p18 /cust ro
+    mount vfat /dev/block/mmcblk0p19 /storage/sdcard0 uid=1000,gid=1015,umask=0002,utf8
 
     # Imported from init.msm7627a.rc
     write /sys/module/block2mtd/parameters/block2mtd /dev/block/mmcblk0p17
-
-on post-fs
-    copy /proc/modem_panic /data/dontpanic/modem_panic
-    chown root log /data/dontpanic/modem_panic
-    chmod 0640 /data/dontpanic/modem_panic
 
 # msm specific files that need to be created on /data
 on post-fs-data
@@ -311,13 +283,6 @@ service iprenew_p2p /system/bin/dhcpcd -n p2p
 
 service dhcpcd_bnep0 /system/bin/dhcpcd -BKLG
     class main
-    disabled
-    oneshot
-
-service fm_dl /system/bin/sh /system/etc/init.qcom.fm.sh
-    class main
-    user root
-    group system qcom_oncrpc
     disabled
     oneshot
 

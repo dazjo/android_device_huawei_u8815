@@ -60,6 +60,7 @@ COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE -DQCOM_NO_SECURE_PLAYBACK -DQCOM_ICS_COM
 BOARD_EGL_CFG := device/huawei/u8815/configs/egl.cfg
 USE_OPENGL_RENDERER := true
 BOARD_AVOID_DRAW_TEXTURE_EXTENSION := true
+BOARD_USE_SKIA_LCDTEXT := true
 TARGET_GRALLOC_USES_ASHMEM := true
 TARGET_NO_HW_OVERLAY := true
 BOARD_USE_LEGACY_TOUCHSCREEN := true
@@ -113,7 +114,7 @@ TARGET_CUSTOM_WIFI := ../../device/huawei/u8815/libhardware_legacy/wifi/wifi.c
 # Kernel 
 TARGET_KERNEL_SOURCE := kernel/huawei/u8815
 TARGET_KERNEL_CONFIG := cyanogenmod_u8815_defconfig
-BOARD_KERNEL_CMDLINE := androidboot.hardware=huawei
+BOARD_KERNEL_CMDLINE := androidboot.hardware=huawei no_console_suspend=true
 BOARD_KERNEL_BASE := 0x00200000
 BOARD_PAGE_SIZE := 2048
 
