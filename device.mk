@@ -30,9 +30,6 @@ PRODUCT_PACKAGES += \
     audio.usb.default \
     libaudioutils
 
-PRODUCT_COPY_FILES += \
-    device/huawei/u8815/audio/audio_policy.conf:system/etc/audio_policy.conf
-
 # Other HALs
 PRODUCT_PACKAGES += \
     power.msm7x27a \
