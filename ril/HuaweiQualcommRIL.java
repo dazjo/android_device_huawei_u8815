@@ -35,6 +35,9 @@ import com.android.internal.telephony.RILConstants;
 import com.android.internal.telephony.gsm.SmsBroadcastConfigInfo;
 import com.android.internal.telephony.cdma.CdmaInformationRecords;
 
+import com.android.internal.telephony.IccCardApplicationStatus;
+import com.android.internal.telephony.IccCardStatus;
+
 import java.util.ArrayList;
 
 /**
@@ -194,15 +197,15 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
     @Override
     protected Object
     responseIccCardStatus(Parcel p) {
-        IccCardApplication ca;
+        IccCardApplicationStatus appStatus;
 
-        IccCardStatus status = new IccCardStatus();
-        status.setCardState(p.readInt());
-        status.setUniversalPinState(p.readInt());
-        status.setGsmUmtsSubscriptionAppIndex(p.readInt());
-        status.setCdmaSubscriptionAppIndex(p.readInt());
+        IccCardStatus cardStatus = new IccCardStatus();
+        cardStatus.setCardState(p.readInt());
+        cardStatus.setUniversalPinState(p.readInt());
 
-        status.setImsSubscriptionAppIndex(p.readInt());
+        cardStatus.mGsmUmtsSubscriptionAppIndex = p.readInt();
+        cardStatus.mCdmaSubscriptionAppIndex = p.readInt();
+        cardStatus.mImsSubscriptionAppIndex = p.readInt();
 
         int numApplications = p.readInt();
 
@@ -210,34 +213,34 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
         if (numApplications > IccCardStatus.CARD_MAX_APPS) {
             numApplications = IccCardStatus.CARD_MAX_APPS;
         }
-        status.setNumApplications(numApplications);
+        cardStatus.mApplications = new IccCardApplicationStatus[numApplications];
 
         for (int i = 0; i < numApplications; i++) {
-            ca = new IccCardApplication();
-            ca.app_type = ca.AppTypeFromRILInt(p.readInt());
-            ca.app_state = ca.AppStateFromRILInt(p.readInt());
-            ca.perso_substate = ca.PersoSubstateFromRILInt(p.readInt());
-            ca.aid = p.readString();
-            ca.app_label = p.readString();
-            ca.pin1_replaced = p.readInt();
-            ca.pin1 = ca.PinStateFromRILInt(p.readInt());
-            ca.pin2 = ca.PinStateFromRILInt(p.readInt());
-            status.addApplication(ca);
+            appStatus = new IccCardApplicationStatus();
+            appStatus.app_type = appStatus.AppTypeFromRILInt(p.readInt());
+            appStatus.app_state = appStatus.AppStateFromRILInt(p.readInt());
+            appStatus.perso_substate = appStatus.PersoSubstateFromRILInt(p.readInt());
+            appStatus.aid = p.readString();
+            appStatus.app_label = p.readString();
+            appStatus.pin1_replaced = p.readInt();
+            appStatus.pin1 = appStatus.PinStateFromRILInt(p.readInt());
+            appStatus.pin2 = appStatus.PinStateFromRILInt(p.readInt());
+            cardStatus.mApplications[i] = appStatus;
         }
         int appIndex = -1;
         if (mPhoneType == RILConstants.CDMA_PHONE) {
-            appIndex = status.getCdmaSubscriptionAppIndex();
+            appIndex = cardStatus.mCdmaSubscriptionAppIndex;
             Log.d(LOG_TAG, "This is a CDMA PHONE " + appIndex);
         } else {
-            appIndex = status.getGsmUmtsSubscriptionAppIndex();
+            appIndex = cardStatus.mGsmUmtsSubscriptionAppIndex;
             Log.d(LOG_TAG, "This is a GSM PHONE " + appIndex);
         }
 
         if (numApplications > 0) {
-            IccCardApplication application = status.getApplication(appIndex);
+            IccCardApplicationStatus application = cardStatus.mApplications[appIndex];
             mAid = application.aid;
             mUSIM = application.app_type
-                      == IccCardApplication.AppType.APPTYPE_USIM;
+                      == IccCardApplicationStatus.AppType.APPTYPE_USIM;
             mSetPreferredNetworkType = mPreferredNetworkType;
 
             if (TextUtils.isEmpty(mAid))
@@ -245,7 +248,7 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
             Log.d(LOG_TAG, "mAid " + mAid);
         }
 
-        return status;
+        return cardStatus;
     }
 
     @Override
