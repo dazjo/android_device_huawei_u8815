@@ -25,7 +25,7 @@ debug.hwc.dynThreshold=1.91
 debug.sf.hw=1
 debug.sf.swaprect=1
 gfx.highend_override=yes
-hwui.render_dirty_regions=true
+hwui.render_dirty_regions=false
 persist.sys.use_dithering=2
 ro.max.fling_velocity=4000
 ro.opengles.version=131072
@@ -39,7 +39,7 @@ ro.confg.hw_appversion=U8815VCM10_KERNEL
 # Qualcomm
 com.qc.hardware=true
 debug.composition.7x27A.type=gpu
-hwui.render_dirty_regions.7x27A=true
+hwui.render_dirty_regions.7x27A=false
 ro.hw_plat=7x27A
 ro.vendor.extension_library=/system/lib/libqc-opt.so
 
