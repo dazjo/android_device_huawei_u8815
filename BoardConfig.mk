@@ -89,7 +89,7 @@ BOARD_VOLD_EMMC_SHARES_DEV_MAJOR := true
 BOARD_HAVE_BLUETOOTH := true
 BOARD_HAVE_BLUETOOTH_BCM := true
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := device/huawei/u8815/bluetooth
-BOARD_BLUEDROID_VENDOR_CONF := device/huawei/u8815/bluetooth/libbt_vndcfg.txt
+BOARD_BLUEDROID_VENDOR_CONF := device/huawei/u8815/bluetooth/vnd_u8815.txt
 
 # FM Radio
 BOARD_HAVE_FM_RADIO := true
