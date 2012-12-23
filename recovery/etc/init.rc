@@ -10,6 +10,7 @@ on init
     symlink /system/etc /etc
 
     mkdir /boot
+    mkdir /cust
     mkdir /recovery
     mkdir /sdcard
     mkdir /internal_sd
@@ -62,7 +63,7 @@ service rmt_oeminfo /sbin/rmt_oeminfo
     user root
     oneshot
 
-on property:ro.boot.emmc=1
+on property:ro.boot.emmc=true
     start rmt_oeminfo
     start rmt_storage
 
