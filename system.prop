@@ -23,6 +23,7 @@ dalvik.vm.heapstartsize=5m
 debug.composition.type=gpu
 debug.hwc.dynThreshold=1.91
 debug.sf.hw=1
+debug.sf.swaprect=1
 gfx.highend_override=yes
 hwui.render_dirty_regions=false
 persist.sys.use_dithering=2
