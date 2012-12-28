@@ -1,7 +1,7 @@
 USE_CAMERA_STUB := false
 
 # inherit from the proprietary version
--include vendor/huawei/u8818/BoardConfigVendor.mk
+-include vendor/huawei/u8815/BoardConfigVendor.mk
 
 TARGET_NO_BOOTLOADER := true
 
@@ -16,8 +16,8 @@ TARGET_CPU_ABI2 := armeabi
 TARGET_ARCH_VARIANT := armv7-a-neon
 ARCH_ARM_HAVE_TLS_REGISTER := true
 
-TARGET_BOOTLOADER_BOARD_NAME := u8818
-TARGET_OTA_ASSERT_DEVICE := u8818,hwu8818,u8815,hwu8815
+TARGET_BOOTLOADER_BOARD_NAME := u8815
+TARGET_OTA_ASSERT_DEVICE := u8815,hwu8815,u8815,hwu8815
 
 # Audio
 BOARD_PROVIDES_LIBAUDIO := true
@@ -27,15 +27,15 @@ TARGET_PROVIDES_LIBLIGHTS := true
 # GPS
 BOARD_USES_QCOM_GPS := true
 BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION := 50000
-BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := u8818
+BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := u8815
 
 # Touchscreen
 BOARD_USE_LEGACY_TOUCHSCREEN := true
 
-TARGET_SPECIFIC_HEADER_PATH := device/huawei/u8818/include
+TARGET_SPECIFIC_HEADER_PATH := device/huawei/u8815/include
 
 # OpenGL drivers config file path
-BOARD_EGL_CFG := device/huawei/u8818/prebuilt/system/lib/egl/egl.cfg
+BOARD_EGL_CFG := device/huawei/u8815/prebuilt/system/lib/egl/egl.cfg
 BOARD_USES_QCOM_HARDWARE := true
 COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE
 BOARD_USES_QCOM_LIBRPC := true
@@ -76,14 +76,14 @@ BOARD_USERDATAIMAGE_PARTITION_SIZE := 183500800
 BOARD_FLASH_BLOCK_SIZE := 131072
 
 # Kernel 
-#TARGET_KERNEL_SOURCE := kernel/huawei/u8818
-#TARGET_KERNEL_CONFIG := cyanogen_u8818_defconfig
-TARGET_PREBUILT_KERNEL := device/huawei/u8818/kernel
+#TARGET_KERNEL_SOURCE := kernel/huawei/u8815
+#TARGET_KERNEL_CONFIG := cyanogen_u8815_defconfig
+TARGET_PREBUILT_KERNEL := device/huawei/u8815/kernel
 BOARD_KERNEL_CMDLINE := console=ttyDDC0 androidboot.hardware=huawei
 BOARD_KERNEL_BASE := 0x00200000
 BOARD_PAGE_SIZE := 2048
 
-TARGET_RECOVERY_INITRC := device/huawei/u8818/recovery/etc/init.rc
+TARGET_RECOVERY_INITRC := device/huawei/u8815/recovery/etc/init.rc
 BOARD_DATA_DEVICE := /dev/block/mmcblk0p13
 BOARD_DATA_FILESYSTEM := ext4
 BOARD_DATA_FILESYSTEM_OPTIONS := rw
@@ -96,8 +96,8 @@ BOARD_CACHE_FILESYSTEM_OPTIONS := rw
 BOARD_USES_MMCUTILS := true
 BOARD_HAS_NO_MISC_PARTITION := true
 
-BOARD_CUSTOM_GRAPHICS := ../../../device/huawei/u8818/recovery/graphics.c
-BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/huawei/u8818/recovery/recovery_ui.c
+BOARD_CUSTOM_GRAPHICS := ../../../device/huawei/u8815/recovery/graphics.c
+BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/huawei/u8815/recovery/recovery_ui.c
 BOARD_USE_USB_MASS_STORAGE_SWITCH := true
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/devices/platform/usb_mass_storage/lun
 TARGET_USE_CUSTOM_SECOND_LUN_NUM := 2

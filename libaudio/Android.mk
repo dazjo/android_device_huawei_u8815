@@ -2,7 +2,7 @@
 
 #AUDIO_POLICY_TEST := true
 #ENABLE_AUDIO_DUMP := true
-ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),u8818)
+ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),u8815)
 LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
@@ -28,7 +28,7 @@ LOCAL_STATIC_LIBRARIES := \
     libmedia_helper \
     libaudiohw_legacy
 
-LOCAL_MODULE := audio.primary.u8818
+LOCAL_MODULE := audio.primary.u8815
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
 LOCAL_MODULE_TAGS := optional
 
@@ -60,7 +60,7 @@ LOCAL_STATIC_LIBRARIES := \
     libmedia_helper \
     libaudiopolicy_legacy
 
-LOCAL_MODULE := audio_policy.u8818
+LOCAL_MODULE := audio_policy.u8815
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
 LOCAL_MODULE_TAGS := optional
 

@@ -1,5 +1,5 @@
 
-LOCAL_PATH := device/huawei/u8818/prebuilt
+LOCAL_PATH := device/huawei/u8815/prebuilt
 
 #
 # Kernel
