@@ -28,10 +28,13 @@ on init
 on boot-pause
     exec system/bin/battery_charging
 
-on emmc-fs
+on fs
 # mount mmc partitions
-    wait /dev/block/mmcblk0p12
-    mount ext4 /dev/block/mmcblk0p12 /system rw barrier=1,nodelalloc
+# ueventd is broken for some reason
+    chmod 0777 /dev/kgsl-3d0
+    chmod 0777 /dev/msm_hw3dm
+# had to change mount for system mount to work
+    mount ext4 /dev/block/mmcblk0p12 /system wait ro
     wait /dev/block/mmcblk0p13
     exec /system/bin/e2fsck -p /dev/block/mmcblk0p13
     mount ext4 /dev/block/mmcblk0p13 /data nosuid nodev barrier=1 noauto_da_alloc,nodelalloc

@@ -21,10 +21,6 @@
      for different hardware and product builds. -->
 <resources>
 
-    <!-- Boolean indicating if current platform supports quick switch-on/off of
-Bluetooth module -->
-    <bool name="config_bluetooth_adapter_quick_switch">false</bool>
-
     <!-- Default color for notification LED is green. -->
     <color name="config_defaultNotificationColor">#ff00ff00</color>
 
@@ -47,14 +43,6 @@ Bluetooth module -->
     
     <bool name="config_batterySdCardAccessibility">true</bool>
 
-    <!-- If true, the direction rotation is applied to get to an application's requested
-         orientation is reversed.  Normally, the model is that landscape is
-         clockwise from portrait; thus on a portrait device an app requesting
-         landscape will cause a clockwise rotation, and on a landscape device an
-         app requesting portrait will cause a counter-clockwise rotation.  Setting
-         true here reverses that logic. -->
-    <bool name="config_reverseDefaultRotation">false</bool>
-
     <integer name="config_deskDockKeepsScreenOn">1</integer>
     <integer name="config_carDockKeepsScreenOn">1</integer>
 
@@ -70,10 +58,6 @@ Bluetooth module -->
     <!-- Flag indicating whether we should enable the automatic brightness in Settings.
          config_hardware_automatic_brightness_available is not set, so we will use software implementation -->
     <bool name="config_automatic_brightness_available">true</bool>
-
-    <!-- Whether a software navigation bar should be shown. NOTE: in the future this may be
-         autodetected from the Configuration. -->
-    <bool name="config_showNavigationBar">false</bool>
 
     <!-- Array of light sensor LUX values to define our levels for auto backlight brightness support.
          The N entries of this array define N + 1 zones as follows:
@@ -137,9 +121,6 @@ Bluetooth module -->
          will not debounce light sensor readings -->
     <integer name="config_lightSensorWarmupTime">2000</integer>
 
-    <!-- Minimum screen brightness allowed by the power manager. -->
-    <integer name="config_screenBrightnessDim">20</integer>
-
     <!-- XXXXX NOTE THE FOLLOWING RESOURCES USE THE WRONG NAMING CONVENTION.
          Please don't copy them, copy anything else. -->
 
@@ -193,44 +174,13 @@ Bluetooth module -->
         <item>"eth\\d"</item>
     </string-array>
 
-    <!-- List of regexpressions describing the interface (if any) that represent tetherable
-         bluetooth interfaces.  If the device doesn't want to support tethering over bluetooth this
-         should be empty. -->
-    <string-array translatable="false" name="config_tether_bluetooth_regexs">
-        <item>"bnep\\d"</item>
-    </string-array>
-
-    <!-- Array of ConnectivityManager.TYPE_xxxx values allowable for tethering -->
-    <!-- Common options are [1, 4] for TYPE_WIFI and TYPE_MOBILE_DUN or
-    <!== [0,1,5,7] for TYPE_MOBILE, TYPE_WIFI, TYPE_MOBILE_HIPRI and TYPE_BLUETOOTH -->
-    <integer-array translatable="false" name="config_tether_upstream_types">
-        <item>0</item>
-        <item>1</item>
-        <item>5</item>
-        <item>7</item>
-    </integer-array>
-
-    <!-- Boolean indicating whether the wifi chipset has dual frequency band support -->
-    <bool translatable="false" name="config_wifi_dual_band_support">true</bool>
-
-    <!-- Boolean indicating whether the wifi chipset has background scan support -->
-    <bool translatable="false" name="config_wifi_background_scan_support">true</bool>
-
-    <bool name="config_ui_enableFadingMarquee">false</bool>
-
     <!-- Component name of the service providing network location support. -->
     <string name="config_networkLocationProvider">com.google.android.location.NetworkLocationProvider</string>
 
     <!-- Component name of the service providing geocoder API support. -->
     <string name="config_geocodeProvider">com.google.android.location.GeocodeProvider</string>
 
-    <!-- Is the notification LED intrusive? Used to decide if there should be a disable option -->
-    <bool name="config_intrusiveNotificationLed">true</bool>
-
     <!-- The default iface on which to monitor data use -->
     <string name="config_datause_iface">rmnet0</string>
-
-    <string name="config_legacyUmsLunFile">/sys/devices/platform/usb_mass_storage/lun0/file</string>
-
 
 </resources>

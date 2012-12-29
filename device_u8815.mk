@@ -33,11 +33,8 @@ PRODUCT_PACKAGES += \
     
 # Graphics 
 PRODUCT_PACKAGES += \
-    gralloc.msm7x27 \
-    copybit.msm7x27 \
-    hwcomposer.msm7x27 \
-    libtilerenderer \
-    libQcomUI
+    gralloc.u8815 \
+    copybit.u8815
 
 # Audio
 PRODUCT_PACKAGES += \
@@ -77,6 +74,7 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8815/prebuilt/system/wifi/fw_4330_b2.bin:system/wifi/fw_4330_b2.bin \
     device/huawei/u8815/prebuilt/system/wifi/nvram_4330.txt:system/wifi/nvram_4330.txt \
     device/huawei/u8815/prebuilt/system/etc/wifi/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
+
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/prebuilt/system/etc/bluetooth/BCM4330.hcd:system/etc/bluetooth/BCM4330.hcd \
     device/huawei/u8815/prebuilt/system/etc/bluetooth/init.bcm.bt.sh:system/etc/bluetooth/init.bcm.bt.sh \
@@ -91,12 +89,7 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8815/prebuilt/system/etc/init.qcom.post_boot.sh:system/etc/init.qcom.post_boot.sh \
     device/huawei/u8815/prebuilt/system/etc/init.qcom.sdio.sh:system/etc/init.qcom.sdio.sh \
     device/huawei/u8815/prebuilt/system/etc/vold.fstab:system/etc/vold.fstab \
-    device/huawei/u8815/mediaprofiles/media_profiles.xml:system/etc/media_profiles.xml \
     device/huawei/u8815/prebuilt/system/etc/AutoVolumeControl.txt:system/etc/AutoVolumeControl.txt
-
-PRODUCT_COPY_FILES += \
-    device/huawei/u8815/prebuilt/system/etc/firmware/yamato_pfp.fw:system/etc/firmware/yamato_pfp.fw \
-    device/huawei/u8815/prebuilt/system/etc/firmware/yamato_pm4.fw:system/etc/firmware/yamato_pm4.fw
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/prebuilt/system/usr/idc/synaptics.idc:system/usr/idc/synaptics.idc \
@@ -106,21 +99,9 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8815/prebuilt/system/usr/keylayout/AVRCP.kl:system/usr/keylayout/AVRCP.kl \
     device/huawei/u8815/prebuilt/system/usr/keylayout/Generic.kl:system/usr/keylayout/Generic.kl \
     device/huawei/u8815/prebuilt/system/usr/keylayout/surf_keypad.kl:system/usr/keylayout/surf_keypad.kl
-    
-PRODUCT_COPY_FILES += \
-    device/huawei/u8815/prebuilt/system/lib/egl/libq3dtools_adreno200.so:system/lib/egl/libq3dtools_adreno200.so \
-    device/huawei/u8815/prebuilt/system/lib/egl/libGLESv2_adreno200.so:system/lib/egl/libGLESv2_adreno200.so \
-    device/huawei/u8815/prebuilt/system/lib/egl/libGLESv1_CM_adreno200.so:system/lib/egl/libGLESv1_CM_adreno200.so \
-    device/huawei/u8815/prebuilt/system/lib/egl/libEGL_adreno200.so:system/lib/egl/libEGL_adreno200.so \
-    device/huawei/u8815/prebuilt/system/lib/egl/eglsubAndroid.so:system/lib/egl/eglsubAndroid.so \
-    device/huawei/u8815/prebuilt/system/lib/libC2D2.so:system/lib/libC2D2.so \
-    device/huawei/u8815/prebuilt/system/lib/libOpenVG.so:system/lib/libOpenVG.so \
-    device/huawei/u8815/prebuilt/system/lib/libsc-a2xx.so:system/lib/libsc-a2xx.so \
-    device/huawei/u8815/prebuilt/system/lib/libgsl.so:system/lib/libgsl.so
 
 PRODUCT_COPY_FILES += \
-    vendor/cm/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml \
-    device/huawei/u8815/prebuilt/system/bin/vold:system/bin/vold
+    vendor/cyanogen/prebuilt/common/etc/apns-conf.xml:system/etc/apns-conf.xml
 
 PRODUCT_LOCALES += hdpi
 
