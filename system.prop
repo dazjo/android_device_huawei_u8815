@@ -18,9 +18,7 @@ dalvik.vm.heapsize=128m
 dalvik.vm.heapstartsize=5m
 
 # Display
-# We should be using mdp composition but
-# this is causing issues for 7x27a on CM
-debug.composition.type=gpu
+debug.composition.type=mdp
 debug.hwc.dynThreshold=1.91
 debug.sf.hw=1
 debug.sf.swaprect=1
@@ -38,7 +36,7 @@ ro.confg.hw_appversion=U8815VCM10_1_KERNEL
 
 # Qualcomm
 com.qc.hardware=true
-debug.composition.7x27A.type=gpu
+debug.composition.7x27A.type=mdp
 hwui.render_dirty_regions.7x27A=true
 ro.hw_plat=7x27A
 ro.vendor.extension_library=/system/lib/libqc-opt.so
