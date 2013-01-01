@@ -10,9 +10,6 @@ $(call inherit-product, vendor/cm/config/common_full_phone.mk)
 # Inherit device configuration
 $(call inherit-product, device/huawei/u8815/u8815.mk)
 
-CM_BUILDTYPE := EXPERIMENTAL
-CM_EXTRAVERSION := R3
-
 # Correct boot animation size for the screen.
 TARGET_SCREEN_HEIGHT := 800
 TARGET_SCREEN_WIDTH := 480
