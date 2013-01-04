@@ -197,20 +197,21 @@ set_speaker_light_locked(struct light_device_t* dev,
             pwm = 16;
 
         blink = 1;
-
-        v[0] = colorRGB;
-        v[1] = onMS/2;
-        v[2] = offMS;
-        huawei_oem_rapi_streaming_function(0x26, 0, 0, 0xc, v, 0, 0);
+        if(read_int(SLEEP_FILE) == 0) {
+            v[0] = colorRGB;
+            v[1] = onMS/2;
+            v[2] = offMS;
+            huawei_oem_rapi_streaming_function(0x26, 0, 0, 0xc, v, 0, 0);
+        }
     } else {
         blink = 0;
         freq = 0;
         pwm = 0;
-
-        v[0] = colorRGB;
-        v[1] = 0;
-        v[2] = 0;
-        huawei_oem_rapi_streaming_function(0x26, 0, 0, 0xc, v, 0, 0);
+        if(read_int(SLEEP_FILE) == 0) {
+            v[0] = colorRGB;
+            v[1] = 0;
+            v[2] = 0;
+            huawei_oem_rapi_streaming_function(0x26, 0, 0, 0xc, v, 0, 0);
         }
     }
 
