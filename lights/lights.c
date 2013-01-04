@@ -211,13 +211,14 @@ set_speaker_light_locked(struct light_device_t* dev,
         v[1] = 0;
         v[2] = 0;
         huawei_oem_rapi_streaming_function(0x26, 0, 0, 0xc, v, 0, 0);
+        }
     }
 
-    if (blink) {
-        write_int(RED_FREQ_FILE, freq);
-        write_int(RED_PWM_FILE, pwm);
-    }
-    write_int(RED_BLINK_FILE, blink);
+        if (blink) {
+            write_int(RED_FREQ_FILE, freq);
+            write_int(RED_PWM_FILE, pwm);
+        }
+        write_int(RED_BLINK_FILE, blink);
 
     return 0;
 }
