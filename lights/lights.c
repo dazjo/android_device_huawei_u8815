@@ -33,9 +33,6 @@
 #include <hardware/lights.h>
 
 /******************************************************************************/
- 
-/* In libhwrpc.so */
-extern void huawei_oem_rapi_streaming_function(int n, int p1, int p2, int p3, int *v1, int *v2, int *v3);
 
 static pthread_once_t g_init = PTHREAD_ONCE_INIT;
 static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -152,8 +149,6 @@ set_speaker_light_locked(struct light_device_t* dev,
     int onMS, offMS;
     unsigned int colorRGB;
 
-    int v[3];
-
     switch (state->flashMode) {
         case LIGHT_FLASH_TIMED:
             onMS = state->flashOnMS;
@@ -197,22 +192,10 @@ set_speaker_light_locked(struct light_device_t* dev,
             pwm = 16;
 
         blink = 1;
-        if(read_int(SLEEP_FILE) == 0) {
-            v[0] = colorRGB;
-            v[1] = onMS/2;
-            v[2] = offMS;
-            huawei_oem_rapi_streaming_function(0x26, 0, 0, 0xc, v, 0, 0);
-        }
     } else {
         blink = 0;
         freq = 0;
         pwm = 0;
-        if(read_int(SLEEP_FILE) == 0) {
-            v[0] = colorRGB;
-            v[1] = 0;
-            v[2] = 0;
-            huawei_oem_rapi_streaming_function(0x26, 0, 0, 0xc, v, 0, 0);
-        }
     }
 
         if (blink) {
