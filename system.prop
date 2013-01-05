@@ -2,10 +2,6 @@
 # system.prop for u8815
 #
 
-# Audio
-dev.pm.dyn_sample_period=700000
-dev.pm.dyn_samplingrate=1
-
 # CWM
 ro.cwm.enable_key_repeat=true
 
@@ -34,6 +30,8 @@ ro.confg.hw_appversion=U8815VCM9_KERNEL
 com.qc.hardware=true
 debug.composition.7x27A.type=mdp
 debug.enabletr.7x27A=true
+dev.pm.dyn_sample_period=700000
+dev.pm.dyn_samplingrate=1
 hwui.render_dirty_regions.7x27A=true
 ro.hw_plat=7x27A
 ro.vendor.extension_library=/system/lib/libqc-opt.so
