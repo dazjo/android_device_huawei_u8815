@@ -6,15 +6,12 @@
 ro.cwm.enable_key_repeat=true
 
 # Dalvik
-dalvik.vm.dexopt-data-only=1
-dalvik.vm.execution-mode=int:jit
 dalvik.vm.heapgrowthlimit=36m
 dalvik.vm.heapsize=128m
 dalvik.vm.heapstartsize=5m
 
 # Display
 debug.composition.type=mdp
-debug.sf.hw=1
 hwui.render_dirty_regions=true
 persist.sys.use_dithering=1
 ro.max.fling_velocity=4000
