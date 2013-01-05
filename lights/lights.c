@@ -31,6 +31,7 @@
 #include <sys/types.h>
 
 #include <hardware/lights.h>
+#include <hardware_legacy/power.h>
 
 /******************************************************************************/
 
@@ -156,6 +157,7 @@ void
             usleep(offMS * 1000);
         }
     }
+    release_wake_lock("blink");
     return 0;
 }
 
@@ -213,6 +215,7 @@ set_speaker_light_locked(struct light_device_t* dev,
     }
 
     if(blink) {
+        acquire_wake_lock(PARTIAL_WAKE_LOCK, "blink");
         pthread_create(&t_led_blink, NULL, led_blink, NULL);
     } else {
         write_int(RED_LED_FILE, red);
