@@ -11,6 +11,9 @@ on init
 
     mkdir /boot
     mkdir /cust
+    mkdir /p5
+    mkdir /p10
+    mkdir /p11
     mkdir /recovery
     mkdir /sdcard
     mkdir /internal_sd
