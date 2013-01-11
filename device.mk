@@ -35,7 +35,6 @@ PRODUCT_PACKAGES += \
 
 # Other HALs
 PRODUCT_PACKAGES += \
-    camera.u8815 \
     gps.u8815
 #   lights.u8815
 
