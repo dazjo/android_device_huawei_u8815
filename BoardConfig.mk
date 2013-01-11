@@ -11,15 +11,15 @@ TARGET_NO_RADIOIMAGE := true
 
 TARGET_CPU_ABI := armeabi-v7a
 TARGET_CPU_ABI2 := armeabi
-TARGET_CPU_SMP := true
 
+TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv7-a-neon
-
-ARCH_ARM_HAVE_TLS_REGISTER := true
+TARGET_ARCH_VARIANT_CPU := cortex-a5
 
 BOARD_USES_QCOM_HARDWARE := true
 COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE
 
+TARGET_EXTRA_CFLAGS += $(call cc-option,-march=armv7-a -mtune=cortex-a5)
 TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 
@@ -55,23 +55,16 @@ BOARD_VENDOR_QCOM_GPS_LOC_API_HARDWARE := u8815
 # Graphics
 BOARD_EGL_CFG := device/huawei/u8815/configs/egl.cfg
 USE_OPENGL_RENDERER := true
+BOARD_ADRENO_DECIDE_TEXTURE_TARGET := true
 BOARD_AVOID_DRAW_TEXTURE_EXTENSION := true
 BOARD_USE_SKIA_LCDTEXT := true
-TARGET_GRALLOC_USES_ASHMEM := true
-
-# Touchscreen
-BOARD_USE_LEGACY_TOUCHSCREEN := true
 
 # Video
 COMMON_GLOBAL_CFLAGS += -DQCOM_ICS_DECODERS -DQCOM_NO_SECURE_PLAYBACK
 
 # Web Rendering
-WITH_JIT := true
-ENABLE_JSC_JIT := true
 ENABLE_WEBGL := true
 TARGET_FORCE_CPU_UPLOAD := true
-HTTP := chrome
-JS_ENGINE := v8
 
 # USB
 TARGET_USE_CUSTOM_LUN_FILE_PATH := /sys/class/android_usb/android0/f_mass_storage/lun%d/file
@@ -111,7 +104,7 @@ TARGET_CUSTOM_WIFI := ../../device/huawei/u8815/libhardware_legacy/wifi/wifi.c
 # Kernel 
 TARGET_KERNEL_SOURCE := kernel/huawei/u8815
 TARGET_KERNEL_CONFIG := cyanogenmod_u8815_defconfig
-BOARD_KERNEL_CMDLINE := androidboot.hardware=huawei no_console_suspend=true
+BOARD_KERNEL_CMDLINE := androidboot.hardware=huawei
 BOARD_KERNEL_BASE := 0x00200000
 BOARD_PAGE_SIZE := 2048
 
