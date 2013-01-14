@@ -19,8 +19,9 @@ dalvik.vm.heapstartsize=5m
 
 # Display
 debug.composition.type=mdp
-debug.fb.rgb565=0
+debug.enabletr=false
 debug.hwc.dynThreshold=1.9
+debug.sf.swaprect=1
 hwui.render_dirty_regions=true
 ro.max.fling_velocity=4000
 ro.opengles.version=131072
@@ -33,8 +34,6 @@ ro.confg.hw_appversion=U8815VCM10_KERNEL
 
 # Qualcomm
 com.qc.hardware=true
-debug.composition.7x27A.type=mdp
-hwui.render_dirty_regions.7x27A=true
 ro.hw_plat=7x27A
 ro.vendor.extension_library=/system/lib/libqc-opt.so
 
