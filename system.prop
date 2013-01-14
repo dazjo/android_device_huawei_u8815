@@ -7,6 +7,12 @@ dev.pm.dyn_sample_period=700000
 dev.pm.dyn_samplingrate=1
 headset.hook.delay=500
 
+# Bluetooth
+ro.bluetooth.remote.autoconnect=true
+ro.bluetooth.request.master=true
+ro.qualcomm.bluetooth.dun=true
+ro.qualcomm.bluetooth.ftp=true
+
 # CWM
 ro.cwm.enable_key_repeat=true
 
