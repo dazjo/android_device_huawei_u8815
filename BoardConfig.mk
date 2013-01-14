@@ -14,12 +14,12 @@ TARGET_CPU_ABI2 := armeabi
 
 TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv7-a-neon
-TARGET_ARCH_VARIANT_CPU := cortex-a5
+
+ARCH_ARM_HAVE_TLS_REGISTER := true
 
 BOARD_USES_QCOM_HARDWARE := true
 COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE
 
-TARGET_EXTRA_CFLAGS += $(call cc-option,-march=armv7-a -mtune=cortex-a5)
 TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 
