@@ -3,8 +3,6 @@
 #
 
 # Audio
-dev.pm.dyn_sample_period=700000
-dev.pm.dyn_samplingrate=1
 headset.hook.delay=500
 
 # Bluetooth
@@ -40,6 +38,8 @@ ro.confg.hw_appversion=U8815VCM10_KERNEL
 
 # Qualcomm
 com.qc.hardware=true
+dev.pm.dyn_sample_period=700000
+dev.pm.dyn_samplingrate=1
 ro.hw_plat=7x27A
 ro.vendor.extension_library=/system/lib/libqc-opt.so
 
