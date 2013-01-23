@@ -3,28 +3,25 @@
 #
 
 # Audio
-dev.pm.dyn_sample_period=700000
-dev.pm.dyn_samplingrate=1
 headset.hook.delay=500
+
+# Bluetooth
+ro.bluetooth.remote.autoconnect=true
+ro.bluetooth.request.master=true
+ro.qualcomm.bluetooth.dun=true
+ro.qualcomm.bluetooth.ftp=true
 
 # CWM
 ro.cwm.enable_key_repeat=true
 
 # Dalvik
-dalvik.vm.dexopt-data-only=1
-dalvik.vm.execution-mode=int:jit
-dalvik.vm.heapgrowthlimit=36m
-dalvik.vm.heapsize=128m
+dalvik.vm.heapgrowthlimit=32m
+dalvik.vm.heapsize=76m
 dalvik.vm.heapstartsize=5m
 
 # Display
-debug.composition.type=mdp
 debug.hwc.dynThreshold=1.91
-debug.sf.hw=1
 debug.sf.swaprect=1
-gfx.highend_override=yes
-hwui.render_dirty_regions=true
-persist.sys.use_dithering=2
 ro.max.fling_velocity=4000
 ro.opengles.version=131072
 ro.sf.lcd_density=240
@@ -36,8 +33,8 @@ ro.confg.hw_appversion=U8815VCM10_1_KERNEL
 
 # Qualcomm
 com.qc.hardware=true
-debug.composition.7x27A.type=mdp
-hwui.render_dirty_regions.7x27A=true
+dev.pm.dyn_sample_period=700000
+dev.pm.dyn_samplingrate=1
 ro.hw_plat=7x27A
 ro.vendor.extension_library=/system/lib/libqc-opt.so
 
