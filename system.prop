@@ -20,11 +20,8 @@ dalvik.vm.heapsize=76m
 dalvik.vm.heapstartsize=5m
 
 # Display
-debug.composition.type=mdp
-debug.enabletr=false
-debug.hwc.dynThreshold=1.9
+debug.hwc.dynThreshold=1.91
 debug.sf.swaprect=1
-hwui.render_dirty_regions=true
 ro.max.fling_velocity=4000
 ro.opengles.version=131072
 ro.sf.lcd_density=240
