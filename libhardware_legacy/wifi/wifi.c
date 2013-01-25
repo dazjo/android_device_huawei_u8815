@@ -1025,6 +1025,29 @@ int wifi_send_command(int index, const char *cmd, char *reply, size_t *reply_len
     return 0;
 }
 
+void wifi_close_sockets(int index)
+{
+    if (ctrl_conn[index] != NULL) {
+        wpa_ctrl_close(ctrl_conn[index]);
+        ctrl_conn[index] = NULL;
+    }
+
+    if (monitor_conn[index] != NULL) {
+        wpa_ctrl_close(monitor_conn[index]);
+        monitor_conn[index] = NULL;
+    }
+
+    if (exit_sockets[index][0] >= 0) {
+        close(exit_sockets[index][0]);
+        exit_sockets[index][0] = -1;
+    }
+
+    if (exit_sockets[index][1] >= 0) {
+        close(exit_sockets[index][1]);
+        exit_sockets[index][1] = -1;
+    }
+}
+
 int wifi_ctrl_recv(int index, char *reply, size_t *reply_len)
 {
     int res;
@@ -1121,29 +1144,6 @@ int wifi_wait_for_event(const char *ifname, char *buf, size_t buflen)
         return wifi_wait_on_socket(PRIMARY, buf, buflen);
     } else {
         return wifi_wait_on_socket(SECONDARY, buf, buflen);
-    }
-}
-
-void wifi_close_sockets(int index)
-{
-    if (ctrl_conn[index] != NULL) {
-        wpa_ctrl_close(ctrl_conn[index]);
-        ctrl_conn[index] = NULL;
-    }
-
-    if (monitor_conn[index] != NULL) {
-        wpa_ctrl_close(monitor_conn[index]);
-        monitor_conn[index] = NULL;
-    }
-
-    if (exit_sockets[index][0] >= 0) {
-        close(exit_sockets[index][0]);
-        exit_sockets[index][0] = -1;
-    }
-
-    if (exit_sockets[index][1] >= 0) {
-        close(exit_sockets[index][1]);
-        exit_sockets[index][1] = -1;
     }
 }
 
