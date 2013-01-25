@@ -639,7 +639,7 @@ static int qcom_adev_open(const hw_module_t* module, const char* name,
         return -ENOMEM;
 
     qadev->device.common.tag = HARDWARE_DEVICE_TAG;
-    qadev->device.common.version = AUDIO_DEVICE_API_VERSION_1_0;
+    qadev->device.common.version = AUDIO_DEVICE_API_VERSION_2_0;
     qadev->device.common.module = const_cast<hw_module_t*>(module);
     qadev->device.common.close = qcom_adev_close;
 
