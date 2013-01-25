@@ -290,7 +290,7 @@ int wifi_load_driver()
 #ifdef WIFI_DRIVER_MODULE_PATH
     char driver_status[PROPERTY_VALUE_MAX];
     int count = 100; /* wait at most 20 seconds for completion */
-    char module_arg[PROPERTY_VALUE_MAX];
+    char module_arg[256];
     char module_mac_param[PROPERTY_VALUE_MAX];
     char module_arg2[256];
 
