@@ -273,11 +273,9 @@ status_t AudioHardware::initCheck()
 AudioStreamOut* AudioHardware::openOutputStream(uint32_t devices, int *format, uint32_t *channels,
         uint32_t *sampleRate, status_t *status)
 {
-    ALOGD("openOutputStream: devices = %u format = %x channels = %u sampleRate = %u\n",
-         devices, *format, *channels, *sampleRate);
-
     audio_output_flags_t flags = static_cast<audio_output_flags_t> (*status);
-
+    ALOGD("openOutputStream: devices = %u format = %x channels = %u sampleRate = %u flags %x\n",
+         devices, *format, *channels, *sampleRate, flags);
     { // scope for the lock
         status_t lStatus;
         Mutex::Autolock lock(mLock);
@@ -3558,12 +3556,11 @@ status_t AudioHardware::AudioSessionOutLPA::openAudioSessionDevice( )
     }
 
 	start();
-	//bufferAlloc();
+	bufferAlloc();
 
 	return status;
 }
 
-/*
 void AudioHardware::AudioSessionOutLPA::bufferAlloc( )
 {
     // Allocate ION buffers
@@ -3712,7 +3709,6 @@ void AudioHardware::AudioSessionOutLPA::bufferDeAlloc()
         ionfd = -1;
     }
 }
-*/
 
 uint32_t AudioHardware::AudioSessionOutLPA::latency() const
 {
@@ -4002,7 +3998,7 @@ void AudioHardware::AudioSessionOutLPA::reset()
     mIsDriverStarted = false;
     requestAndWaitForEventThreadExit();
     status_t status = NO_ERROR;
-    //bufferDeAlloc();
+    bufferDeAlloc();
     ::close(afd);
     ALOGD("AudioSessionOutLPA::reset() complete");
 }
