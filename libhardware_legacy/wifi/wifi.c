@@ -23,6 +23,17 @@
 #include <unistd.h>
 #include <poll.h>
 
+#ifdef USES_TI_MAC80211
+#include <dirent.h>
+#include <net/if.h>
+#include <netlink/genl/genl.h>
+#include <netlink/genl/family.h>
+#include <netlink/genl/ctrl.h>
+#include <netlink/msg.h>
+#include <netlink/attr.h>
+#include "nl80211.h"
+#endif
+
 #include "hardware_legacy/wifi.h"
 #include "libwpa_client/wpa_ctrl.h"
 
@@ -61,12 +72,24 @@ extern void get_dhcp_info();
 extern int init_module(void *, unsigned long, const char *);
 extern int delete_module(const char *, unsigned int);
 
+static int wifi_mode = 0;
+
 static char primary_iface[PROPERTY_VALUE_MAX];
 // TODO: use new ANDROID_SOCKET mechanism, once support for multiple
 // sockets is in
 
+#ifdef USES_TI_MAC80211
+#define P2P_INTERFACE			"p2p0"
+struct nl_sock *nl_soc;
+struct nl_cache *nl_cache;
+struct genl_family *nl80211;
+#endif
+
 #ifndef WIFI_DRIVER_MODULE_ARG
 #define WIFI_DRIVER_MODULE_ARG          ""
+#endif
+#ifndef WIFI_DRIVER_MODULE_AP_ARG
+#define WIFI_DRIVER_MODULE_AP_ARG       ""
 #endif
 #ifndef WIFI_FIRMWARE_LOADER
 #define WIFI_FIRMWARE_LOADER		""
@@ -105,6 +128,7 @@ static const char DRIVER_MODULE_NAME[]  = WIFI_DRIVER_MODULE_NAME;
 static const char DRIVER_MODULE_TAG[]   = WIFI_DRIVER_MODULE_NAME " ";
 static const char DRIVER_MODULE_PATH[]  = WIFI_DRIVER_MODULE_PATH;
 static const char DRIVER_MODULE_ARG[]   = WIFI_DRIVER_MODULE_ARG;
+static const char DRIVER_MODULE_AP_ARG[] = WIFI_DRIVER_MODULE_AP_ARG;
 #endif
 static const char FIRMWARE_LOADER[]     = WIFI_FIRMWARE_LOADER;
 static const char DRIVER_PROP_NAME[]    = "wlan.driver.status";
@@ -269,6 +293,7 @@ int wifi_load_driver()
     char module_arg[PROPERTY_VALUE_MAX];
     char module_mac_param[PROPERTY_VALUE_MAX];
     char module_arg2[256];
+
 #ifdef SAMSUNG_WIFI
     char* type = get_samsung_wifi_type();
 #endif
@@ -285,7 +310,11 @@ int wifi_load_driver()
     sprintf(module_arg, "%s %s", DRIVER_MODULE_ARG, module_mac_param);
 
 #ifdef SAMSUNG_WIFI
-    snprintf(module_arg2, sizeof(module_arg2), "%s%s", DRIVER_MODULE_ARG, type == NULL ? "" : type);
+    if (wifi_mode == 1) {
+        snprintf(module_arg2, sizeof(module_arg2), "%s%s", DRIVER_MODULE_AP_ARG, type == NULL ? "" : type);
+    } else {
+        snprintf(module_arg2, sizeof(module_arg2), "%s%s", DRIVER_MODULE_ARG, type == NULL ? "" : type);
+    }
 
     if (insmod(DRIVER_MODULE_PATH, module_arg2) < 0) {
 #else
@@ -433,7 +462,19 @@ int update_ctrl_interface(const char *config_file) {
     } else {
         strcpy(ifc, CONTROL_IFACE_PATH);
     }
-    if ((sptr = strstr(pbuf, "ctrl_interface="))) {
+    /*
+     * if there is a "ctrl_interface=<value>" entry, re-write it ONLY if it is
+     * NOT a directory.  The non-directory value option is an Android add-on
+     * that allows the control interface to be exchanged through an environment
+     * variable (initialized by the "init" program when it starts a service
+     * with a "socket" option).
+     *
+     * The <value> is deemed to be a directory if the "DIR=" form is used or
+     * the value begins with "/".
+     */
+    if ((sptr = strstr(pbuf, "ctrl_interface=")) &&
+        (!strstr(pbuf, "ctrl_interface=DIR=")) &&
+        (!strstr(pbuf, "ctrl_interface=/"))) {
         char *iptr = sptr + strlen("ctrl_interface=");
         int ilen = 0;
         int mlen = strlen(ifc);
@@ -567,6 +608,220 @@ void wifi_wpa_ctrl_cleanup(void)
     closedir(dir);
 }
 
+#ifdef USES_TI_MAC80211
+static int init_nl()
+{
+    int err;
+
+    nl_soc = nl_socket_alloc();
+    if (!nl_soc) {
+        ALOGE("Failed to allocate netlink socket.");
+        return -ENOMEM;
+    }
+
+    if (genl_connect(nl_soc)) {
+        ALOGE("Failed to connect to generic netlink.");
+        err = -ENOLINK;
+        goto out_handle_destroy;
+    }
+
+    genl_ctrl_alloc_cache(nl_soc, &nl_cache);
+    if (!nl_cache) {
+        ALOGE("Failed to allocate generic netlink cache.");
+        err = -ENOMEM;
+        goto out_handle_destroy;
+    }
+
+    nl80211 = genl_ctrl_search_by_name(nl_cache, "nl80211");
+    if (!nl80211) {
+        ALOGE("nl80211 not found.");
+        err = -ENOENT;
+        goto out_cache_free;
+    }
+
+    return 0;
+
+out_cache_free:
+    nl_cache_free(nl_cache);
+out_handle_destroy:
+    nl_socket_free(nl_soc);
+    return err;
+}
+
+static void deinit_nl()
+{
+    genl_family_put(nl80211);
+    nl_cache_free(nl_cache);
+    nl_socket_free(nl_soc);
+}
+
+// ignore the "." and ".." entries
+static int dir_filter(const struct dirent *name)
+{
+    if (0 == strcmp("..", name->d_name) ||
+        0 == strcmp(".", name->d_name))
+            return 0;
+
+    return 1;
+}
+
+// lookup the only active phy
+int phy_lookup()
+{
+    char buf[200];
+    int fd, pos;
+    struct dirent **namelist;
+    int n, i;
+
+    n = scandir("/sys/class/ieee80211", &namelist, dir_filter,
+                (int (*)(const struct dirent**, const struct dirent**))alphasort);
+    if (n != 1) {
+        ALOGE("unexpected - found %d phys in /sys/class/ieee80211", n);
+        for (i = 0; i < n; i++)
+            free(namelist[i]);
+        free(namelist);
+        return -1;
+    }
+
+    snprintf(buf, sizeof(buf), "/sys/class/ieee80211/%s/index",
+             namelist[0]->d_name);
+    free(namelist[0]);
+    free(namelist);
+
+    fd = open(buf, O_RDONLY);
+    if (fd < 0)
+        return -1;
+    pos = read(fd, buf, sizeof(buf) - 1);
+    if (pos < 0) {
+        close(fd);
+        return -1;
+    }
+    buf[pos] = '\0';
+    close(fd);
+    return atoi(buf);
+}
+
+int nl_error_handler(struct sockaddr_nl *nla, struct nlmsgerr *err, void *arg)
+{
+    int *ret = (int *)arg;
+    *ret = err->error;
+    return NL_STOP;
+}
+
+int nl_finish_handler(struct nl_msg *msg, void *arg)
+{
+     int *ret = (int *)arg;
+     *ret = 0;
+     return NL_SKIP;
+}
+
+int nl_ack_handler(struct nl_msg *msg, void *arg)
+{
+    int *ret = (int *)arg;
+    *ret = 0;
+    return NL_STOP;
+}
+
+static int execute_nl_interface_cmd(const char *iface,
+                                    enum nl80211_iftype type,
+                                    uint8_t cmd)
+{
+    struct nl_cb *cb;
+    struct nl_msg *msg;
+    int devidx = 0;
+    int err;
+    int add_interface = (cmd == NL80211_CMD_NEW_INTERFACE);
+
+    if (add_interface) {
+        devidx = phy_lookup();
+    } else {
+        devidx = if_nametoindex(iface);
+        if (devidx == 0) {
+            ALOGE("failed to translate ifname to idx");
+            return -errno;
+        }
+    }
+
+    msg = nlmsg_alloc();
+    if (!msg) {
+        ALOGE("failed to allocate netlink message");
+        return 2;
+    }
+
+    cb = nl_cb_alloc(NL_CB_DEFAULT);
+    if (!cb) {
+        ALOGE("failed to allocate netlink callbacks");
+        err = 2;
+        goto out_free_msg;
+    }
+
+    genlmsg_put(msg, 0, 0, genl_family_get_id(nl80211), 0, 0, cmd, 0);
+
+    if (add_interface) {
+        NLA_PUT_U32(msg, NL80211_ATTR_WIPHY, devidx);
+    } else {
+        NLA_PUT_U32(msg, NL80211_ATTR_IFINDEX, devidx);
+    }
+
+    if (add_interface) {
+        NLA_PUT_STRING(msg, NL80211_ATTR_IFNAME, iface);
+        NLA_PUT_U32(msg, NL80211_ATTR_IFTYPE, type);
+    }
+
+    err = nl_send_auto_complete(nl_soc, msg);
+    if (err < 0)
+        goto out;
+
+    err = 1;
+
+    nl_cb_err(cb, NL_CB_CUSTOM, nl_error_handler, &err);
+    nl_cb_set(cb, NL_CB_FINISH, NL_CB_CUSTOM, nl_finish_handler, &err);
+    nl_cb_set(cb, NL_CB_ACK, NL_CB_CUSTOM, nl_ack_handler, &err);
+
+    while (err > 0)
+        nl_recvmsgs(nl_soc, cb);
+out:
+    nl_cb_put(cb);
+out_free_msg:
+    nlmsg_free(msg);
+    return err;
+nla_put_failure:
+    ALOGW("building message failed");
+    return 2;
+}
+
+int add_remove_p2p_interface(int add)
+{
+    int ret;
+
+    ret = init_nl();
+    if (ret != 0)
+        return ret;
+
+    if (add) {
+        ret = execute_nl_interface_cmd(P2P_INTERFACE, NL80211_IFTYPE_STATION,
+                                       NL80211_CMD_NEW_INTERFACE);
+        if (ret != 0) {
+            ALOGE("could not add P2P interface: %d", ret);
+            goto cleanup;
+        }
+    } else {
+        ret = execute_nl_interface_cmd(P2P_INTERFACE, NL80211_IFTYPE_STATION,
+                                       NL80211_CMD_DEL_INTERFACE);
+        if (ret != 0) {
+            ALOGE("could not remove P2P interface: %d", ret);
+            goto cleanup;
+        }
+    }
+
+    ALOGD("added/removed p2p interface. add: %d", add);
+
+cleanup:
+    deinit_nl();
+    return ret;
+}
+#endif /* USES_TI_MAC80211 */
+
 int wifi_start_supplicant(int p2p_supported)
 {
     char supp_status[PROPERTY_VALUE_MAX] = {'\0'};
@@ -606,6 +861,13 @@ int wifi_start_supplicant(int p2p_supported)
     if (ensure_entropy_file_exists() < 0) {
         ALOGE("Wi-Fi entropy file was not created");
     }
+
+#ifdef USES_TI_MAC80211
+    if (p2p_supported && add_remove_p2p_interface(1) < 0) {
+        ALOGE("Wi-Fi - could not create p2p interface");
+        return -1;
+    }
+#endif
 
     /* Clear out any stale socket files that might be left over. */
     wifi_wpa_ctrl_cleanup();
@@ -781,10 +1043,16 @@ int wifi_ctrl_recv(int index, char *reply, size_t *reply_len)
     }
     if (rfds[0].revents & POLLIN) {
         return wpa_ctrl_recv(monitor_conn[index], reply, reply_len);
-    } else {
-        return -2;
+    } else if (rfds[1].revents & POLLIN) {
+        /* Close only the p2p sockets on receive side
+         * see wifi_close_supplicant_connection()
+         */
+        if (index == SECONDARY) {
+            ALOGD("close sockets %d", index);
+            wifi_close_sockets(index);
+        }
     }
-    return 0;
+    return -2;
 }
 
 int wifi_wait_on_socket(int index, char *buf, size_t buflen)
@@ -891,9 +1159,9 @@ void wifi_close_supplicant_connection(const char *ifname)
          * STA connection does not need it since supplicant gets shutdown
          */
         TEMP_FAILURE_RETRY(write(exit_sockets[SECONDARY][0], "T", 1));
-        wifi_close_sockets(SECONDARY);
-        //closing p2p connection does not need a wait on
-        //supplicant stop
+        /* p2p sockets are closed after the monitor thread
+         * receives the terminate on the exit socket
+         */
         return;
     }
 
@@ -948,4 +1216,9 @@ int wifi_change_fw_path(const char *fwpath)
     }
     close(fd);
     return ret;
+}
+
+int wifi_set_mode(int mode) {
+    wifi_mode = mode;
+    return 0;
 }
