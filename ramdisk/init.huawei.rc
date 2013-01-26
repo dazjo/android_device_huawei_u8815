@@ -224,7 +224,7 @@ on property:ro.baseband="unknown"
     start port-bridge
 
 on property:wlan.driver.status=loading
-    start setmac
+    start setwifimac
 
 service pcm-bridge /system/bin/pcm-bridge /dev/smd7 /dev/ttyGS1
 
@@ -236,7 +236,7 @@ service qmuxd /system/bin/qmuxd
 service netmgrd /system/bin/netmgrd
     class main
 
-service setmac /system/bin/setmac
+service setwifimac /system/bin/setwifimac
     disabled
     oneshot
 

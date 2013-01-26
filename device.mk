@@ -39,7 +39,7 @@ PRODUCT_PACKAGES += \
 # Other Packages
 PRODUCT_PACKAGES += \
     libgenlock \
-    setmac \
+    setwifimac \
     dexpreopt \
     make_ext4fs \
     setup_fs \

@@ -21,10 +21,10 @@ $(shell touch $(OUT)/obj/SHARED_LIBRARIES/libhwrpc_intermediates/export_includes
 
 LOCAL_MODULE_TAGS := optional
 
-LOCAL_SRC_FILES := setmac.c
+LOCAL_SRC_FILES := setwifimac.c
 
 LOCAL_PRELINK_MODULE := true
 LOCAL_SHARED_LIBRARIES := libcutils libhwrpc
-LOCAL_MODULE := setmac
+LOCAL_MODULE := setwifimac
 
 include $(BUILD_EXECUTABLE)
