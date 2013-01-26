@@ -76,11 +76,5 @@ protected:
                                int session = 0);
         virtual void setFmMode(fm_modes mode) {  fmMode = mode; }
         virtual fm_modes getFMMode() const {  return fmMode; }
-
-private:
-        // updates device caching and output for streams that can influence the
-        // routing of notifications
-        void handleNotificationRoutingForStream(AudioSystem::stream_type stream);
-
 };
 };
