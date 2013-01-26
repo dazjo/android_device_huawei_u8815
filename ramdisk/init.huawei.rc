@@ -236,6 +236,10 @@ service qmuxd /system/bin/qmuxd
 service netmgrd /system/bin/netmgrd
     class main
 
+service setbtmac /system/bin/setbtmac
+    class main
+    oneshot
+
 service setwifimac /system/bin/setwifimac
     disabled
     oneshot
