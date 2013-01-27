@@ -18,6 +18,7 @@
 #include <string.h>
 #include <cutils/log.h>
 #include <cutils/properties.h>
+#include <sys/stat.h>
 
 static const char PROP_SERIALNO[] = "ro.serialno";
 static const char PROP_BDADDR[] = "ro.bt.bdaddr_path";
@@ -55,6 +56,7 @@ void SetMAC(void)
 	}
 	write(file, bdaddr, strlen(bdaddr));
 	close(file);
+	chmod(FILE_BDADDR, 00600|00060|00006);
 
 	property_set(PROP_BDADDR, FILE_BDADDR);
 }
