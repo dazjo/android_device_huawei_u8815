@@ -351,10 +351,8 @@ int gr_init(void)
     gl->enable(gl, GGL_BLEND);
     gl->blendFunc(gl, GGL_SRC_ALPHA, GGL_ONE_MINUS_SRC_ALPHA);
 
-#if 0
     gr_fb_blank(true);
     gr_fb_blank(false);
-#endif
 
     return 0;
 }
@@ -386,7 +384,6 @@ gr_pixel *gr_fb_data(void)
     return (unsigned short *) gr_mem_surface.data;
 }
 
-#if 0
 void gr_fb_blank(bool blank)
 {
     int ret;
@@ -395,4 +392,3 @@ void gr_fb_blank(bool blank)
     if (ret < 0)
         perror("ioctl(): blank");
 }
-#endif
