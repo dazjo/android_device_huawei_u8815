@@ -27,6 +27,10 @@
 
 import init.huawei.usb.rc
 
+on early-init
+    start ueventd
+    import init.b2g.rc
+
 on init
     mkdir /mnt 0775 root system
     mkdir /mnt/sdcard 0000 system system
@@ -112,7 +116,13 @@ on boot
 on emmc-fs
     # mount mmc partitions
     wait /dev/block/mmcblk0p12
-    mount ext4 /dev/block/mmcblk0p12 /system ro barrier=1,nodelalloc
+    mount ext4 /dev/block/mmcblk0p12 /system rw barrier=1,nodelalloc
+
+    # B2G permissions
+    chmod 0755 /system/b2g/b2g
+    chmod 0755 /system/b2g/updater
+    chmod 0755 /system/b2g/plugin-container
+
     wait /dev/block/mmcblk0p13
     exec /system/bin/e2fsck -p /dev/block/mmcblk0p13
     mount ext4 /dev/block/mmcblk0p13 /data nosuid nodev barrier=1 noauto_da_alloc,nodelalloc
