@@ -32,7 +32,7 @@
   <item name="radio.active">230</item>
   <item name="gps.on">120</item>
   <array name="radio.on">
-      <value>90</value>
+      <value>3</value>
       <value>3</value>
   </array>
   <array name="cpu.speeds">
