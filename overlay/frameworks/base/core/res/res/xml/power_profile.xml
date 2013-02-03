@@ -19,18 +19,18 @@
 
 <device name="Android">
   <item name="none">0</item>
-  <item name="screen.on">30</item>
+  <item name="screen.on">22</item>
   <item name="bluetooth.active">103</item>
   <item name="bluetooth.on">0.8</item>
   <item name="bluetooth.at">35690</item>
-  <item name="screen.full">114</item>
-  <item name="wifi.on">23</item>
-  <item name="wifi.active">200</item>
-  <item name="wifi.scan">200</item>
-  <item name="dsp.audio">70</item>
-  <item name="dsp.video">100</item>
-  <item name="radio.active">230</item>
-  <item name="gps.on">120</item>
+  <item name="screen.full">127</item>
+  <item name="wifi.on">4</item>
+  <item name="wifi.active">120</item>
+  <item name="wifi.scan">220</item>
+  <item name="dsp.audio">38</item>
+  <item name="dsp.video">55</item>
+  <item name="radio.active">220</item>
+  <item name="gps.on">70</item>
   <array name="radio.on">
       <value>3</value>
       <value>3</value>
@@ -51,7 +51,6 @@
       <value>1267200</value>
   </array>
   <item name="cpu.idle">1.0</item>
-  <item name="cpu.awake">20</item>
   <array name="cpu.active">
       <value>51</value>
       <value>58</value>
