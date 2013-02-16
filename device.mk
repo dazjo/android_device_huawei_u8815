@@ -26,6 +26,8 @@ PRODUCT_PACKAGES += \
 
 # Audio
 PRODUCT_PACKAGES += \
+    audio.primary.u8815 \
+    audio_policy.u8815 \
     audio.a2dp.default \
     audio.usb.default \
     libaudioutils
@@ -58,10 +60,6 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8815/configs/nvram_4330.txt:system/etc/nvram_4330.txt \
     device/huawei/u8815/configs/dhcpcd.conf:system/etc/dhcpcd/dhcpcd.conf \
     device/huawei/u8815/configs/wpa_supplicant.conf:system/etc/wifi/wpa_supplicant.conf
-
-PRODUCT_COPY_FILES += \
-    device/huawei/u8815/prebuilt/audio.primary.u8815.so:system/lib/hw/audio.primary.u8815.so \
-    device/huawei/u8815/prebuilt/audio_policy.u8815.so:system/lib/hw/audio_policy.u8815.so
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/configs/audio_policy.conf:system/etc/audio_policy.conf \
