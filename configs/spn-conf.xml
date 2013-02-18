@@ -1041,8 +1041,8 @@
 <spnOverride numeric="65532" spn="Ilizwi" />
 <spnOverride numeric="65533" spn="Thinta" />
 <spnOverride numeric="65502" spn="Telkom" />
-<spnOverride numeric="21401" spn="Vodafone" />
-<spnOverride numeric="21403" spn="Orange" />
+<spnOverride numeric="21401" spn="Vodafone ES" />
+<spnOverride numeric="21403" spn="Orange ES" />
 <spnOverride numeric="21404" spn="Yoigo" />
 <spnOverride numeric="21405" spn="Tuenti" />
 <spnOverride numeric="21406" spn="Pepephone" />
