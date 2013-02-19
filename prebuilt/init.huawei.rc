@@ -5,11 +5,7 @@ on init
     export EXTERNAL_STORAGE /mnt/sdcard
     mkdir /system
     mkdir /data 0771 system system
-    mkdir /persist 0771 system system
     mkdir /cache 0771 system cache
-    mkdir /config 0500 root root
-    mkdir /cust   
-    mkdir /persist 0771 system system
     mkdir /mnt 0775 root system
     mkdir /mnt/sdcard 0000 system system
     mkdir /mnt/emmc 0000 system system
@@ -24,16 +20,8 @@ on init
     symlink /mnt/sdcard /sdcard
     symlink /mnt/emmc /HWUserData
 
-    
-on boot-pause
-    exec system/bin/battery_charging
-
 on fs
 # mount mmc partitions
-# ueventd is broken for some reason
-    chmod 0777 /dev/kgsl-3d0
-    chmod 0777 /dev/msm_hw3dm
-# had to change mount for system mount to work
     mount ext4 /dev/block/mmcblk0p12 /system wait ro
     wait /dev/block/mmcblk0p13
     exec /system/bin/e2fsck -p /dev/block/mmcblk0p13
@@ -42,20 +30,8 @@ on fs
     write /sys/module/block2mtd/parameters/block2mtd /dev/block/mmcblk0p17
     wait /dev/block/mmcblk0p19
     mount vfat /dev/block/mmcblk0p19 /mnt/emmc  uid=1000,gid=1015,umask=0002,utf8
-    mount ext4 /dev/block/mmcblk0p18 /cust ro
 
 on post-fs
-# once everything is setup, no need to modify /
-    mount rootfs rootfs / ro remount
-
-# We chown/chmod /data again so because mount is run as root + defaults
-    chown system system /data
-    chmod 0771 /data
-
-# Mounting of persist is moved to 'on emmc-fs' and 'on fs' sections
-# We chown/chmod /persist again so because mount is run as root + defaults
-    chown system system /persist
-    chmod 0771 /persist
     chmod 0664 /sys/devices/platform/msm_sdcc.1/polling
     chmod 0664 /sys/devices/platform/msm_sdcc.2/polling
     chmod 0664 /sys/devices/platform/msm_sdcc.3/polling
@@ -67,30 +43,12 @@ on post-fs
     chown system system /sys/devices/platform/msm_sdcc.3/polling
     chown system system /sys/devices/platform/msm_sdcc.4/polling
 
-# Create dump dir and collect dumps.
-# Do this before we mount cache so eventually we can use cache for
-# storing dumps on platforms which do not have a dedicated dump partition.
-   
-    mkdir /data/dontpanic
-    chown root log /data/dontpanic
-    chmod 0750 /data/dontpanic
-
-    chmod 0664 /dev/light
-    chmod 0664 /dev/proximity
-    chmod 0777 /mnt/sdcard/.android_secure/
-
-# Collect apanic data, free resources and re-arm trigger
-    copy /proc/apanic_console /data/dontpanic/apanic_console
-    chown root log /data/dontpanic/apanic_console
-    chmod 0640 /data/dontpanic/apanic_console
-
-    copy /proc/apanic_threads /data/dontpanic/apanic_threads
-    chown root log /data/dontpanic/apanic_threads
-    chmod 0640 /data/dontpanic/apanic_threads
-
-    write /proc/apanic_console 1
-
 on boot
+#cpufreq configurations
+    write /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate 500000
+    write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold 90
+    write /sys/devices/system/cpu/cpufreq/ondemand/down_threshold 30
+
     mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
     chown bluetooth bluetooth /sys/module/bluetooth_power/parameters/power
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
@@ -107,54 +65,18 @@ on boot
     chmod 0660 /sys/devices/platform/msm_serial_hs.0/clock
 
 # Create the directories used by the Wireless subsystem
-# wi-fi
-    mkdir /data/misc/wifi/sockets 0770 wifi wifi
+    mkdir /data/misc 01771 system misc
+    mkdir /data/misc/wifi 0770 wifi wifi
+    mkdir /data/misc/wifi/sockets
+    chown system wifi /data/misc/wifi/sockets
+    chmod 770 /data/misc/wifi/sockets
     mkdir /data/misc/dhcp 0770 dhcp dhcp
+    chown dhcp dhcp /data/misc/dhcp
+    mkdir /data/system 0775 system system
 
-    mkdir /data/misc/sensors 0775 root root
-    write /data/system/sensors/settings 0
-    chmod 0664 /data/system/sensors/settings
-    mkdir /data/cust
-
-    symlink /cust/nv /data/cust/nv
-    symlink /cust/wifi /data/cust/wifi
-    symlink /cust/xml /data/cust/xml
-    symlink /cust/prop /data/cust/prop
-    symlink /cust/wallpaper /data/cust/wallpaper
-    symlink /cust/ons /data/cust/ons
-    symlink /cust/app /data/cust/app
-    symlink /cust/media /data/cust/media
-    symlink /cust/logo /data/cust/logo
-    symlink /cust/guide /data/cust/guide
-    symlink /cust/email /data/cust/email
-    exec /system/bin/load_oemlogo
-
-# create the OMA directories, so as to enforce our permissions
-    mkdir /data/oma 0777
-    chmod 0777 /data/oma
-    chmod 0660 /dev/assd
-    chown smartcard smartcard /dev/assd
-
-
-    # Enable Bluetooth 802.11 PAL when Bluetooth is turned on
-    setprop ro.config.bt.amp no
-
-     # Create directories for wiper services
+    # Create directories for wiper services
     mkdir /data/wpstiles/ 0775 shell
     mkdir /data/wiper 0775 location qcom_oncrpc
-     # Create directories for gpsone_daemon services
-    mkdir /data/misc/gpsone_d 0770 system system
-
-     # Create directory from IMS services
-    mkdir /data/shared 0755
-    #Set SUID bit for diag_mdlog
-    chmod 4755 /system/bin/diag_mdlog
-
-    #Set SUID bit for btwlancoex
-    chmod 4755 /system/bin/btwlancoex
-
-    #Remove SUID bit for iproute2 ip tool
-    chmod 0755 /system/bin/ip
 
     #port-bridge
     chmod 0660 /dev/smd0
@@ -165,18 +87,10 @@ on boot
 
     chmod 0444 /sys/devices/platform/msm_hsusb/gadget/usb_state
 
-    # Remove write permissions to video related nodes
-    chmod 0664 /sys/devices/virtual/graphics/fb1/hpd
-    chmod 0664 /sys/devices/virtual/graphics/fb1/video_mode
-    chmod 0664 /sys/devices/virtual/graphics/fb1/format_3d
+    # For bridgemgr daemon to inform the USB driver of the correct transport
+    chown radio radio /sys/class/android_usb/f_rmnet_smd_sdio/transport
 
-    # Change owner and group for media server and surface flinger
-    chown media system /sys/devices/virtual/graphics/fb1/format_3d
-
-    #For netmgr daemon to inform the USB driver of the correct transport
-    chown radio radio /sys/class/usb_composite/rmnet_smd_sdio/transport
-
-    #To allow interfaces to get v6 address when tethering is enabled
+    # To allow interfaces to get v6 address when tethering is enabled
     write /proc/sys/net/ipv6/conf/rmnet0/accept_ra 2
     write /proc/sys/net/ipv6/conf/rmnet1/accept_ra 2
     write /proc/sys/net/ipv6/conf/rmnet2/accept_ra 2
@@ -194,20 +108,6 @@ on boot
     write /proc/sys/net/ipv6/conf/rmnet_sdio6/accept_ra 2
     write /proc/sys/net/ipv6/conf/rmnet_sdio7/accept_ra 2
 
-    chown system system /sys/devices/platform/mmi_key_dev/keytest
-
-# we changed the owner and group of these files of usb 
-# to meet the requirements of projectmenu
-    chown system system /sys/devices/platform/msm_hsusb/gadget/sdstatus
-    chown system system /sys/devices/platform/msm_hsusb/gadget/switchusb
-    chown system system /sys/devices/platform/msm_hsusb/gadget/fixusb
-
-#set cpu scaling_governor to ondemand 
-    write  /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor "ondemand"
-# Set up_threshold initialize value from 95 to 80 to enhance performance
-    write /sys/devices/system/cpu/cpu0/cpufreq/ondemand/up_threshold 80
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 320000
-
 on property:init.svc.wpa_supplicant=stopped
     stop dhcpcd
 
@@ -223,33 +123,9 @@ service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmc
     user root
     oneshot
 
-service qcom-sh /system/bin/sh /init.qcom.sh      	
-    class main	  	
-    user root	  	
-    oneshot
-	  	
-service qcom-post-boot /system/bin/sh /system/etc/init.qcom.post_boot.sh 	
-    class main
-    user root	  	
-    disabled	
-    oneshot
-
-# bugreport is triggered by holding down volume down, volume up and power
-service bugreport /system/bin/dumpstate -d -v -o /sdcard/bugreports/bugreport
-    disabled
-    oneshot
-    keycodes 114 115 116
-
 on property:ro.emmc=1
     start rmt_storage
-
-# start btld if soft_onoff is enabled
-on property:service.brcm.bt.soft_onoff=1
-    start btld
-
-# stop btld if soft_onoff is disabled
-on property:service.brcm.bt.soft_onoff=0
-    stop btld
+    start rmt_oeminfo
 
 service bt-dun /system/bin/dun-server /dev/smd7 /dev/rfcomm0
     class main
@@ -260,6 +136,7 @@ service bt-sap /system/bin/sapd 15
     class main
     disabled
     oneshot
+
 service sapd /system/bin/sdptool add --channel=15 SAP
     class main
     user bluetooth
@@ -296,7 +173,7 @@ on property:ro.baseband="unknown"
 
 service pcm-bridge /system/bin/pcm-bridge /dev/smd7 /dev/ttyGS1
     class main
-    
+
 service qmiproxy /system/bin/qmiproxy
     class main
     user radio
@@ -313,9 +190,6 @@ service netmgrd /system/bin/netmgrd
     class main
     disabled
 
-#on property:init.svc.bootanim=stopped
-#    start qcom-post-boot
-
 service ftp /system/bin/sdptool add --psm=5257 --channel=20 FTP
     class main
     user bluetooth
@@ -330,30 +204,9 @@ service map /system/bin/sdptool add --channel=16 MAS
     disabled
     oneshot
 
-service ril-daemon1 /system/bin/rild -c 1
-    class main
-    socket rild1 stream 660 root radio
-    socket rild-debug1 stream 660 radio system
-    user root
-    disabled
-    group radio cache inet misc audio sdcard_rw qcom_oncrpc diag
-
-service profiler_daemon /system/bin/profiler_daemon
-    class main
-    user root
-    group root
-    disabled
-
-
 # start huawei rpc server
 service oem_rpc_svc /system/bin/oem_rpc_svc
     class main
-    oneshot
-
-service dumpstate /system/bin/dumpstate -s
-    class main
-    socket dumpstate stream 0660 shell log
-    disabled
     oneshot
 
 service rmt_oeminfo /system/bin/rmt_oeminfo
@@ -361,13 +214,11 @@ service rmt_oeminfo /system/bin/rmt_oeminfo
     user root
     oneshot
 
-on property:ro.emmc=1
-    start rmt_oeminfo
-
 service compassd /system/bin/compassd
     class main
     disabled
     oneshot
+
 service akm8975 /system/bin/akmd8975
     class main
     disabled
@@ -434,10 +285,3 @@ service iprenew_eth0 /system/bin/dhcpcd -n
     class main        
     disabled        
     oneshot
-    
-#/* we change the following lines to change the accel and  compass_aot mode to pass the AT&T test
-chmod 0664 /dev/accel
-chmod 0664 /dev/compass_aot
-chmod 0664 /dev/akm8975_dev
-chmod 0664 /dev/compass_dev
-chmod 0664 /dev/gyro
