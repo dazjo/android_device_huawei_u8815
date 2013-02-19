@@ -103,7 +103,11 @@ TARGET_CUSTOM_WIFI := ../../device/huawei/u8815/libhardware_legacy/wifi/wifi.c
 
 # Kernel 
 TARGET_KERNEL_SOURCE := kernel/huawei/u8815
-TARGET_KERNEL_CONFIG := cyanogenmod_u8815_defconfig
+ifdef HUAWEI_109808_BASEBAND
+TARGET_KERNEL_CONFIG := cyanogenmod_u8815_109808_defconfig
+else
+TARGET_KERNEL_CONFIG := cyanogenmod_u8815_2030_defconfig
+endif
 BOARD_KERNEL_CMDLINE := androidboot.hardware=huawei
 BOARD_KERNEL_BASE := 0x00200000
 BOARD_PAGE_SIZE := 2048
