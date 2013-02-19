@@ -229,44 +229,10 @@ service akm8962 /system/bin/akmd8962
     disabled
     oneshot
 
-#service bcm_hciattach /system/bin/sh /system/etc/bluetooth/init.bcm.bt.sh
-#    class main
-#    user bluetooth
-#    group qcom_oncrpc bluetooth net_bt_admin system
-#    disabled 
-    
-service chip_power_on /system/bin/sh /system/etc/bluetooth/init.bcm.chip_on.sh
-    class main
-    user root
-    group system
-    disabled
-    oneshot 
-    
-service chip_power_off /system/bin/sh /system/etc/bluetooth/init.bcm.chip_off.sh
-    class main
-    user root
-    group system
-    disabled
-    oneshot
-    
-service hci_dev_up /system/bin/hci_dev_state --dev_up
-    class main
-    user root
-    group bluetooth system
-    disabled 
-    oneshot
-    
-service hci_dev_down /system/bin/hci_dev_state --dev_down
-    class main
-    user root
-    group bluetooth system
-    disabled 
-    oneshot    
-    
 service hciattach /system/bin/sh /system/etc/bluetooth/init.bcm.bt.sh
     class main
     user bluetooth
-    group qcom_oncrpc bluetooth net_bt_admin
+    group qcom_oncrpc bluetooth net_bt_admin system
     disabled
     oneshot
 
