@@ -4,6 +4,8 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base.mk)
 
 $(call inherit-product, device/common/gps/gps_eu_supl.mk)
 
+FRAMEWORKS_BASE_SUBDIRS += ../../$(LOCAL_PATH)/ril/
+
 DEVICE_PACKAGE_OVERLAYS := device/huawei/u8815/overlay
 
 PRODUCT_PACKAGES += \
