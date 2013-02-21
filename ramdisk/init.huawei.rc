@@ -126,13 +126,13 @@ on fs
     # mount mmc partitions
     wait /dev/block/mmcblk0p12
     mount ext4 /dev/block/mmcblk0p12 /system ro barrier=1,nodelalloc
-    wait /dev/block/mmcblk0p13
-    exec /system/bin/e2fsck -p /dev/block/mmcblk0p13
-    mount ext4 /dev/block/mmcblk0p13 /data nosuid nodev barrier=1 noauto_da_alloc,nodelalloc
+    wait /dev/block/mmcblk0p19
+    exec /system/bin/e2fsck -p /dev/block/mmcblk0p19
+    mount ext4 /dev/block/mmcblk0p19 /data nosuid nodev barrier=1 noauto_da_alloc,nodelalloc
     mount ext4 /dev/block/mmcblk0p6 /cache nosuid nodev barrier=1,nodelalloc
     
-    wait /dev/block/mmcblk0p19
-    mount vfat /dev/block/mmcblk0p19 /storage/sdcard0 uid=1000,gid=1015,umask=0002,utf8
+    wait /dev/block/mmcblk0p13
+    mount vfat /dev/block/mmcblk0p13 /storage/sdcard0 uid=1000,gid=1015,umask=0002,utf8
 
     # Imported from init.msm7627a.rc
     write /sys/module/block2mtd/parameters/block2mtd /dev/block/mmcblk0p17
