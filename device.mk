@@ -55,10 +55,6 @@ PRODUCT_PACKAGES += \
     com.android.future.usb.accessory 
 
 PRODUCT_COPY_FILES += \
-    device/huawei/u8815/prebuilt/ubuntuappmanager:system/bin/ubuntuappmanager \
-    device/huawei/u8815/prebuilt/libubuntu_application_api.so:system/lib/libubuntu_application_api.so
-
-PRODUCT_COPY_FILES += \
     device/huawei/u8815/ramdisk/init.huawei.rc:root/init.huawei.rc \
     device/huawei/u8815/ramdisk/ueventd.huawei.rc:root/ueventd.huawei.rc \
     device/huawei/u8815/ramdisk/init.huawei.usb.rc:root/init.huawei.usb.rc
