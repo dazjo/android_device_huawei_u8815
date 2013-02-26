@@ -45,7 +45,6 @@ PRODUCT_PACKAGES += \
 
 # Other Packages
 PRODUCT_PACKAGES += \
-    libsystem_server \
     setmac \
     dexpreopt \
     make_ext4fs \
