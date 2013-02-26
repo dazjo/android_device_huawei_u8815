@@ -12,6 +12,11 @@ DEVICE_PACKAGE_OVERLAYS += device/huawei/u8815/overlay
 PRODUCT_AAPT_CONFIG := normal hdpi
 PRODUCT_AAPT_PREF_CONFIG := hdpi
 
+ifdef HUAWEI_109808_BASEBAND
+PRODUCT_PROPERTY_OVERRIDES += \
+    ro.telephony.ril.v3=skipsuggestedretrytime
+endif
+
 # Video
 PRODUCT_PACKAGES += \
     libstagefrighthw \
