@@ -31,6 +31,9 @@ ro.confg.hw_appfsversion=U8815VCM10_SYSIMG
 ro.confg.hw_appsbootversion=U8815VCM10_APPSBOOT
 ro.confg.hw_appversion=U8815VCM10_KERNEL
 
+# Memory
+sys.mem.max_hidden_apps=3
+
 # Qualcomm
 com.qc.hardware=true
 dev.pm.dyn_sample_period=700000
