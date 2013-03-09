@@ -137,3 +137,8 @@ on property:persist.service.adb.enable=1
 
 on property:persist.service.adb.enable=0
     stop adbd
+
+on property:service.adb.root=1
+    setprop sys.usb.config none
+    sleep 1
+    setprop sys.usb.config ${persist.sys.usb.config}
