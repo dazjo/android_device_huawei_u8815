@@ -124,6 +124,8 @@ on emmc-fs
     # Imported from init.msm7627a.rc
     write /sys/module/block2mtd/parameters/block2mtd /dev/block/mmcblk0p17
 
+    start libcm_link
+
 # msm specific files that need to be created on /data
 on post-fs-data
     mkdir /data/misc/bluetooth 0770 bluetooth bluetooth
@@ -208,6 +210,11 @@ service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
     user system
     group system inet
     disabled
+
+service libcm_link /system/bin/sh /system/etc/baseband.sh
+    user root
+    disabled
+    oneshot
 
 on property:ro.baseband="msm"
     start port-bridge
