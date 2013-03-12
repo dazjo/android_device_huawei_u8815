@@ -211,7 +211,7 @@ service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
     group system inet
     disabled
 
-service libcm_link /system/bin/sh /system/etc/baseband.sh
+service libcm_link /system/bin/sh /system/etc/libcm.sh
     user root
     disabled
     oneshot
