@@ -172,35 +172,13 @@ service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmc
     user root
     disabled
 
-service bridgemgrd /system/bin/bridgemgrd
-    class main
-    user radio
-    group radio
-    disabled
-
-service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
-    class late_start
-    user system
-    group system inet
-    disabled
-
 service libcm_link /system/bin/sh /system/etc/libcm.sh
     user root
     disabled
     oneshot
 
-on property:ro.baseband="msm"
-    start port-bridge
-    # Enable BT-DUN only for all msms
-    setprop ro.qualcomm.bluetooth.dun true
-
-on property:ro.baseband="unknown"
-    start port-bridge
-
 on property:wlan.driver.status=loading
     start setwifimac
-
-service pcm-bridge /system/bin/pcm-bridge /dev/smd7 /dev/ttyGS1
 
 service qmuxd /system/bin/qmuxd
     class main
