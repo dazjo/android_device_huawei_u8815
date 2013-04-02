@@ -55,9 +55,10 @@ PRODUCT_PACKAGES += \
     com.android.future.usb.accessory 
 
 PRODUCT_COPY_FILES += \
+    device/huawei/u8815/ramdisk/fstab.u8815:root/fstab.u8815 \
     device/huawei/u8815/ramdisk/init.huawei.rc:root/init.huawei.rc \
-    device/huawei/u8815/ramdisk/ueventd.huawei.rc:root/ueventd.huawei.rc \
-    device/huawei/u8815/ramdisk/init.huawei.usb.rc:root/init.huawei.usb.rc
+    device/huawei/u8815/ramdisk/init.huawei.usb.rc:root/init.huawei.usb.rc \
+    device/huawei/u8815/ramdisk/ueventd.huawei.rc:root/ueventd.huawei.rc
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/prebuilt/fw_4330_b2.bin:system/etc/fw_4330_b2.bin \
