@@ -24,8 +24,6 @@ COMMON_GLOBAL_CFLAGS += -DQCOM_HARDWARE
 TARGET_GLOBAL_CFLAGS += -mfpu=neon -mfloat-abi=softfp
 TARGET_GLOBAL_CPPFLAGS += -mfpu=neon -mfloat-abi=softfp
 
-WITH_JIT := true
-
 # Optimisations used by Qualcomm
 TARGET_CORTEX_CACHE_LINE_32 := true
 TARGET_USE_SPARROW_BIONIC_OPTIMIZATION := true
@@ -60,10 +58,7 @@ BOARD_AVOID_DRAW_TEXTURE_EXTENSION := true
 TARGET_GRALLOC_USES_ASHMEM := true
 
 # Web Rendering
-ENABLE_JSC_JIT := true
 ENABLE_WEBGL := true
-HTTP := chrome
-JS_ENGINE := v8
 TARGET_FORCE_CPU_UPLOAD := true
 
 # USB
