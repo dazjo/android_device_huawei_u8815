@@ -35,7 +35,7 @@
 #include <hardware_legacy/power.h>
 
 #include "private/android_filesystem_config.h"
-#include <sys/wait.h>
+ #include <sys/wait.h>
 
 static pthread_once_t g_init = PTHREAD_ONCE_INIT;
 static pthread_mutex_t g_lock = PTHREAD_MUTEX_INITIALIZER;
@@ -76,53 +76,42 @@ static pthread_t blink;
 static struct led_config g_leds[3]; // For battery, notifications, and attention.
 static int g_cur_led = -1;          // Presently showing LED of the above.
 
-void *led_blink(void *arg)
-{
-    while(led_link_status) {
+void *led_blink(void *arg){
+    while(led_link_status){
         write_int(RED_LED_FILE, par.RED);
         write_int(BLUE_LED_FILE, par.BLUE);
         write_int(GREEN_LED_FILE, par.GREEN);
-
-        usleep(par.onMs * 1000);
+        usleep(par.onMs*1000);
 
         if (g_leds[1].color > 0) {
             write_int(RED_LED_FILE, 0);
             write_int(BLUE_LED_FILE, 0);
             write_int(GREEN_LED_FILE, 0);
         }
-
-        usleep(par.offMs * 1000);
+        usleep(par.offMs*1000);
     }
-
     pthread_exit((void *)0);
-
     return 0;
 }
 
-int start_notification()
-{
+int start_notification(){
     pthread_mutex_lock(&g_lock);
     led_link_status = TRUE;
     acquire_wake_lock(PARTIAL_WAKE_LOCK, "blink_id");
-
     if (pthread_create(&blink, NULL, led_blink, NULL) != 0) {
         ALOGE("Can't start blink thread\n");
         pthread_mutex_unlock(&g_lock);
         return -1;
     }
-
     pthread_mutex_unlock(&g_lock);
-
     return 0;
 }
 
-int stop_notification()
-{
+int stop_notification(){
     pthread_mutex_lock(&g_lock);
     led_link_status = FALSE;
     release_wake_lock("blink_id");
     pthread_mutex_unlock(&g_lock);
-
     return 0;
 }
 
@@ -182,7 +171,8 @@ static int set_light_backlight(struct light_device_t *dev,
     return err;
 }
 
-static int set_light_buttons(struct light_device_t* dev,
+static int
+set_light_buttons(struct light_device_t* dev,
         struct light_state_t const* state)
 {
     int err = 0;
@@ -239,7 +229,7 @@ static int set_light_leds(struct light_state_t const *state, int type)
      * which are multiplexed onto the same physical LED in the above order. */
     led = &g_leds[type];
 
-    if(type == 1) {
+    if(type == 1){
         pthread_mutex_lock(&g_lock);
 
         par.RED = ((state->color >> 16) & 0xFF)? 255 : 0;
@@ -251,7 +241,7 @@ static int set_light_leds(struct light_state_t const *state, int type)
 
         pthread_mutex_unlock(&g_lock);
 
-        if(state->color > 0) {
+        if(state->color > 0){
             start_notification();
         } else {
             stop_notification();
@@ -360,7 +350,7 @@ static int open_lights(const struct hw_module_t *module, char const *name,
     else if (0 == strcmp(LIGHT_ID_ATTENTION, name))
         set_light = set_light_leds_attention;
     else if (0 == strcmp(LIGHT_ID_BATTERY, name)) {
-        set_light = set_light_leds_battery;
+            set_light = set_light_leds_battery;
     }
     else
         return -EINVAL;
