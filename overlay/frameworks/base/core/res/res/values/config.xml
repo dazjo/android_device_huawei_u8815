@@ -114,7 +114,7 @@
     <bool name="config_automatic_brightness_available">true</bool>
 
     <!-- If this is true, the screen will come on when you unplug usb/power/whatever. -->
-    <bool name="config_unplugTurnsOnScreen">false</bool>
+    <bool name="config_unplugTurnsOnScreen">true</bool>
 
     <!-- If this is true, the screen will fade off. -->
     <bool name="config_animateScreenLights">false</bool>
@@ -207,9 +207,10 @@
 
     <!-- Set additional audio parameters for incall audio
          Usage: parameter=onstring=offstring
-         Examples: <item>realcall=on=off</item> <item>dualmic_enabled=true=false</item> <item>mic_boost=yes=no</item> -->
+         Examples: <item>realcall=on=off</item>
+                   <item>dualmic_enabled=true=false</item>
+                   <item>mic_boost=yes=no</item> -->
     <string-array name="config_telephony_set_audioparameters" translatable="false">
-        <item>dualmic_enabled=false=false</item>
     </string-array>
 
     <!-- Hardware 'face' keys present on the device, stored as a bit field.
