@@ -172,8 +172,6 @@ service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmc
     user root
     disabled
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 service hciattach /system/bin/sh /system/etc/bluetooth/init.bcm.bt.sh
     class main
     user bluetooth
