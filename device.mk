@@ -55,9 +55,10 @@ PRODUCT_PACKAGES += \
     com.android.future.usb.accessory 
 
 PRODUCT_COPY_FILES += \
+    device/huawei/u8815/ramdisk/fstab.u8815:root/fstab.u8815 \
     device/huawei/u8815/ramdisk/init.huawei.rc:root/init.huawei.rc \
-    device/huawei/u8815/ramdisk/ueventd.huawei.rc:root/ueventd.huawei.rc \
-    device/huawei/u8815/ramdisk/init.huawei.usb.rc:root/init.huawei.usb.rc
+    device/huawei/u8815/ramdisk/init.huawei.usb.rc:root/init.huawei.usb.rc \
+    device/huawei/u8815/ramdisk/ueventd.huawei.rc:root/ueventd.huawei.rc
 
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/prebuilt/fw_4330_b2.bin:system/etc/fw_4330_b2.bin \
@@ -72,6 +73,7 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8815/configs/AutoVolumeControl.txt:system/etc/AutoVolumeControl.txt \
     device/huawei/u8815/configs/media_codecs.xml:system/etc/media_codecs.xml \
     device/huawei/u8815/configs/media_profiles.xml:system/etc/media_profiles.xml \
+    device/huawei/u8815/configs/libcm.sh:system/etc/libcm.sh \
     device/huawei/u8815/configs/vold.fstab:system/etc/vold.fstab
 
 PRODUCT_COPY_FILES += \

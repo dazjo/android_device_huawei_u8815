@@ -102,40 +102,28 @@ on boot
     chown system system /sys/devices/platform/msm_hsusb/gadget/sdstatus
     chown system system /sys/devices/platform/msm_hsusb/gadget/switchusb
     chown system system /sys/devices/platform/msm_hsusb/gadget/fixusb
-    
-    setprop net.tcp.buffersize.hsupa   4094,87380,1220608,4096,16384,1220608
-    setprop net.tcp.buffersize.hsdpa   4094,87380,1220608,4096,16384,1220608
-    setprop net.tcp.buffersize.evdo_b  4094,87380,262144,4096,16384,262144
-
-    # Assign TCP buffer thresholds to be ceiling value of technology maximums
-    # Increased technology maximums should be reflected here.
-    write /proc/sys/net/core/rmem_max  1220608
-    write /proc/sys/net/core/wmem_max  1220608
 
     chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
     chown system system /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
-    chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chmod 0644 /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+    chmod 0666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
 
     chown system system /sys/devices/system/cpu/cpufreq/ondemand/boostpulse
-    chown system system /sys/devices/system/cpu/cpufreq/interactive/boostpulse
-    chmod 0644 /sys/devices/system/cpu/cpufreq/ondemand/boostpulse
-    chmod 0644 /sys/devices/system/cpu/cpufreq/interactive/boostpulse
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/down_differential
+    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/boostpulse
+    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
+    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
+    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
+    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/down_differential
 
 on fs
     # mount mmc partitions
-    wait /dev/block/mmcblk0p12
-    mount ext4 /dev/block/mmcblk0p12 /system ro barrier=1,nodelalloc
-    wait /dev/block/mmcblk0p19
-    exec /system/bin/e2fsck -p /dev/block/mmcblk0p19
-    mount ext4 /dev/block/mmcblk0p19 /data nodev barrier=1 noauto_da_alloc,nodelalloc
-    mount ext4 /dev/block/mmcblk0p6 /cache nodev barrier=1,nodelalloc
-    
-    wait /dev/block/mmcblk0p13
-    mount vfat /dev/block/mmcblk0p13 /storage/sdcard0 uid=1000,gid=1015,umask=0002,utf8
+    mount_all /fstab.u8815
 
-    # Imported from init.msm7627a.rc
-    write /sys/module/block2mtd/parameters/block2mtd /dev/block/mmcblk0p17
+    start libcm_link
 
 # msm specific files that need to be created on /data
 on post-fs-data
@@ -184,49 +172,13 @@ service rmt_storage /system/bin/rmt_storage /dev/block/mmcblk0p10 /dev/block/mmc
     user root
     disabled
 
-service bt-dun /system/bin/dun-server /dev/smd7 /dev/rfcomm0
-    class main
+service libcm_link /system/bin/sh /system/etc/libcm.sh
+    user root
     disabled
     oneshot
-
-service sapd /system/bin/sdptool add --channel=15 SAP
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
-
-service dund /system/bin/sdptool add --channel=1 DUN
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
-
-service bridgemgrd /system/bin/bridgemgrd
-    class main
-    user radio
-    group radio
-    disabled
-
-service port-bridge /system/bin/port-bridge /dev/smd0 /dev/ttyGS0
-    class late_start
-    user system
-    group system inet
-    disabled
-
-on property:ro.baseband="msm"
-    start port-bridge
-    # Enable BT-DUN only for all msms
-    setprop ro.qualcomm.bluetooth.dun true
-
-on property:ro.baseband="unknown"
-    start port-bridge
 
 on property:wlan.driver.status=loading
     start setwifimac
-
-service pcm-bridge /system/bin/pcm-bridge /dev/smd7 /dev/ttyGS1
 
 service qmuxd /system/bin/qmuxd
     class main
@@ -320,24 +272,3 @@ service hostapd /system/bin/hostapd -dddd /data/hostapd/hostapd.conf
     group root
     oneshot
     disabled
-
-service ftp /system/bin/sdptool add --psm=5257 --channel=20 FTP
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
-
-service map0 /system/bin/sdptool add --channel=16 MAS0
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
-
-service map1 /system/bin/sdptool add --channel=17 MAS1
-    class main
-    user bluetooth
-    group bluetooth net_bt_admin
-    disabled
-    oneshot
