@@ -22,6 +22,9 @@ ro.confg.hw_appfsversion=U8815VCM9_SYSIMG
 ro.confg.hw_appsbootversion=U8815VCM9_APPSBOOT
 ro.confg.hw_appversion=U8815VCM9_KERNEL
 
+# Memory
+sys.mem.max_hidden_apps=10
+
 # Qualcomm
 com.qc.hardware=true
 debug.composition.7x27A.type=mdp

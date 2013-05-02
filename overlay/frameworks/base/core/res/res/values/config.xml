@@ -114,7 +114,7 @@
     <bool name="config_automatic_brightness_available">true</bool>
 
     <!-- If this is true, the screen will come on when you unplug usb/power/whatever. -->
-    <bool name="config_unplugTurnsOnScreen">false</bool>
+    <bool name="config_unplugTurnsOnScreen">true</bool>
 
     <!-- If this is true, the screen will fade off. -->
     <bool name="config_animateScreenLights">false</bool>
@@ -142,11 +142,11 @@
 
          Must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLevels">
-        <item>100</item>
-        <item>200</item>
-        <item>400</item>
-        <item>1000</item>
-        <item>3000</item>
+        <item>225</item>
+        <item>320</item>
+        <item>1280</item>
+        <item>2600</item>
+        <item>10240</item>
     </integer-array>
 
     <!-- Minimum screen brightness allowed by the power manager. -->
@@ -157,11 +157,11 @@
          than the size of the config_autoBrightnessLevels array.
          This must be overridden in platform specific overlays -->
     <integer-array name="config_autoBrightnessLcdBacklightValues">
-        <item>30</item>
-        <item>55</item>
-        <item>150</item>
-        <item>150</item>
-        <item>150</item>
+        <item>20</item>
+        <item>50</item>
+        <item>80</item>
+        <item>145</item>
+        <item>200</item>
         <item>255</item>
     </integer-array>
 
@@ -176,7 +176,7 @@
     <integer-array name="config_autoBrightnessButtonBacklightValues">
         <item>255</item>
         <item>255</item>
-        <item>0</item>
+        <item>255</item>
         <item>0</item>
         <item>0</item>
         <item>0</item>
