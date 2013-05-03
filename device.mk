@@ -23,6 +23,13 @@ PRODUCT_PACKAGES += \
     libmm-omxcore \
     libOmxCore
 
+# NFC
+PRODUCT_PACKAGES += \
+    libnfc \
+    libnfc_jni \
+    Nfc \
+    Tag
+
 # Graphics
 PRODUCT_PACKAGES += \
     copybit.msm7x27a \
@@ -99,7 +106,8 @@ PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/android.hardware.touchscreen.multitouch.distinct.xml:system/etc/permissions/android.hardware.touchscreen.multitouch.distinct.xml \
     frameworks/base/data/etc/android.hardware.usb.accessory.xml:system/etc/permissions/android.hardware.usb.accessory.xml \
     frameworks/base/data/etc/android.hardware.wifi.xml:system/etc/permissions/android.hardware.wifi.xml \
-    frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml
+    frameworks/base/data/etc/android.software.sip.voip.xml:system/etc/permissions/android.software.sip.voip.xml \
+    frameworks/base/data/etc/android.hardware.nfc.xml:system/etc/permissions/android.hardware.nfc.xml
 
 PRODUCT_TAGS += dalvik.gc.type-precise
 
