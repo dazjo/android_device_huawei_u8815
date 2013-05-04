@@ -40,7 +40,6 @@ PRODUCT_PACKAGES += \
 
 # Other HALs
 PRODUCT_PACKAGES += \
-    power.msm7x27a \
     gps.u8815 \
     lights.u8815
 
