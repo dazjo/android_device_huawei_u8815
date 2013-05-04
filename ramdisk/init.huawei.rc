@@ -103,21 +103,54 @@ on boot
     chown system system /sys/devices/platform/msm_hsusb/gadget/switchusb
     chown system system /sys/devices/platform/msm_hsusb/gadget/fixusb
 
-    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chown system system /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
-    chmod 0666 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate
+# Memory management.  Basic kernel parameters, and allow the high
+# level system server to be able to adjust the kernel OOM driver
+# parameters to match how it is managing things.
+    write /proc/sys/vm/overcommit_memory 1
+    write /proc/sys/vm/min_free_order_shift 4
+    chown root system /sys/module/lowmemorykiller/parameters/adj
+    chmod 0664 /sys/module/lowmemorykiller/parameters/adj
+    chown root system /sys/module/lowmemorykiller/parameters/minfree
+    chmod 0664 /sys/module/lowmemorykiller/parameters/minfree
 
+    # Tweak background writeout
+    write /proc/sys/vm/dirty_expire_centisecs 200
+    write /proc/sys/vm/dirty_background_ratio  5
+
+    # Permissions for System Server and daemons.
+    chown radio system /sys/android_power/state
+    chown radio system /sys/android_power/request_state
+    chown radio system /sys/android_power/acquire_full_wake_lock
+    chown radio system /sys/android_power/acquire_partial_wake_lock
+    chown radio system /sys/android_power/release_wake_lock
+    chown system system /sys/power/state
+    chown system system /sys/power/autosleep
+    chown system system /sys/power/wakeup_count
+    chown radio system /sys/power/wake_lock
+    chown radio system /sys/power/wake_unlock
+    chmod 0660 /sys/power/state
+    chmod 0660 /sys/power/wake_lock
+    chmod 0660 /sys/power/wake_unlock
+
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/timer_rate
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/timer_rate
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/min_sample_time
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/min_sample_time
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/hispeed_freq
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/hispeed_freq
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/go_hispeed_load
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/go_hispeed_load
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/above_hispeed_delay
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/above_hispeed_delay
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/boost
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/boost
     chown system system /sys/devices/system/cpu/cpufreq/ondemand/boostpulse
-    chown system system /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
-    chown system system /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
-    chown system system /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
-    chown system system /sys/devices/system/cpu/cpufreq/ondemand/down_differential
-    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/boostpulse
-    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/up_threshold
-    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/io_is_busy
-    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/sampling_down_factor
-    chmod 0666 /sys/devices/system/cpu/cpufreq/ondemand/down_differential
+    chown system system /sys/devices/system/cpu/cpufreq/ondemand/input_boost
+    chmod 0660 /sys/devices/system/cpu/cpufreq/ondemand/input_boost
+
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chmod 0660 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    chown system system /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq
 
 on fs
     # mount mmc partitions
