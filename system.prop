@@ -25,12 +25,6 @@ ro.confg.hw_appversion=U8815VCM9_KERNEL
 # Memory
 sys.mem.max_hidden_apps=10
 
-# NFC
-ro.config.hw_accesscontrol=true
-ro.config.hw_smartcardservice=true
-ro.config.nfc.card_setting=false
-ro.nfc.port=I2C
-
 # Qualcomm
 com.qc.hardware=true
 debug.composition.7x27A.type=mdp
