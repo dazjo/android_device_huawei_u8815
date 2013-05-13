@@ -8,16 +8,9 @@ LOCAL_PATH := $(call my-dir)
 include $(CLEAR_VARS)
 
 LOCAL_SRC_FILES := \
+   AudioHardware.cpp \
     audio_hw_hal.cpp \
     HardwarePinSwitching.c
-
-ifeq ($(strip $(TARGET_HAS_QACT)),true)
-LOCAL_SRC_FILES += \
-    AudioHardware_cad.cpp
-else
-LOCAL_SRC_FILES += \
-    AudioHardware.cpp
-endif
 
 ifeq ($(BOARD_HAVE_BLUETOOTH),true)
   LOCAL_CFLAGS += -DWITH_A2DP
@@ -36,20 +29,42 @@ ifeq ($(strip $(BOARD_USES_SRS_TRUEMEDIA)),true)
 LOCAL_CFLAGS += -DSRS_PROCESSING
 endif
 
+ifeq ($(BOARD_USES_QCOM_AUDIO_LPA),true)
+    LOCAL_CFLAGS += -DQCOM_TUNNEL_LPA_ENABLED
+endif
+
+ifeq ($(BOARD_USES_QCOM_AUDIO_SPEECH),true)
+    LOCAL_CFLAGS += -DWITH_QCOM_SPEECH
+endif
+
+ifeq ($(BOARD_USES_QCOM_AUDIO_VOIPMUTE),true)
+    LOCAL_CFLAGS += -DWITH_QCOM_VOIPMUTE
+endif
+
+ifeq ($(BOARD_USES_QCOM_AUDIO_RESETALL),true)
+    LOCAL_CFLAGS += -DWITH_QCOM_RESETALL
+endif
+
 LOCAL_CFLAGS += -DQCOM_VOIP_ENABLED
 LOCAL_CFLAGS += -DQCOM_TUNNEL_LPA_ENABLED
 
 LOCAL_SHARED_LIBRARIES := \
     libcutils       \
     libutils        \
-    libmedia
+    libmedia        \
+    libaudioalsa
+
+# hack for prebuilt
+$(shell mkdir -p $(OUT)/obj/SHARED_LIBRARIES/libaudioalsa_intermediates/)
+$(shell touch $(OUT)/obj/SHARED_LIBRARIES/libaudioalsa_intermediates/export_includes)
 
 ifneq ($(TARGET_SIMULATOR),true)
 LOCAL_SHARED_LIBRARIES += libdl
 endif
 
-ifeq ($(strip $(TARGET_HAS_QACT)),true)
-LOCAL_SHARED_LIBRARIES += libaudcal
+ifeq ($(BOARD_USES_QCOM_AUDIO_CALIBRATION),true)
+    LOCAL_SHARED_LIBRARIES += libaudcal
+    LOCAL_CFLAGS += -DWITH_QCOM_CALIBRATION
 endif
 
 LOCAL_STATIC_LIBRARIES := \
@@ -63,14 +78,16 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_CFLAGS += -fno-short-enums
 
 LOCAL_C_INCLUDES := $(TARGET_OUT_HEADERS)/mm-audio/audio-alsa
-LOCAL_C_INCLUDES += $(TARGET_OUT_HEADERS)/mm-audio/audcal
+ifeq ($(BOARD_USES_QCOM_AUDIO_CALIBRATION),true)
+    LOCAL_C_INCLUDES += $(TARGET_OUT_HEADERS)/mm-audio/audcal
+endif
 LOCAL_C_INCLUDES += hardware/libhardware/include
 LOCAL_C_INCLUDES += hardware/libhardware_legacy/include
 LOCAL_C_INCLUDES += frameworks/base/include
 LOCAL_C_INCLUDES += system/core/include
 
-#LOCAL_C_INCLUDES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
-#LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+LOCAL_C_INCLUDES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
 
 include $(BUILD_SHARED_LIBRARY)
 
@@ -101,8 +118,17 @@ endif
 
 LOCAL_C_INCLUDES := hardware/libhardware_legacy/audio
 
-#LOCAL_C_INCLUDES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
-#LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
+LOCAL_C_INCLUDES += $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr/include
+LOCAL_ADDITIONAL_DEPENDENCIES := $(TARGET_OUT_INTERMEDIATES)/KERNEL_OBJ/usr
 
 include $(BUILD_SHARED_LIBRARY)
+
+# Load audio_policy.conf to system/etc/
+include $(CLEAR_VARS)
+LOCAL_MODULE       := audio_policy.conf
+LOCAL_MODULE_TAGS  := optional
+LOCAL_MODULE_CLASS := ETC
+LOCAL_MODULE_PATH  := $(TARGET_OUT_ETC)
+LOCAL_SRC_FILES    := audio_policy.conf
+include $(BUILD_PREBUILT)
 endif # TARGET_BOOTLOADER_BOARD_NAME

@@ -807,10 +807,7 @@ AudioPolicyManagerBase::IOProfile *AudioPolicyManager::getProfileForDirectOutput
                                                                uint32_t channelMask,
                                                                audio_output_flags_t flags)
 {
-    if( !((flags & AUDIO_OUTPUT_FLAG_LPA)   ||
-          (flags & AUDIO_OUTPUT_FLAG_TUNNEL)||
-          (flags & AUDIO_OUTPUT_FLAG_VOIP_RX)) )
-        flags = AUDIO_OUTPUT_FLAG_DIRECT;
+
 
     for (size_t i = 0; i < mHwModules.size(); i++) {
         if (mHwModules[i]->mHandle == 0) {
@@ -820,7 +817,7 @@ AudioPolicyManagerBase::IOProfile *AudioPolicyManager::getProfileForDirectOutput
            AudioPolicyManagerBase::IOProfile *profile = mHwModules[i]->mOutputProfiles[j];
            if (isCompatibleProfile(profile, device, samplingRate, format,
                                            channelMask,
-                                           flags)) {
+                                           (audio_output_flags_t)(flags|AUDIO_OUTPUT_FLAG_DIRECT))) { 
                if (mAvailableOutputDevices & profile->mSupportedDevices) {
                    return mHwModules[i]->mOutputProfiles[j];
                }
@@ -1104,7 +1101,7 @@ audio_devices_t AudioPolicyManager::getDeviceForInputSource(int inputSource)
         }
         break;
     case AUDIO_SOURCE_VOICE_COMMUNICATION:
-        device = AudioSystem::DEVICE_IN_COMMUNICATION;
+        device = AUDIO_DEVICE_IN_COMMUNICATION;
         break;
     case AUDIO_SOURCE_CAMCORDER:
         if (mAvailableInputDevices & AUDIO_DEVICE_IN_BACK_MIC) {
@@ -1310,8 +1307,8 @@ uint32_t AudioPolicyManager::setOutputDevice(audio_io_handle_t output, audio_dev
     //  - the requested device is 0
     //  - the requested device is the same as current device and force is not specified.
     // Doing this check here allows the caller to call setOutputDevice() without conditions
-    if ((device == 0 || device == prevDevice) && !force) {
-        ALOGV("setOutputDevice() setting same device %04x or null device for output %d", device, output);
+    if (device == 0) {
+        ALOGV("setOutputDevice() setting null device for output %d", output);
         return muteWaitMs;
     }
 
