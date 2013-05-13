@@ -238,7 +238,7 @@ public:
 #endif
 protected:
     virtual status_t    dump(int fd, const Vector<String16>& args);
-    uint32_t getMvsMode(int format);
+    uint32_t getMvsMode(int format, int rate);
     uint32_t getMvsRateType(uint32_t MvsMode, uint32_t *rateType);
     status_t setupDeviceforVoipCall(bool value);
 
@@ -322,11 +322,11 @@ private:
                                 int *pFormat,
                                 uint32_t *pChannels,
                                 uint32_t *pRate);
-        virtual uint32_t    sampleRate() const {ALOGD(" AudioStreamOutDirect: SampleRate %d\n",mSampleRate); return mSampleRate; }
+        virtual uint32_t    sampleRate() const { ALOGE(" AudioStreamOutDirect: sampleRate\n"); return 8000; }
         // must be 32-bit aligned - driver only seems to like 4800
-        virtual size_t      bufferSize() const { ALOGD(" AudioStreamOutDirect: bufferSize %d\n",mBufferSize);return mBufferSize; }
-        virtual uint32_t    channels() const {ALOGD(" AudioStreamOutDirect: channels %d\n",mChannels); return mChannels; }
-        virtual int         format() const {ALOGD(" AudioStreamOutDirect: format %d\n",mFormat);return mFormat; }
+        virtual size_t      bufferSize() const { ALOGE(" AudioStreamOutDirect: bufferSize\n"); return 320; }
+        virtual uint32_t    channels() const {ALOGD(" AudioStreamOutDirect: channels\n"); return mChannels; }
+        virtual int         format() const {ALOGE(" AudioStreamOutDirect: format\n"); return AudioSystem::PCM_16_BIT; }
         virtual uint32_t    latency() const { return (1000*AUDIO_HW_NUM_OUT_BUF*(bufferSize()/frameSize()))/sampleRate()+AUDIO_HW_OUT_LATENCY_MS; }
         virtual status_t    setVolume(float left, float right) { return INVALID_OPERATION; }
         virtual ssize_t     write(const void* buffer, size_t bytes);
@@ -559,7 +559,7 @@ private:
                                 uint32_t *pChannels,
                                 uint32_t *pRate,
                                 AudioSystem::audio_in_acoustics acoustics);
-        virtual size_t      bufferSize() const { return 320; }
+        virtual size_t      bufferSize() const { return mBufferSize; }
         virtual uint32_t    channels() const {ALOGD(" AudioStreamInVoip: channels %d \n",mChannels); return mChannels; }
         virtual int         format() const { return AUDIO_HW_IN_FORMAT; }
         virtual uint32_t    sampleRate() const { return 8000; }
