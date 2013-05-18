@@ -23,12 +23,13 @@
 
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/full_base_telephony.mk)
-# Inherit from u8666E device
-$(call inherit-product, device/huawei/u8666E/device.mk)
+# Inherit from u8655 device
+$(call inherit-product, device/huawei/u8655/device.mk)
 
 # Set those variables here to overwrite the inherited values.
-PRODUCT_NAME := huawei_u8666E
-PRODUCT_DEVICE := u8666E
+PRODUCT_NAME := huawei_u8655
+PRODUCT_DEVICE := u8655
 PRODUCT_BRAND := Huawei
 PRODUCT_MANUFACTURER := Huawei
-PRODUCT_MODEL := Ascend Y201PRO
+PRODUCT_MODEL := Ascend Y200
+
