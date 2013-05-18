@@ -1,0 +1,37 @@
+From 3d9a18f36d74a3342c7ce7569828277e562694b9 Mon Sep 17 00:00:00 2001
+From: Daz Jones <yuki@thebronasium.com>
+Date: Sat, 16 Feb 2013 19:09:04 +0000
+Subject: [PATCH] AdapterService: nasty hack to fix null jstring jni crash for now
+
+Change-Id: Iaba4dd8fb8fd82e84f19fd3e3816fdcd233ca041
+---
+ jni/com_android_bluetooth_btservice_AdapterService.cpp |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/jni/com_android_bluetooth_btservice_AdapterService.cpp b/jni/com_android_bluetooth_btservice_AdapterService.cpp
+index 5989c79..36f0a22 100755
+--- a/jni/com_android_bluetooth_btservice_AdapterService.cpp
++++ b/jni/com_android_bluetooth_btservice_AdapterService.cpp
+@@ -873,6 +873,10 @@ static int createSocketChannelNative(JNIEnv *env, jobject object, jint type,
+ 
+     if (!sBluetoothSocketInterface) return NULL;
+ 
++    if (name_str == NULL) {
++        ALOGE("cannot get service name - name_str is null");
++        goto Fail;
++    }
+     service_name = env->GetStringUTFChars(name_str, NULL);
+ 
+     uuid = env->GetByteArrayElements(uuidObj, NULL);
+@@ -896,7 +900,7 @@ static int createSocketChannelNative(JNIEnv *env, jobject object, jint type,
+     return socket_fd;
+ 
+ Fail:
+-    if (service_name) env->ReleaseStringUTFChars(name_str, service_name);
++    if (service_name && name_str) env->ReleaseStringUTFChars(name_str, service_name);
+     if (uuid) env->ReleaseByteArrayElements(uuidObj, uuid, 0);
+ 
+     return -1;
+-- 
+1.7.10.4
+

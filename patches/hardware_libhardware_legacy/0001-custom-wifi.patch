@@ -1,0 +1,33 @@
+From f4d93a7890ce81848352336d32a763e75dffd273 Mon Sep 17 00:00:00 2001
+From: Daz Jones <yuki@thebronasium.com>
+Date: Sat, 9 Mar 2013 12:26:45 +0000
+Subject: [PATCH] libhardware_legacy: add support for custom Wi-Fi
+ implementations
+
+Change-Id: Ifb3530495dd1c804cefe4fcdcf2039d9f20b1395
+---
+ wifi/Android.mk |    8 +++++++-
+ 1 file changed, 7 insertions(+), 1 deletion(-)
+
+diff --git a/wifi/Android.mk b/wifi/Android.mk
+index 51afe3a..788520f 100644
+--- a/wifi/Android.mk
++++ b/wifi/Android.mk
+@@ -43,7 +43,13 @@ ifdef WIFI_EXT_MODULE_NAME
+ LOCAL_CFLAGS += -DWIFI_EXT_MODULE_NAME=\"$(WIFI_EXT_MODULE_NAME)\"
+ endif
+ 
+-LOCAL_SRC_FILES += wifi/wifi.c
++ifeq ($(TARGET_CUSTOM_WIFI),)
++       LOCAL_SRC_FILES += \
++               wifi/wifi.c
++else
++       LOCAL_SRC_FILES += \
++               $(TARGET_CUSTOM_WIFI)
++endif
+ 
+ ifeq ($(BOARD_HAVE_SAMSUNG_WIFI),true)
+ LOCAL_CFLAGS += -DSAMSUNG_WIFI
+-- 
+1.7.10.4
+

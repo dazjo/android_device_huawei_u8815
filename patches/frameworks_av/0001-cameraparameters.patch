@@ -1,0 +1,38 @@
+From 2162e16110d8a37b923995f3e95d6a3856e8bf4c Mon Sep 17 00:00:00 2001
+From: Daz Jones <yuki@thebronasium.com>
+Date: Mon, 18 Feb 2013 01:25:07 +0000
+Subject: [PATCH] CameraParameters: add SCENE_MODE_OFF
+
+Change-Id: Id0ace334fee45cbfbc1623cf4597b588918bac95
+---
+ camera/CameraParameters.cpp       |    1 +
+ include/camera/CameraParameters.h |    1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/camera/CameraParameters.cpp b/camera/CameraParameters.cpp
+index 2a5795e..b1591f0 100644
+--- a/camera/CameraParameters.cpp
++++ b/camera/CameraParameters.cpp
+@@ -236,6 +236,7 @@ const char CameraParameters::SCENE_MODE_BARCODE[] = "barcode";
+ const char CameraParameters::SCENE_MODE_HDR[] = "hdr";
+ #ifdef QCOM_HARDWARE
+ const char CameraParameters::SCENE_MODE_AR[] = "AR";
++const char CameraParameters::SCENE_MODE_OFF[] = "off";
+ #ifdef QCOM_SONY_HARDWARE
+ const char CameraParameters::EX_SCENE_MODE_DOCUMENT[] = "document";
+ #endif
+diff --git a/include/camera/CameraParameters.h b/include/camera/CameraParameters.h
+index e282b28..aa9cef2 100644
+--- a/include/camera/CameraParameters.h
++++ b/include/camera/CameraParameters.h
+@@ -735,6 +735,7 @@ public:
+     static const char SCENE_MODE_BACKLIGHT[];
+     static const char SCENE_MODE_FLOWERS[];
+     static const char SCENE_MODE_AR[];
++    static const char SCENE_MODE_OFF[];
+ #ifdef QCOM_SONY_HARDWARE
+     static const char EX_SCENE_MODE_DOCUMENT[];
+ #endif
+-- 
+1.7.10.4
+

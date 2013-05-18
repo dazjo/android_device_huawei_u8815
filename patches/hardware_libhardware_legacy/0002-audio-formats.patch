@@ -1,0 +1,26 @@
+From eb6b717694837a0650edcd39fbb55e18b652a2d3 Mon Sep 17 00:00:00 2001
+From: Daz Jones <yuki@thebronasium.com>
+Date: Fri, 25 Jan 2013 15:18:02 +0000
+Subject: [PATCH] audio policy: Add EVRCB and EVRCWB for 7x27a HAL compilation
+
+Change-Id: I01e8bd9bb67b972ad72eab3bbb00d59793d2b51c
+---
+ include/hardware_legacy/AudioSystemLegacy.h |    2 ++
+ 1 files changed, 2 insertions(+), 0 deletions(-)
+
+diff --git a/include/hardware_legacy/AudioSystemLegacy.h b/include/hardware_legacy/AudioSystemLegacy.h
+index a1e9c64..9ec5b29 100644
+--- a/include/hardware_legacy/AudioSystemLegacy.h
++++ b/include/hardware_legacy/AudioSystemLegacy.h
+@@ -135,6 +135,8 @@ public:
+         VORBIS              = 0x07000000,
+         EVRC                = 0x08000000,
+         QCELP               = 0x09000000,
++        EVRCB               = 0x10000000,
++        EVRCWB              = 0x11000000,
+         MAIN_FORMAT_MASK    = 0xFF000000,
+         SUB_FORMAT_MASK     = 0x00FFFFFF,
+         // Aliases
+-- 
+1.7.2.5
+
