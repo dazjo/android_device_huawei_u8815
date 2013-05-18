@@ -1,0 +1,28 @@
+From bcee4eadec104e47231ed91d780897e4cf96c96f Mon Sep 17 00:00:00 2001
+From: Daz Jones <yuki@thebronasium.com>
+Date: Sat, 15 Dec 2012 17:39:39 +0000
+Subject: [PATCH] media: let msm7x27a build libI420colorconvert
+
+Change-Id: Ie06af7e14fb26720ed5f75a9bf89fa2da6b18d5f
+---
+ Android.mk |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/Android.mk b/Android.mk
+index 08f1472..413d102 100755
+--- a/Android.mk
++++ b/Android.mk
+@@ -2,9 +2,9 @@ QCOM_MEDIA_ROOT := $(call my-dir)
+ ifneq ($(filter msm8974 msm8960 msm8660 msm7x27a msm7x30,$(TARGET_BOARD_PLATFORM)),)
+ include $(QCOM_MEDIA_ROOT)/mm-core/Android.mk
+ include $(QCOM_MEDIA_ROOT)/libstagefrighthw/Android.mk
++include $(QCOM_MEDIA_ROOT)/libI420colorconvert/Android.mk
+ endif
+ 
+ ifneq ($(filter msm8974 msm8960 msm8660 msm7x30,$(TARGET_BOARD_PLATFORM)),)
+ include $(QCOM_MEDIA_ROOT)/mm-video/Android.mk
+-include $(QCOM_MEDIA_ROOT)/libI420colorconvert/Android.mk
+ endif
+-- 
+1.7.2.5
+
