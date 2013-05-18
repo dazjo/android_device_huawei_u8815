@@ -1,4 +1,4 @@
-ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),u8815)
+ifeq ($(TARGET_BOOTLOADER_BOARD_NAME),u8655)
 
 BUILD_LIBCAMERA := true
 
@@ -51,7 +51,7 @@ endif
 LOCAL_CFLAGS += -include bionic/libc/kernel/common/linux/socket.h
 
 LOCAL_MODULE_PATH := $(TARGET_OUT_SHARED_LIBRARIES)/hw
-LOCAL_MODULE := camera.u8815
+LOCAL_MODULE := camera.u8655
 LOCAL_MODULE_TAGS := optional
 include $(BUILD_SHARED_LIBRARY)
 
