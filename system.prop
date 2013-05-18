@@ -1,5 +1,5 @@
 #
-# system.prop for u8666E
+# system.prop for u8655
 #
 
 # CWM
@@ -18,9 +18,9 @@ ro.opengles.version=131072
 ro.sf.lcd_density=160
 
 # Huawei
-ro.confg.hw_appfsversion=U8666EVCM9_SYSIMG
-ro.confg.hw_appsbootversion=U8666EVCM9_APPSBOOT
-ro.confg.hw_appversion=U8666EVCM9_KERNEL
+ro.confg.hw_appfsversion=U8655VCM9_SYSIMG
+ro.confg.hw_appsbootversion=U8655VCM9_APPSBOOT
+ro.confg.hw_appversion=U8655VCM9_KERNEL
 
 # Memory
 sys.mem.max_hidden_apps=10
