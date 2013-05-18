@@ -1,5 +1,5 @@
 #
-# system.prop for u8815
+# system.prop for u8655
 #
 
 # CWM
@@ -15,12 +15,12 @@ debug.composition.type=mdp
 hwui.render_dirty_regions=true
 ro.max.fling_velocity=4000
 ro.opengles.version=131072
-ro.sf.lcd_density=240
+ro.sf.lcd_density=160
 
 # Huawei
-ro.confg.hw_appfsversion=U8815VCM9_SYSIMG
-ro.confg.hw_appsbootversion=U8815VCM9_APPSBOOT
-ro.confg.hw_appversion=U8815VCM9_KERNEL
+ro.confg.hw_appfsversion=U8655VCM9_SYSIMG
+ro.confg.hw_appsbootversion=U8655VCM9_APPSBOOT
+ro.confg.hw_appversion=U8655VCM9_KERNEL
 
 # Memory
 sys.mem.max_hidden_apps=10
