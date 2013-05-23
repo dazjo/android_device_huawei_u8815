@@ -1,0 +1,68 @@
+From f03627bce1de975ad9b88206874dda851b7d2bf4 Mon Sep 17 00:00:00 2001
+From: Grigori Goronzy <greg@blackbox>
+Date: Sat, 19 Jan 2013 18:26:25 +0100
+Subject: [PATCH] Fix alignment and copy size for legacy QCOM OMX
+
+Change-Id: I6d13c67601da0f0c35d3dd455401f982406cefe3
+---
+ .../colorconversion/SoftwareRenderer.cpp            | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
+
+diff --git a/media/libstagefright/colorconversion/SoftwareRenderer.cpp b/media/libstagefright/colorconversion/SoftwareRenderer.cpp
+index b5a0fe6..f31f80a 100644
+--- a/media/libstagefright/colorconversion/SoftwareRenderer.cpp
++++ b/media/libstagefright/colorconversion/SoftwareRenderer.cpp
+@@ -42,6 +42,11 @@ static bool runningInEmulator() {
+     return (property_get("ro.kernel.qemu", prop, NULL) > 0);
+ }
+ 
++static int ALIGN(int x, int y) {
++    // y must be a power of 2.
++    return (x + y - 1) & ~(y - 1);
++}
++
+ SoftwareRenderer::SoftwareRenderer(
+         const sp<ANativeWindow> &nativeWindow, const sp<MetaData> &meta)
+     : mConverter(NULL),
+@@ -90,9 +95,9 @@ static bool runningInEmulator() {
+         case OMX_QCOM_COLOR_FormatYVU420SemiPlanar:
+         {
+             halFormat = HAL_PIXEL_FORMAT_YCrCb_420_SP;
+-            bufWidth = (mCropWidth + 1) & ~1;
+-            bufHeight = (mCropHeight + 1) & ~1;
+-            mAlign = ((mWidth + 15) & -16) * ((mHeight + 15) & -16);
++            bufWidth = ALIGN(mCropWidth, 16);
++            bufHeight = ALIGN(mCropHeight, 2);
++            mAlign = ALIGN(mWidth, 16) * ALIGN(mHeight, 16);
+             break;
+         }
+ #endif
+@@ -168,11 +173,6 @@ static bool runningInEmulator() {
+     mConverter = NULL;
+ }
+ 
+-static int ALIGN(int x, int y) {
+-    // y must be a power of 2.
+-    return (x + y - 1) & ~(y - 1);
+-}
+-
+ void SoftwareRenderer::render(
+         const void *data, size_t size, void *platformPrivate) {
+     ANativeWindowBuffer *buf;
+@@ -235,10 +235,11 @@ void SoftwareRenderer::render(
+         uint8_t *src_u = src_y + mAlign;
+         uint8_t *dst_y = (uint8_t *)dst;
+         uint8_t *dst_u = dst_y + buf->stride * buf->height;
++        size_t bufsz = ALIGN(mCropWidth, 16) * ALIGN(mCropHeight, 2);
+ 
+         // Legacy codec doesn't return crop params. Ignore it for speedup :)
+-        memcpy(dst_y, src_y, mCropWidth * mCropHeight);
+-        memcpy(dst_u, src_u, mCropWidth * mCropHeight / 2);
++        memcpy(dst_y, src_y, bufsz);
++        memcpy(dst_u, src_u, bufsz / 2);
+ 
+         /*for(size_t y = 0; y < mCropHeight; ++y) {
+             memcpy(dst_y, src_y, mCropWidth);
+-- 
+1.8.1.6
+
