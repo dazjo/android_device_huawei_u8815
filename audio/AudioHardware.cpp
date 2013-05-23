@@ -41,7 +41,7 @@ extern "C" {
 //#include <media/AudioRecord.h>
 
 
-//#define COMBO_DEVICE_SUPPORTED // Headset speaker combo device not supported on this target
+#define COMBO_DEVICE_SUPPORTED // Headset speaker combo device not supported on this target
 #define DUALMIC_KEY "dualmic_enabled"
 #define TTY_MODE_KEY "tty_mode"
 #define ECHO_SUPRESSION "ec_supported"
