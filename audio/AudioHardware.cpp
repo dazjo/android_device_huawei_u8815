@@ -1582,7 +1582,7 @@ status_t AudioHardware::setVoiceVolume(float v)
     // setting Rx volume level as 2 for minimum and 7 as max level.
     v = 0.4 + v;
 
-    int vol = lrint(v * 5.0);
+    int vol = lrint(v * 4.0);
     ALOGD("setVoiceVolume(%f)\n", v);
     ALOGI("Setting in-call volume to %d (available range is 2 to 7)\n", vol);
 
