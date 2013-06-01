@@ -261,10 +261,15 @@ audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strate
       // output routing
       if (mPhoneState == AudioSystem::MODE_IN_CALL &&
          !AudioSystem::isA2dpDevice((AudioSystem::audio_devices)device) &&
-          device != getDeviceForStrategy(STRATEGY_PHONE)) {
-          device = getDeviceForStrategy(STRATEGY_PHONE);
-          ALOGV("getDeviceForStrategy() incompatible media and phone devices");
-      }
+           device != getDeviceForStrategy(STRATEGY_PHONE) &&
+           strategy == STRATEGY_ENFORCED_AUDIBLE) {
+          if (!mStreams[AUDIO_STREAM_ENFORCED_AUDIBLE].mCanBeMuted) {
+              ALOGV("getDeviceForStrategy() do not change to phone device for ENFORCED_AUDIBLE");
+          } else {
+              device = getDeviceForStrategy(STRATEGY_PHONE);
+              ALOGV("getDeviceForStrategy() incompatible media and phone devices");
+          }
+	  }
       if (device == 0) {
         ALOGE("getDeviceForStrategy() no device found for STRATEGY_MEDIA");
       }

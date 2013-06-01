@@ -562,7 +562,7 @@ private:
         virtual size_t      bufferSize() const { return mBufferSize; }
         virtual uint32_t    channels() const {ALOGD(" AudioStreamInVoip: channels %d \n",mChannels); return mChannels; }
         virtual int         format() const { return AUDIO_HW_IN_FORMAT; }
-        virtual uint32_t    sampleRate() const { return 8000; }
+        virtual uint32_t    sampleRate() const { return mSampleRate; }
         virtual status_t    setGain(float gain) { return INVALID_OPERATION; }
         virtual ssize_t     read(void* buffer, ssize_t bytes);
         virtual status_t    dump(int fd, const Vector<String16>& args);
@@ -572,6 +572,7 @@ private:
         virtual unsigned int  getInputFramesLost() const { return 0; }
                 uint32_t    devices() { return mDevices; }
                 int         state() const { return mState; }
+                bool        mSetupDevice;
 
     private:
                 AudioHardware* mHardware;
@@ -625,6 +626,7 @@ private:
             bool mVoipInActive;
             bool mVoipOutActive;
             Mutex       mVoipLock;
+            int         mDirectOutrefCnt;
 #endif /*QCOM_VOIP_ENABLED*/
      friend class AudioStreamInMSM72xx;
             Mutex       mLock;
