@@ -77,7 +77,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/configs/audio_policy.conf:system/etc/audio_policy.conf \
     device/huawei/u8815/configs/AudioFilter.csv:system/etc/AudioFilter.csv \
-    device/huawei/u8815/configs/AutoVolumeControl.txt:system/etc/AutoVolumeControl.txt \
     device/huawei/u8815/configs/media_profiles.xml:system/etc/media_profiles.xml \
     device/huawei/u8815/configs/nfcee_access.xml:system/etc/nfcee_access.xml \
     device/huawei/u8815/configs/libcm.sh:system/etc/libcm.sh \
