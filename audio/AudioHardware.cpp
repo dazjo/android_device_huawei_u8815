@@ -1151,15 +1151,14 @@ status_t AudioHardware::setVoiceVolume(float v)
         LOGW("setVoiceVolume(%f) over 1.0, assuming 1.0\n", v);
         v = 1.0;
     }
-    // Added 0.4 to current volume, as in voice call Mute cannot be set as minimum volume(0.00)
-    // setting Rx volume level as 2 for minimum and 7 as max level.
-    if (v < 0.4) {
-        v = 0.4;
+    // Added 0.2 to current volume, as in voice call Mute cannot be set as minimum volume(0.00)
+    // setting Rx volume level as 1 for minimum and 6 as max level.
+    v = 0.2 + v;
     }
 
-    int vol = lrint(v * 5.0);
+    int vol = lrint(v * 3.0);
     LOGD("setVoiceVolume(%f)\n", v);
-    LOGI("Setting in-call volume to %d (available range is 2 to 7)\n", vol);
+    LOGI("Setting in-call volume to %d (available range is 1 to 6)\n", vol);
 
     if ((mCurSndDevice != -1) && ((mCurSndDevice == SND_DEVICE_TTY_HEADSET) || (mCurSndDevice == SND_DEVICE_TTY_VCO)))
     {
