@@ -92,7 +92,7 @@
         <EncoderProfile quality="480p" fileFormat="mp4" duration="30">
             <Video codec="h264"
                    bitRate="5000000"
-                   width="640"
+                   width="800"
                    height="480"
                    frameRate="30" />
             <Audio codec="aac"
@@ -127,7 +127,7 @@
         <EncoderProfile quality="timelapse480p" fileFormat="mp4" duration="30">
             <Video codec="h264"
                    bitRate="5000000"
-                   width="720"
+                   width="800"
                    height="480"
                    frameRate="30" />
             <Audio codec="aac"
@@ -171,7 +171,7 @@
         <EncoderProfile quality="480p" fileFormat="mp4" duration="30">
             <Video codec="h264"
                    bitRate="5000000"
-                   width="640"
+                   width="800"
                    height="480"
                    frameRate="30" />
             <Audio codec="aac"
@@ -182,7 +182,7 @@
         <EncoderProfile quality="timelapse480p" fileFormat="mp4" duration="30">
             <Video codec="h264"
                    bitRate="2000000"
-                   width="640"
+                   width="800"
                    height="480"
                    frameRate="30" />
             <Audio codec="aac"
