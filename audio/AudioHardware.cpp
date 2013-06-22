@@ -1154,7 +1154,6 @@ status_t AudioHardware::setVoiceVolume(float v)
     // Added 0.2 to current volume, as in voice call Mute cannot be set as minimum volume(0.00)
     // setting Rx volume level as 1 for minimum and 6 as max level.
     v = 0.2 + v;
-    }
 
     int vol = lrint(v * 3.0);
     LOGD("setVoiceVolume(%f)\n", v);
