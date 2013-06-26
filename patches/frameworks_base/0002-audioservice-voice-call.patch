@@ -1,0 +1,26 @@
+From 8c1a0433b87e0b404e718d50b04a414157a7eaae Mon Sep 17 00:00:00 2001
+From: Daz Jones <yuki@thebronasium.com>
+Date: Wed, 26 Jun 2013 12:26:56 +0100
+Subject: [PATCH] AudioService: change voice call max stream volume
+
+Change-Id: Iefa99cf6c5b674bcdf39d267e86ed9cafa8e325b
+---
+ media/java/android/media/AudioService.java | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/media/java/android/media/AudioService.java b/media/java/android/media/AudioService.java
+index 5dcec1a..cf9008a 100644
+--- a/media/java/android/media/AudioService.java
++++ b/media/java/android/media/AudioService.java
+@@ -218,7 +218,7 @@ public class AudioService extends IAudioService.Stub implements OnFinished {
+ 
+    /** @hide Maximum volume index values for audio streams */
+     private final int[] MAX_STREAM_VOLUME = new int[] {
+-        5,  // STREAM_VOICE_CALL
++        7,  // STREAM_VOICE_CALL
+         7,  // STREAM_SYSTEM
+         7,  // STREAM_RING
+         15, // STREAM_MUSIC
+-- 
+1.8.1.2
+
