@@ -20,6 +20,7 @@ dalvik.vm.heapsize=76m
 dalvik.vm.heapstartsize=5m
 
 # Display
+debug.composition.type=mdp
 debug.hwc.dynThreshold=1.91
 debug.sf.swaprect=1
 ro.max.fling_velocity=4000
