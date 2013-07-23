@@ -16,8 +16,7 @@ TARGET_CPU_SMP := false
 TARGET_ARCH := arm
 TARGET_ARCH_VARIANT := armv7-a-neon
 
-# cortex-a9 is used to take advantage of NEON optimizations
-TARGET_ARCH_VARIANT_CPU := cortex-a9
+TARGET_ARCH_VARIANT_CPU := cortex-a5
 TARGET_ARCH_VARIANT_FPU := neon
 
 BOARD_USES_QCOM_HARDWARE := true
