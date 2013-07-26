@@ -28,9 +28,9 @@ ro.opengles.version=131072
 ro.sf.lcd_density=240
 
 # Huawei
-ro.confg.hw_appfsversion=U8815VCM10_1_SYSIMG
-ro.confg.hw_appsbootversion=U8815VCM10_1_APPSBOOT
-ro.confg.hw_appversion=U8815VCM10_1_KERNEL
+ro.confg.hw_appfsversion=U8815VCM10_2_SYSIMG
+ro.confg.hw_appsbootversion=U8815VCM10_2_APPSBOOT
+ro.confg.hw_appversion=U8815VCM10_2_KERNEL
 
 # Memory
 sys.mem.max_hidden_apps=10
