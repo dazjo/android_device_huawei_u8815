@@ -154,7 +154,7 @@ on boot
 
 on fs
     # mount mmc partitions
-    mount_all /fstab.u8815
+    mount_all /fstab.huawei
 
     start libcm_link
 
