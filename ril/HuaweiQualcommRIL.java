@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The CyanogenMod Project
+ * Copyright (C) 2013 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,8 +35,10 @@ import com.android.internal.telephony.RILConstants;
 import com.android.internal.telephony.gsm.SmsBroadcastConfigInfo;
 import com.android.internal.telephony.cdma.CdmaInformationRecords;
 
-import com.android.internal.telephony.IccCardApplicationStatus;
-import com.android.internal.telephony.IccCardStatus;
+import com.android.internal.telephony.uicc.IccCardApplicationStatus;
+import com.android.internal.telephony.uicc.IccCardStatus;
+import com.android.internal.telephony.dataconnection.DataCallResponse;
+import com.android.internal.telephony.dataconnection.DcFailCause;
 
 import java.util.ArrayList;
 
@@ -74,15 +76,15 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
         RILRequest rr
                 = RILRequest.obtain(RIL_REQUEST_SIM_IO, result);
 
-        rr.mp.writeInt(command);
-        rr.mp.writeInt(fileid);
-        rr.mp.writeString(path);
-        rr.mp.writeInt(p1);
-        rr.mp.writeInt(p2);
-        rr.mp.writeInt(p3);
-        rr.mp.writeString(data);
-        rr.mp.writeString(pin2);
-        rr.mp.writeString(mAid);
+        rr.mParcel.writeInt(command);
+        rr.mParcel.writeInt(fileid);
+        rr.mParcel.writeString(path);
+        rr.mParcel.writeInt(p1);
+        rr.mParcel.writeInt(p2);
+        rr.mParcel.writeInt(p3);
+        rr.mParcel.writeString(data);
+        rr.mParcel.writeString(pin2);
+        rr.mParcel.writeString(mAid);
 
         if (RILJ_LOGD) riljLog(rr.serialString() + "> iccIO: "
                     + " aid: " + mAid + " "
@@ -105,7 +107,7 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
         if (RILJ_LOGD) riljLog(rr.serialString() + "> " + requestToString(rr.mRequest)
                     + " " + operatorNumeric);
 
-        rr.mp.writeString(operatorNumeric);
+        rr.mParcel.writeString(operatorNumeric);
 
         send(rr);
     }
@@ -252,14 +254,14 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
     }
 
     @Override
-    protected DataCallState
-    getDataCallState(Parcel p, int version) {
-        DataCallState dataCall = new DataCallState();
+    protected DataCallResponse
+    getDataCallResponse(Parcel p, int version) {
+        DataCallResponse dataCall = new DataCallResponse();
 
         boolean oldRil = needsOldRilFeature("datacall");
 
         if (!oldRil && version < 5) {
-            return super.getDataCallState(p, version);
+            return super.getDataCallResponse(p, version);
         } else if (!oldRil) {
             dataCall.version = version;
             dataCall.status = p.readInt();
@@ -270,9 +272,9 @@ public class HuaweiQualcommRIL extends QualcommSharedRIL implements CommandsInte
             dataCall.active = p.readInt();
             dataCall.type = p.readString();
             dataCall.ifname = p.readString();
-            if ((dataCall.status == DataConnection.FailCause.NONE.getErrorCode()) &&
+            if ((dataCall.status == DcFailCause.NONE.getErrorCode()) &&
                     TextUtils.isEmpty(dataCall.ifname) && dataCall.active != 0) {
-              throw new RuntimeException("getDataCallState, no ifname");
+              throw new RuntimeException("getDataCallResponse, no ifname");
             }
             String addresses = p.readString();
             if (!TextUtils.isEmpty(addresses)) {
