@@ -71,6 +71,7 @@ extern char *dhcp_lasterror();
 extern void get_dhcp_info();
 extern int init_module(void *, unsigned long, const char *);
 extern int delete_module(const char *, unsigned int);
+void wifi_close_sockets(int index);
 
 static int wifi_mode = 0;
 
@@ -293,10 +294,17 @@ int wifi_load_driver()
     char module_arg[256];
     char module_mac_param[PROPERTY_VALUE_MAX];
     char module_arg2[256];
-
 #ifdef SAMSUNG_WIFI
     char* type = get_samsung_wifi_type();
-#endif
+
+    if (wifi_mode == 1) {
+        snprintf(module_arg2, sizeof(module_arg2), "%s%s", DRIVER_MODULE_AP_ARG, type == NULL ? "" : type);
+    } else {
+        snprintf(module_arg2, sizeof(module_arg2), "%s%s", DRIVER_MODULE_ARG, type == NULL ? "" : type);
+    }
+
+    if (insmod(DRIVER_MODULE_PATH, module_arg2) < 0) {
+#else
 
     property_set(DRIVER_PROP_NAME, "loading");
 
@@ -309,15 +317,6 @@ int wifi_load_driver()
     property_get(DRIVER_PROP_MAC_PARAM, module_mac_param, NULL);
     sprintf(module_arg, "%s %s", DRIVER_MODULE_ARG, module_mac_param);
 
-#ifdef SAMSUNG_WIFI
-    if (wifi_mode == 1) {
-        snprintf(module_arg2, sizeof(module_arg2), "%s%s", DRIVER_MODULE_AP_ARG, type == NULL ? "" : type);
-    } else {
-        snprintf(module_arg2, sizeof(module_arg2), "%s%s", DRIVER_MODULE_ARG, type == NULL ? "" : type);
-    }
-
-    if (insmod(DRIVER_MODULE_PATH, module_arg2) < 0) {
-#else
     if (insmod(DRIVER_MODULE_PATH, module_arg) < 0) {
 #endif
 
@@ -436,6 +435,7 @@ int update_ctrl_interface(const char *config_file) {
     char *pbuf;
     char *sptr;
     struct stat sb;
+    int ret;
 
     if (stat(config_file, &sb) != 0)
         return -1;
@@ -462,6 +462,8 @@ int update_ctrl_interface(const char *config_file) {
     } else {
         strcpy(ifc, CONTROL_IFACE_PATH);
     }
+    /* Assume file is invalid to begin with */
+    ret = -1;
     /*
      * if there is a "ctrl_interface=<value>" entry, re-write it ONLY if it is
      * NOT a directory.  The non-directory value option is an Android add-on
@@ -472,33 +474,35 @@ int update_ctrl_interface(const char *config_file) {
      * The <value> is deemed to be a directory if the "DIR=" form is used or
      * the value begins with "/".
      */
-    if ((sptr = strstr(pbuf, "ctrl_interface=")) &&
-        (!strstr(pbuf, "ctrl_interface=DIR=")) &&
-        (!strstr(pbuf, "ctrl_interface=/"))) {
-        char *iptr = sptr + strlen("ctrl_interface=");
-        int ilen = 0;
-        int mlen = strlen(ifc);
-        int nwrite;
-        if (strncmp(ifc, iptr, mlen) != 0) {
-            ALOGE("ctrl_interface != %s", ifc);
-            while (((ilen + (iptr - pbuf)) < nread) && (iptr[ilen] != '\n'))
-                ilen++;
-            mlen = ((ilen >= mlen) ? ilen : mlen) + 1;
-            memmove(iptr + mlen, iptr + ilen + 1, nread - (iptr + ilen + 1 - pbuf));
-            memset(iptr, '\n', mlen);
-            memcpy(iptr, ifc, strlen(ifc));
-            destfd = TEMP_FAILURE_RETRY(open(config_file, O_RDWR, 0660));
-            if (destfd < 0) {
-                ALOGE("Cannot update \"%s\": %s", config_file, strerror(errno));
-                free(pbuf);
-                return -1;
+    if (sptr = strstr(pbuf, "ctrl_interface=")) {
+        ret = 0;
+        if ((!strstr(pbuf, "ctrl_interface=DIR=")) &&
+                (!strstr(pbuf, "ctrl_interface=/"))) {
+            char *iptr = sptr + strlen("ctrl_interface=");
+            int ilen = 0;
+            int mlen = strlen(ifc);
+            int nwrite;
+            if (strncmp(ifc, iptr, mlen) != 0) {
+                ALOGE("ctrl_interface != %s", ifc);
+                while (((ilen + (iptr - pbuf)) < nread) && (iptr[ilen] != '\n'))
+                    ilen++;
+                mlen = ((ilen >= mlen) ? ilen : mlen) + 1;
+                memmove(iptr + mlen, iptr + ilen + 1, nread - (iptr + ilen + 1 - pbuf));
+                memset(iptr, '\n', mlen);
+                memcpy(iptr, ifc, strlen(ifc));
+                destfd = TEMP_FAILURE_RETRY(open(config_file, O_RDWR, 0660));
+                if (destfd < 0) {
+                    ALOGE("Cannot update \"%s\": %s", config_file, strerror(errno));
+                    free(pbuf);
+                    return -1;
+                }
+                TEMP_FAILURE_RETRY(write(destfd, pbuf, nread + mlen - ilen -1));
+                close(destfd);
             }
-            TEMP_FAILURE_RETRY(write(destfd, pbuf, nread + mlen - ilen -1));
-            close(destfd);
         }
     }
     free(pbuf);
-    return 0;
+    return ret;
 }
 
 int ensure_config_file_exists(const char *config_file)
@@ -516,9 +520,13 @@ int ensure_config_file_exists(const char *config_file)
             ALOGE("Cannot set RW to \"%s\": %s", config_file, strerror(errno));
             return -1;
         }
-        /* return if filesize is at least 10 bytes */
-        if (stat(config_file, &sb) == 0 && sb.st_size > 10) {
-            return update_ctrl_interface(config_file);
+        /* return if we were able to update control interface properly */
+        if (update_ctrl_interface(config_file) >=0) {
+            return 0;
+        } else {
+            /* This handles the scenario where the file had bad data
+             * for some reason. We continue and recreate the file.
+             */
         }
     } else if (errno != ENOENT) {
         ALOGE("Cannot access \"%s\": %s", config_file, strerror(errno));
@@ -1034,29 +1042,6 @@ int wifi_send_command(int index, const char *cmd, char *reply, size_t *reply_len
     return 0;
 }
 
-void wifi_close_sockets(int index)
-{
-    if (ctrl_conn[index] != NULL) {
-        wpa_ctrl_close(ctrl_conn[index]);
-        ctrl_conn[index] = NULL;
-    }
-
-    if (monitor_conn[index] != NULL) {
-        wpa_ctrl_close(monitor_conn[index]);
-        monitor_conn[index] = NULL;
-    }
-
-    if (exit_sockets[index][0] >= 0) {
-        close(exit_sockets[index][0]);
-        exit_sockets[index][0] = -1;
-    }
-
-    if (exit_sockets[index][1] >= 0) {
-        close(exit_sockets[index][1]);
-        exit_sockets[index][1] = -1;
-    }
-}
-
 int wifi_ctrl_recv(int index, char *reply, size_t *reply_len)
 {
     int res;
@@ -1090,11 +1075,7 @@ int wifi_ctrl_recv(int index, char *reply, size_t *reply_len)
 int wifi_wait_on_socket(int index, char *buf, size_t buflen)
 {
     size_t nread = buflen - 1;
-    int fd;
-    fd_set rfds;
     int result;
-    struct timeval tval;
-    struct timeval *tptr;
 
     if (monitor_conn[index] == NULL) {
         ALOGD("Connection closed\n");
@@ -1153,6 +1134,29 @@ int wifi_wait_for_event(const char *ifname, char *buf, size_t buflen)
         return wifi_wait_on_socket(PRIMARY, buf, buflen);
     } else {
         return wifi_wait_on_socket(SECONDARY, buf, buflen);
+    }
+}
+
+void wifi_close_sockets(int index)
+{
+    if (ctrl_conn[index] != NULL) {
+        wpa_ctrl_close(ctrl_conn[index]);
+        ctrl_conn[index] = NULL;
+    }
+
+    if (monitor_conn[index] != NULL) {
+        wpa_ctrl_close(monitor_conn[index]);
+        monitor_conn[index] = NULL;
+    }
+
+    if (exit_sockets[index][0] >= 0) {
+        close(exit_sockets[index][0]);
+        exit_sockets[index][0] = -1;
+    }
+
+    if (exit_sockets[index][1] >= 0) {
+        close(exit_sockets[index][1]);
+        exit_sockets[index][1] = -1;
     }
 }
 
