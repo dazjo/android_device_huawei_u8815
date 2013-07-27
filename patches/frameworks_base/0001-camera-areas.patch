@@ -1,18 +1,18 @@
-From bfc17428c13b7f40aaa44735750f3a5f0d44e368 Mon Sep 17 00:00:00 2001
+From d1f5e4994eb85c474468d495a2ba380688a751ec Mon Sep 17 00:00:00 2001
 From: Daz Jones <yuki@thebronasium.com>
-Date: Thu, 24 Jan 2013 22:30:52 +0000
+Date: Sat, 27 Jul 2013 02:38:11 +0100
 Subject: [PATCH] Camera: hack default values to fix areas
 
-Change-Id: I7829ff64e714ecaab1f3323f33b5340d17460cfc
+Change-Id: Ie4e2b9bfcffc612021b61b98dd625ecc29021cd5
 ---
- core/java/android/hardware/Camera.java |    2 +-
+ core/java/android/hardware/Camera.java | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/core/java/android/hardware/Camera.java b/core/java/android/hardware/Camera.java
-index 5c074ed..93454a2 100644
+index 56636e9..5ad390e 100644
 --- a/core/java/android/hardware/Camera.java
 +++ b/core/java/android/hardware/Camera.java
-@@ -2122,7 +2122,7 @@ public class Camera {
+@@ -2133,7 +2133,7 @@ public class Camera {
  
          private void set(String key, List<Area> areas) {
              if (areas == null) {
@@ -22,5 +22,5 @@ index 5c074ed..93454a2 100644
                  StringBuilder buffer = new StringBuilder();
                  for (int i = 0; i < areas.size(); i++) {
 -- 
-1.7.10.4
+1.8.1.2
 
