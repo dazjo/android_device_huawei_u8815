@@ -123,12 +123,13 @@ BOARD_KERNEL_BASE := 0x00200000
 BOARD_PAGE_SIZE := 2048
 
 # Recovery
-#BOARD_TOUCH_RECOVERY := true
 TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
 BOARD_CUSTOM_GRAPHICS := ../../../device/huawei/u8815/recovery/graphics.c
 BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/huawei/u8815/recovery/recovery-keys.c
+TARGET_RECOVERY_FSTAB := device/huawei/u8815/ramdisk/fstab.huawei
 TARGET_RECOVERY_INITRC := device/huawei/u8815/recovery/etc/init.rc
 BOARD_UMS_LUNFILE := /sys/class/android_usb/android0/f_mass_storage/lun%d/file
+RECOVERY_FSTAB_VERSION := 2
 
 # Partitions
 BOARD_DATA_DEVICE := /dev/block/mmcblk0p13
