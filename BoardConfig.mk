@@ -129,7 +129,6 @@ BOARD_CUSTOM_RECOVERY_KEYMAPPING := ../../device/huawei/u8815/recovery/recovery-
 TARGET_RECOVERY_FSTAB := device/huawei/u8815/ramdisk/fstab.huawei
 TARGET_RECOVERY_INITRC := device/huawei/u8815/recovery/etc/init.rc
 BOARD_UMS_LUNFILE := /sys/class/android_usb/android0/f_mass_storage/lun%d/file
-RECOVERY_FSTAB_VERSION := 2
 
 # Partitions
 BOARD_DATA_DEVICE := /dev/block/mmcblk0p13
