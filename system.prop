@@ -34,7 +34,7 @@ ro.confg.hw_appsbootversion=U8815VCM10_2_APPSBOOT
 ro.confg.hw_appversion=U8815VCM10_2_KERNEL
 
 # Memory
-ro.sys.fw.bg_apps_limit=10
+sys.mem.max_hidden_apps=10
 
 # Qualcomm
 com.qc.hardware=true
