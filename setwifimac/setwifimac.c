@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2012 The CyanogenMod Project
+ * Copyright (C) 2013 The CyanogenMod Project
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,19 +21,11 @@
 /* In libhwrpc.so */
 extern void huawei_oem_rapi_streaming_function(int n, int p1, int p2, int p3, int *v1, int *v2, char *v3);
 
-static const char DRIVER_PROP_MAC_PARAM[] = "wlan.module.mac_param";
-
-void SetMAC(void);
+static const char PROP_MAC_PARAM[] = "wlan.module.mac_param";
 
 int main()
 {
-	SetMAC();
-	return 0;
-}
-
-void SetMAC(void)
-{
-	char wlan_mac_arg[PROPERTY_VALUE_MAX] = "mac_param=00:90:4c:ce:43:30";
+	char wlan_mac_arg[PROPERTY_VALUE_MAX];
 	char mac_bits[8];
 	int y = 0;
 
@@ -47,5 +39,7 @@ void SetMAC(void)
 		mac_bits[2], mac_bits[1], mac_bits[0]);
 	printf("%s\n", wlan_mac_arg);
 
-	property_set(DRIVER_PROP_MAC_PARAM, wlan_mac_arg);
+	property_set(PROP_MAC_PARAM, wlan_mac_arg);
+
+	return 0;
 }
