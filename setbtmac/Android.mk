@@ -12,16 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 LOCAL_PATH:= $(call my-dir)
 include $(CLEAR_VARS)
+
+$(shell mkdir -p $(OUT)/obj/SHARED_LIBRARIES/libnv_intermediates/)
+$(shell touch $(OUT)/obj/SHARED_LIBRARIES/libnv_intermediates/export_includes)
+$(shell mkdir -p $(OUT)/obj/SHARED_LIBRARIES/liboncrpc_intermediates/)
+$(shell touch $(OUT)/obj/SHARED_LIBRARIES/liboncrpc_intermediates/export_includes)
 
 LOCAL_MODULE_TAGS := optional
 
 LOCAL_SRC_FILES := setbtmac.c
 
 LOCAL_PRELINK_MODULE := true
-LOCAL_SHARED_LIBRARIES := libcutils
+LOCAL_SHARED_LIBRARIES := libcutils libnv liboncrpc
 LOCAL_MODULE := setbtmac
 
 include $(BUILD_EXECUTABLE)
