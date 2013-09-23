@@ -1,0 +1,739 @@
+From 6dac4eda3d7819a790692e7e088b15264c8dff80 Mon Sep 17 00:00:00 2001
+From: jt1134 <jt1134@gmail.com>
+Date: Sun, 13 Jan 2013 16:45:29 -0600
+Subject: [PATCH] SystemUI: show date on 2 lines in status bar
+
+This allows showing of the full day of the week, and removes
+the blank space above the date (which always felt strange to
+me when clicking it to access the calendar).
+
+It also fixes a spacing issue on smaller screen devices that
+causes the quick settings button to be partially chopped off
+when the AM/PM clock settings are enabled.
+
+Before: http://imgur.com/UzkFe
+After: http://imgur.com/UXoBJ
+
+Change-Id: I10b59f2facf973c0255fd4c002af6caf19194190
+---
+ core/res/res/values-ar-rEG/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-ar/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-bg/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-ca/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-cs/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-da/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-de/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-el/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-en-rAU/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-en-rGB/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-en-rIE/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-en-rIN/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-en-rNZ/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-en-rZA/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-es-rUS/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-es/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-fa/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-fi-rFI/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-fi/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-fr/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-hi-rIN/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-hr-rHR/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-hr/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-hu-rHU/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-hu/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-in-rID/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-in/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-it/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-iw/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-ja/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-ko/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-lt-rLT/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-lt/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-lv-rLV/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-lv/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-nb/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-nl/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-pl/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-pt-rPT/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-pt/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-ro-rRO/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-ro/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-ru/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-sk-rSK/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-sk/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-sl-rSI/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-sl/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-sr-rRS/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-sr/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-sv/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-th-rTH/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-th/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-tl/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-tr/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-uk-rUA/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-uk/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-vi-rVN/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-vi/donottranslate-cldr.xml                         | 1 +
+ core/res/res/values-zh-rCN/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values-zh-rTW/donottranslate-cldr.xml                     | 1 +
+ core/res/res/values/donottranslate-cldr.xml                            | 1 +
+ packages/SystemUI/res/layout/status_bar_expanded_header.xml            | 3 +--
+ packages/SystemUI/res/values/donottranslate.xml                        | 3 +--
+ .../SystemUI/src/com/android/systemui/statusbar/policy/DateView.java   | 3 +--
+ 64 files changed, 64 insertions(+), 6 deletions(-)
+
+diff --git a/core/res/res/values-ar-rEG/donottranslate-cldr.xml b/core/res/res/values-ar-rEG/donottranslate-cldr.xml
+index 7480756..f002e1d 100644
+--- a/core/res/res/values-ar-rEG/donottranslate-cldr.xml
++++ b/core/res/res/values-ar-rEG/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE، d MMMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-ar/donottranslate-cldr.xml b/core/res/res/values-ar/donottranslate-cldr.xml
+index 44d8a26..cc51f4e 100644
+--- a/core/res/res/values-ar/donottranslate-cldr.xml
++++ b/core/res/res/values-ar/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">E d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE، d MMMM y</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-bg/donottranslate-cldr.xml b/core/res/res/values-bg/donottranslate-cldr.xml
+index e7ad610..4bdd5d9 100644
+--- a/core/res/res/values-bg/donottranslate-cldr.xml
++++ b/core/res/res/values-bg/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">d MMMM, EEEE</string>
+     <string name="abbrev_wday_month_day_no_year">d MMMM, EEE</string>
+     <string name="abbrev_wday_month_day_year">d MMM yyyy, E</string>
++    <string name="full_wday_month_day_no_year_split">d MMMM\nEEEE</string>
+ </resources>
+diff --git a/core/res/res/values-ca/donottranslate-cldr.xml b/core/res/res/values-ca/donottranslate-cldr.xml
+index 0872125..b9c73dd 100644
+--- a/core/res/res/values-ca/donottranslate-cldr.xml
++++ b/core/res/res/values-ca/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-cs/donottranslate-cldr.xml b/core/res/res/values-cs/donottranslate-cldr.xml
+index bbf42f0..fedb5b0 100644
+--- a/core/res/res/values-cs/donottranslate-cldr.xml
++++ b/core/res/res/values-cs/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d. MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d. MMMM</string>
+     <string name="abbrev_wday_month_day_year">E d. MMMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd. MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-da/donottranslate-cldr.xml b/core/res/res/values-da/donottranslate-cldr.xml
+index 427fd0c..cdd5df8 100644
+--- a/core/res/res/values-da/donottranslate-cldr.xml
++++ b/core/res/res/values-da/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE d. MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d. MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d. MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd. MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-de/donottranslate-cldr.xml b/core/res/res/values-de/donottranslate-cldr.xml
+index 850fe26..35b7543 100644
+--- a/core/res/res/values-de/donottranslate-cldr.xml
++++ b/core/res/res/values-de/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d. MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d. MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d. MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd. MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-el/donottranslate-cldr.xml b/core/res/res/values-el/donottranslate-cldr.xml
+index dfa199d..47d6106 100644
+--- a/core/res/res/values-el/donottranslate-cldr.xml
++++ b/core/res/res/values-el/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-en-rAU/donottranslate-cldr.xml b/core/res/res/values-en-rAU/donottranslate-cldr.xml
+index 7ccff4d..029c27f 100644
+--- a/core/res/res/values-en-rAU/donottranslate-cldr.xml
++++ b/core/res/res/values-en-rAU/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">E, d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-en-rGB/donottranslate-cldr.xml b/core/res/res/values-en-rGB/donottranslate-cldr.xml
+index 22a8e41..9969134 100644
+--- a/core/res/res/values-en-rGB/donottranslate-cldr.xml
++++ b/core/res/res/values-en-rGB/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">E, d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-en-rIE/donottranslate-cldr.xml b/core/res/res/values-en-rIE/donottranslate-cldr.xml
+index c88d86c..dc5a88a 100644
+--- a/core/res/res/values-en-rIE/donottranslate-cldr.xml
++++ b/core/res/res/values-en-rIE/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">E d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-en-rIN/donottranslate-cldr.xml b/core/res/res/values-en-rIN/donottranslate-cldr.xml
+index 3b7a0ca..4e50bdb 100644
+--- a/core/res/res/values-en-rIN/donottranslate-cldr.xml
++++ b/core/res/res/values-en-rIN/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">E d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-en-rNZ/donottranslate-cldr.xml b/core/res/res/values-en-rNZ/donottranslate-cldr.xml
+index 9156376..0a29ad6 100644
+--- a/core/res/res/values-en-rNZ/donottranslate-cldr.xml
++++ b/core/res/res/values-en-rNZ/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">E, d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-en-rZA/donottranslate-cldr.xml b/core/res/res/values-en-rZA/donottranslate-cldr.xml
+index 5ae38c1..fb4003e 100644
+--- a/core/res/res/values-en-rZA/donottranslate-cldr.xml
++++ b/core/res/res/values-en-rZA/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">E dd MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-es-rUS/donottranslate-cldr.xml b/core/res/res/values-es-rUS/donottranslate-cldr.xml
+index 2339066..30cdee2 100644
+--- a/core/res/res/values-es-rUS/donottranslate-cldr.xml
++++ b/core/res/res/values-es-rUS/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE d \'de\' MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d \'de\' MMMM</string>
+     <string name="abbrev_wday_month_day_year">E d \'de\' MMM \'de\' yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd \'de\' MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-es/donottranslate-cldr.xml b/core/res/res/values-es/donottranslate-cldr.xml
+index dd8a8fa..d2d2eaf 100644
+--- a/core/res/res/values-es/donottranslate-cldr.xml
++++ b/core/res/res/values-es/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE d \'de\' MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d \'de\' MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d \'de\' MMM \'de\' yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd \'de\' MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-fa/donottranslate-cldr.xml b/core/res/res/values-fa/donottranslate-cldr.xml
+index e1c8fec..be1ca61 100644
+--- a/core/res/res/values-fa/donottranslate-cldr.xml
++++ b/core/res/res/values-fa/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E d LLLL</string>
+     <string name="abbrev_wday_month_day_no_year">E d LLLL</string>
+     <string name="abbrev_wday_month_day_year">E d MMM y</string>
++    <string name="full_wday_month_day_no_year_split">EEE\nd LLLL</string>
+ </resources>
+diff --git a/core/res/res/values-fi-rFI/donottranslate-cldr.xml b/core/res/res/values-fi-rFI/donottranslate-cldr.xml
+index 32b7803..fa39c25 100644
+--- a/core/res/res/values-fi-rFI/donottranslate-cldr.xml
++++ b/core/res/res/values-fi-rFI/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE d. MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d. MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d. MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd. MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-fi/donottranslate-cldr.xml b/core/res/res/values-fi/donottranslate-cldr.xml
+index df6f78f..49c6f98 100644
+--- a/core/res/res/values-fi/donottranslate-cldr.xml
++++ b/core/res/res/values-fi/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E d. MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">E d. MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d. MMM y</string>
++    <string name="full_wday_month_day_no_year_split">EEE\n d. MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-fr/donottranslate-cldr.xml b/core/res/res/values-fr/donottranslate-cldr.xml
+index 5698514..3d7fa73 100644
+--- a/core/res/res/values-fr/donottranslate-cldr.xml
++++ b/core/res/res/values-fr/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEE d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-hi-rIN/donottranslate-cldr.xml b/core/res/res/values-hi-rIN/donottranslate-cldr.xml
+index 72b89c2..734e506 100644
+--- a/core/res/res/values-hi-rIN/donottranslate-cldr.xml
++++ b/core/res/res/values-hi-rIN/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-hr-rHR/donottranslate-cldr.xml b/core/res/res/values-hr-rHR/donottranslate-cldr.xml
+index d6d20e7..848c31d 100644
+--- a/core/res/res/values-hr-rHR/donottranslate-cldr.xml
++++ b/core/res/res/values-hr-rHR/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d. MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d. MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d.MMM.yyyy.</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd. MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-hr/donottranslate-cldr.xml b/core/res/res/values-hr/donottranslate-cldr.xml
+index 8703981..b7ae444 100644
+--- a/core/res/res/values-hr/donottranslate-cldr.xml
++++ b/core/res/res/values-hr/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E, d. MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">E, d. MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d.MMM.y.</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd. MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-hu-rHU/donottranslate-cldr.xml b/core/res/res/values-hu-rHU/donottranslate-cldr.xml
+index 59eb75a..aa896ab 100644
+--- a/core/res/res/values-hu-rHU/donottranslate-cldr.xml
++++ b/core/res/res/values-hu-rHU/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE MMMM d</string>
+     <string name="abbrev_wday_month_day_no_year">EEE MMMM d</string>
+     <string name="abbrev_wday_month_day_year">yyyy. MMM d., E</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nMMMM d</string>
+ </resources>
+diff --git a/core/res/res/values-hu/donottranslate-cldr.xml b/core/res/res/values-hu/donottranslate-cldr.xml
+index 525b0c0..53432f8 100644
+--- a/core/res/res/values-hu/donottranslate-cldr.xml
++++ b/core/res/res/values-hu/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_year">y. MMM d., E</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nMMMM d</string>
+ </resources>
+diff --git a/core/res/res/values-in-rID/donottranslate-cldr.xml b/core/res/res/values-in-rID/donottranslate-cldr.xml
+index aedc2c7..f14707a 100644
+--- a/core/res/res/values-in-rID/donottranslate-cldr.xml
++++ b/core/res/res/values-in-rID/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE MMMM d</string>
+     <string name="abbrev_wday_month_day_no_year">EEE MMMM d</string>
+     <string name="abbrev_wday_month_day_year">E, d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nMMMM d</string>
+ </resources>
+diff --git a/core/res/res/values-in/donottranslate-cldr.xml b/core/res/res/values-in/donottranslate-cldr.xml
+index 7371132..d12fa22 100644
+--- a/core/res/res/values-in/donottranslate-cldr.xml
++++ b/core/res/res/values-in/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_year">EEE, y MMM d</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nMMMM d</string>
+ </resources>
+diff --git a/core/res/res/values-it/donottranslate-cldr.xml b/core/res/res/values-it/donottranslate-cldr.xml
+index b06e73d..7222147 100644
+--- a/core/res/res/values-it/donottranslate-cldr.xml
++++ b/core/res/res/values-it/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEE d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-iw/donottranslate-cldr.xml b/core/res/res/values-iw/donottranslate-cldr.xml
+index 037251e..6870349 100644
+--- a/core/res/res/values-iw/donottranslate-cldr.xml
++++ b/core/res/res/values-iw/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_year">EEE, y MMM d</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nMMMM d</string>
+ </resources>
+diff --git a/core/res/res/values-ja/donottranslate-cldr.xml b/core/res/res/values-ja/donottranslate-cldr.xml
+index f2cdbba..5f2bdd9 100644
+--- a/core/res/res/values-ja/donottranslate-cldr.xml
++++ b/core/res/res/values-ja/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">M月d日 (E)</string>
+     <string name="abbrev_wday_month_day_no_year">M月d日 (E)</string>
+     <string name="abbrev_wday_month_day_year">yyyy年M月d日 (E)</string>
++    <string name="full_wday_month_day_no_year_split">M月d日\n(EEEE)</string>
+ </resources>
+diff --git a/core/res/res/values-ko/donottranslate-cldr.xml b/core/res/res/values-ko/donottranslate-cldr.xml
+index 29d7982..4e14ca7 100644
+--- a/core/res/res/values-ko/donottranslate-cldr.xml
++++ b/core/res/res/values-ko/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">MMMM d일 EEEE</string>
+     <string name="abbrev_wday_month_day_no_year">MMMM d일 EEE</string>
+     <string name="abbrev_wday_month_day_year">yyyy년 MMM d일 EEE</string>
++    <string name="full_wday_month_day_no_year_split">MMMM d\n일 EEEE</string>
+ </resources>
+diff --git a/core/res/res/values-lt-rLT/donottranslate-cldr.xml b/core/res/res/values-lt-rLT/donottranslate-cldr.xml
+index 19ae2ea..8f0796e 100644
+--- a/core/res/res/values-lt-rLT/donottranslate-cldr.xml
++++ b/core/res/res/values-lt-rLT/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">MMMM d \'d\'., EEEE</string>
+     <string name="abbrev_wday_month_day_no_year">MMMM d \'d\'., EEE</string>
+     <string name="abbrev_wday_month_day_year">yyyy \'m\'. MMM d \'d\'., E</string>
++    <string name="full_wday_month_day_no_year_split">MMMM d \'d\'.\nEEEE</string>
+ </resources>
+diff --git a/core/res/res/values-lt/donottranslate-cldr.xml b/core/res/res/values-lt/donottranslate-cldr.xml
+index 0683d46..7a0f8e8 100644
+--- a/core/res/res/values-lt/donottranslate-cldr.xml
++++ b/core/res/res/values-lt/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_year">y \'m\'. MMM d \'d\'.,E</string>
++    <string name="full_wday_month_day_no_year_split">EEE\nMMMM d</string>
+ </resources>
+diff --git a/core/res/res/values-lv-rLV/donottranslate-cldr.xml b/core/res/res/values-lv-rLV/donottranslate-cldr.xml
+index eb74fa3..6f99888 100644
+--- a/core/res/res/values-lv-rLV/donottranslate-cldr.xml
++++ b/core/res/res/values-lv-rLV/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d. MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d. MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, yyyy. \'g\'. dd. MMM</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd. MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-lv/donottranslate-cldr.xml b/core/res/res/values-lv/donottranslate-cldr.xml
+index cd55478..9d19d02 100644
+--- a/core/res/res/values-lv/donottranslate-cldr.xml
++++ b/core/res/res/values-lv/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E, d. MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">E, d. MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, yyyy. \'g\'. dd. MMM</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd. MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-nb/donottranslate-cldr.xml b/core/res/res/values-nb/donottranslate-cldr.xml
+index 6d343ca..9feef1e 100644
+--- a/core/res/res/values-nb/donottranslate-cldr.xml
++++ b/core/res/res/values-nb/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE d. MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d. MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d. MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd. MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-nl/donottranslate-cldr.xml b/core/res/res/values-nl/donottranslate-cldr.xml
+index 54e7e39..c8113a9 100644
+--- a/core/res/res/values-nl/donottranslate-cldr.xml
++++ b/core/res/res/values-nl/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-pl/donottranslate-cldr.xml b/core/res/res/values-pl/donottranslate-cldr.xml
+index 91c98ea..f0ee161 100644
+--- a/core/res/res/values-pl/donottranslate-cldr.xml
++++ b/core/res/res/values-pl/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-pt-rPT/donottranslate-cldr.xml b/core/res/res/values-pt-rPT/donottranslate-cldr.xml
+index 60787a9..7e0b47e 100644
+--- a/core/res/res/values-pt-rPT/donottranslate-cldr.xml
++++ b/core/res/res/values-pt-rPT/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEE, d \'de\' MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d \'de\' MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d \'de\' MMM \'de\' yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd \'de\' MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-pt/donottranslate-cldr.xml b/core/res/res/values-pt/donottranslate-cldr.xml
+index d5fee19..d34e222 100644
+--- a/core/res/res/values-pt/donottranslate-cldr.xml
++++ b/core/res/res/values-pt/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEE, d \'de\' MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d \'de\' MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d \'de\' MMM \'de\' yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd \'de\' MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-ro-rRO/donottranslate-cldr.xml b/core/res/res/values-ro-rRO/donottranslate-cldr.xml
+index 1233f4e..de93556 100644
+--- a/core/res/res/values-ro-rRO/donottranslate-cldr.xml
++++ b/core/res/res/values-ro-rRO/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-ro/donottranslate-cldr.xml b/core/res/res/values-ro/donottranslate-cldr.xml
+index f80a944..db89dc1 100644
+--- a/core/res/res/values-ro/donottranslate-cldr.xml
++++ b/core/res/res/values-ro/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">E, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d MMM y</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-ru/donottranslate-cldr.xml b/core/res/res/values-ru/donottranslate-cldr.xml
+index 4e315eb..218ef83 100644
+--- a/core/res/res/values-ru/donottranslate-cldr.xml
++++ b/core/res/res/values-ru/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">E, d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-sk-rSK/donottranslate-cldr.xml b/core/res/res/values-sk-rSK/donottranslate-cldr.xml
+index 94dca66..82d4967 100644
+--- a/core/res/res/values-sk-rSK/donottranslate-cldr.xml
++++ b/core/res/res/values-sk-rSK/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE d. MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d. MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d. MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd. MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-sk/donottranslate-cldr.xml b/core/res/res/values-sk/donottranslate-cldr.xml
+index 9eeb133..61094d8 100644
+--- a/core/res/res/values-sk/donottranslate-cldr.xml
++++ b/core/res/res/values-sk/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E, d. MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">E, d. MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d. MMM y</string>
++    <string name="full_wday_month_day_no_year_split">EEE\nd. MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-sl-rSI/donottranslate-cldr.xml b/core/res/res/values-sl-rSI/donottranslate-cldr.xml
+index 6cf9bd6..9e0ab22 100644
+--- a/core/res/res/values-sl-rSI/donottranslate-cldr.xml
++++ b/core/res/res/values-sl-rSI/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE MMMM d</string>
+     <string name="abbrev_wday_month_day_no_year">EEE MMMM d</string>
+     <string name="abbrev_wday_month_day_year">E, d. MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nMMMM d</string>
+ </resources>
+diff --git a/core/res/res/values-sl/donottranslate-cldr.xml b/core/res/res/values-sl/donottranslate-cldr.xml
+index 49d36fd..c48ae70 100644
+--- a/core/res/res/values-sl/donottranslate-cldr.xml
++++ b/core/res/res/values-sl/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_year">E., d. MMM. y</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nMMMM d</string>
+ </resources>
+diff --git a/core/res/res/values-sr-rRS/donottranslate-cldr.xml b/core/res/res/values-sr-rRS/donottranslate-cldr.xml
+index 3f88960..e02ca7f 100644
+--- a/core/res/res/values-sr-rRS/donottranslate-cldr.xml
++++ b/core/res/res/values-sr-rRS/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE MMMM d</string>
+     <string name="abbrev_wday_month_day_no_year">EEE MMMM d</string>
+     <string name="abbrev_wday_month_day_year">EEE, d. MMM yyyy.</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nMMMM d</string>
+ </resources>
+diff --git a/core/res/res/values-sr/donottranslate-cldr.xml b/core/res/res/values-sr/donottranslate-cldr.xml
+index ca3cb08..b4a3111 100644
+--- a/core/res/res/values-sr/donottranslate-cldr.xml
++++ b/core/res/res/values-sr/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_year">EEE, d. MMM y.</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nMMMM d</string>
+ </resources>
+diff --git a/core/res/res/values-sv/donottranslate-cldr.xml b/core/res/res/values-sv/donottranslate-cldr.xml
+index 46b9f9d..9f81e92 100644
+--- a/core/res/res/values-sv/donottranslate-cldr.xml
++++ b/core/res/res/values-sv/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-th-rTH/donottranslate-cldr.xml b/core/res/res/values-th-rTH/donottranslate-cldr.xml
+index 94ec23d..a868cef 100644
+--- a/core/res/res/values-th-rTH/donottranslate-cldr.xml
++++ b/core/res/res/values-th-rTH/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-th/donottranslate-cldr.xml b/core/res/res/values-th/donottranslate-cldr.xml
+index b42656a..99f866d 100644
+--- a/core/res/res/values-th/donottranslate-cldr.xml
++++ b/core/res/res/values-th/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">E d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE d MMM y</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-tl/donottranslate-cldr.xml b/core/res/res/values-tl/donottranslate-cldr.xml
+index 970a538..8c3581c 100644
+--- a/core/res/res/values-tl/donottranslate-cldr.xml
++++ b/core/res/res/values-tl/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_no_year">E MMMM d</string>
+     <string name="abbrev_wday_month_day_year">EEE, y MMM d</string>
++    <string name="full_wday_month_day_no_year_split">EEE\nMMMM d</string>
+ </resources>
+diff --git a/core/res/res/values-tr/donottranslate-cldr.xml b/core/res/res/values-tr/donottranslate-cldr.xml
+index a0ee370..b1b5379 100644
+--- a/core/res/res/values-tr/donottranslate-cldr.xml
++++ b/core/res/res/values-tr/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">dd MMMM EEEE</string>
+     <string name="abbrev_wday_month_day_no_year">dd MMMM EEE</string>
+     <string name="abbrev_wday_month_day_year">dd MMM yyyy EEE</string>
++    <string name="full_wday_month_day_no_year_split">dd MMMM\nEEEE</string>
+ </resources>
+diff --git a/core/res/res/values-uk-rUA/donottranslate-cldr.xml b/core/res/res/values-uk-rUA/donottranslate-cldr.xml
+index 5cb41f4..107415c 100644
+--- a/core/res/res/values-uk-rUA/donottranslate-cldr.xml
++++ b/core/res/res/values-uk-rUA/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d MMM yyyy \'р\'.</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-uk/donottranslate-cldr.xml b/core/res/res/values-uk/donottranslate-cldr.xml
+index f2a61da..227f824 100644
+--- a/core/res/res/values-uk/donottranslate-cldr.xml
++++ b/core/res/res/values-uk/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E, d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">E, d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d MMM y</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-vi-rVN/donottranslate-cldr.xml b/core/res/res/values-vi-rVN/donottranslate-cldr.xml
+index 307dab2..972c00c 100644
+--- a/core/res/res/values-vi-rVN/donottranslate-cldr.xml
++++ b/core/res/res/values-vi-rVN/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">EEE d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d MMM yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-vi/donottranslate-cldr.xml b/core/res/res/values-vi/donottranslate-cldr.xml
+index f4d5dc3..05c4dee 100644
+--- a/core/res/res/values-vi/donottranslate-cldr.xml
++++ b/core/res/res/values-vi/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">E d MMMM</string>
+     <string name="abbrev_wday_month_day_no_year">E d MMMM</string>
+     <string name="abbrev_wday_month_day_year">EEE, d MMM y</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nd MMMM</string>
+ </resources>
+diff --git a/core/res/res/values-zh-rCN/donottranslate-cldr.xml b/core/res/res/values-zh-rCN/donottranslate-cldr.xml
+index 6ac384a..ca0bcc1 100644
+--- a/core/res/res/values-zh-rCN/donottranslate-cldr.xml
++++ b/core/res/res/values-zh-rCN/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">M 月 d 日 E</string>
+     <string name="abbrev_wday_month_day_no_year">M 月 d 日 E</string>
+     <string name="abbrev_wday_month_day_year">yyyy 年 M 月 d 日 EEE</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nM 月 d 日</string>
+ </resources>
+diff --git a/core/res/res/values-zh-rTW/donottranslate-cldr.xml b/core/res/res/values-zh-rTW/donottranslate-cldr.xml
+index 42faa83..adec539 100644
+--- a/core/res/res/values-zh-rTW/donottranslate-cldr.xml
++++ b/core/res/res/values-zh-rTW/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">M 月 d 日E</string>
+     <string name="abbrev_wday_month_day_no_year">M 月 d 日E</string>
+     <string name="abbrev_wday_month_day_year">yyyy 年 M 月 d 日EEE</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nM 月 d 日</string>
+ </resources>
+diff --git a/core/res/res/values/donottranslate-cldr.xml b/core/res/res/values/donottranslate-cldr.xml
+index 4d37d47..d0b8115 100644
+--- a/core/res/res/values/donottranslate-cldr.xml
++++ b/core/res/res/values/donottranslate-cldr.xml
+@@ -55,4 +55,5 @@
+     <string name="full_wday_month_day_no_year">EEEE, MMMM d</string>
+     <string name="abbrev_wday_month_day_no_year">EEE, MMMM d</string>
+     <string name="abbrev_wday_month_day_year">EEE, MMM d, yyyy</string>
++    <string name="full_wday_month_day_no_year_split">EEEE\nMMMM d</string>
+ </resources>
+diff --git a/packages/SystemUI/res/layout/status_bar_expanded_header.xml b/packages/SystemUI/res/layout/status_bar_expanded_header.xml
+index 9aa7cfd..fdd8c58 100644
+--- a/packages/SystemUI/res/layout/status_bar_expanded_header.xml
++++ b/packages/SystemUI/res/layout/status_bar_expanded_header.xml
+@@ -48,10 +48,9 @@
+         <com.android.systemui.statusbar.policy.DateView android:id="@+id/date"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+-            android:singleLine="true"
+             android:textAppearance="@style/TextAppearance.StatusBar.Expanded.Date"
+             android:layout_toEndOf="@id/clock"
+-            android:layout_alignBaseline="@id/clock"
++            android:layout_centerVertical="true"
+             />
+     </RelativeLayout>
+ 
+diff --git a/packages/SystemUI/res/values/donottranslate.xml b/packages/SystemUI/res/values/donottranslate.xml
+index 351a1fd..fd19553 100644
+--- a/packages/SystemUI/res/values/donottranslate.xml
++++ b/packages/SystemUI/res/values/donottranslate.xml
+@@ -18,6 +18,5 @@
+ -->
+ <resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+     <!-- Date format for display: should match the lockscreen in /policy.  -->
+-    <string name="system_ui_date_pattern">@*android:string/system_ui_date_pattern</string>
+-
++    <string name="system_ui_date_pattern">@*android:string/full_wday_month_day_no_year_split</string>
+ </resources>
+diff --git a/packages/SystemUI/src/com/android/systemui/statusbar/policy/DateView.java b/packages/SystemUI/src/com/android/systemui/statusbar/policy/DateView.java
+index 27a3a15..dd2925e 100644
+--- a/packages/SystemUI/src/com/android/systemui/statusbar/policy/DateView.java
++++ b/packages/SystemUI/src/com/android/systemui/statusbar/policy/DateView.java
+@@ -93,8 +93,7 @@ public class DateView extends TextView {
+     protected void updateClock() {
+         final String dateFormat = getContext().getString(R.string.system_ui_date_pattern);
+         final Locale l = Locale.getDefault();
+-        String fmt = ICU.getBestDateTimePattern(dateFormat, l.toString());
+-        SimpleDateFormat sdf = new SimpleDateFormat(fmt, l);
++        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, l);
+         setText(sdf.format(new Date()));
+     }
+ 
+-- 
+1.8.1.2
+

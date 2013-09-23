@@ -1,0 +1,37 @@
+From 5f5fa7db19be061814776ef7ed335a3c32be1a2f Mon Sep 17 00:00:00 2001
+From: Abhishek Adappa <aadappa@codeaurora.org>
+Date: Wed, 17 Jul 2013 14:59:13 -0700
+Subject: [PATCH] Don't display prompt when card inserted/removed
+
+UiccCard displays a prompt to reboot the device when a card is
+inserted or removed. Don't display this if the modem supports
+hot swapping.
+
+Change-Id: I43fc95e61382671f61286818304ec58e922e8605
+---
+ src/java/com/android/internal/telephony/uicc/UiccCard.java | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/src/java/com/android/internal/telephony/uicc/UiccCard.java b/src/java/com/android/internal/telephony/uicc/UiccCard.java
+index 7d63522..6989960 100644
+--- a/src/java/com/android/internal/telephony/uicc/UiccCard.java
++++ b/src/java/com/android/internal/telephony/uicc/UiccCard.java
+@@ -228,6 +228,15 @@ public void unregisterForAbsent(Handler h) {
+     }
+ 
+     private void onIccSwap(boolean isAdded) {
++
++        boolean isHotSwapSupported = mContext.getResources().getBoolean(
++                com.android.internal.R.bool.config_hotswapCapable);
++
++        if(isHotSwapSupported) {
++            //no need to prompt the user to reboot the device
++            return;
++        }
++
+         synchronized (mLock) {
+             // TODO: Here we assume the device can't handle SIM hot-swap
+             //      and has to reboot. We may want to add a property,
+-- 
+1.8.4
+

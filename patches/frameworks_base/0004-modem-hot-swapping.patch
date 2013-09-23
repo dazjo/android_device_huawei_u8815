@@ -1,0 +1,48 @@
+From 16f59de2e133c95f110bf6879618b2c41d6b5e1a Mon Sep 17 00:00:00 2001
+From: Abhishek Adappa <aadappa@codeaurora.org>
+Date: Wed, 17 Jul 2013 14:53:54 -0700
+Subject: [PATCH] Telephony: Introduce config item for Hot Swap support
+
+When a Uicc Card is inserted or removed, Android pops up a prompt
+to the user to reboot the device. This prompt is unnecessary if the
+modem supports Hot Swapping of cards.
+
+Introduce a new config item to indicate if the modem supports
+hotswapping. Frameworks can then check this before propmting the
+user.
+
+Change-Id: I0f2c3134525aa2301fd667d0a1819f4419eecae0
+---
+ core/res/res/values/config.xml  | 3 +++
+ core/res/res/values/symbols.xml | 1 +
+ 2 files changed, 4 insertions(+)
+
+diff --git a/core/res/res/values/config.xml b/core/res/res/values/config.xml
+index 36607c0..d725e8e 100644
+--- a/core/res/res/values/config.xml
++++ b/core/res/res/values/config.xml
+@@ -551,6 +551,9 @@
+     <!-- Diable lockscreen rotation by default -->
+     <bool name="config_enableLockScreenRotation">false</bool>
+ 
++    <!-- Is the device capable of hot swapping an UICC Card -->
++    <bool name="config_hotswapCapable">false</bool>
++
+     <!-- Enable puk unlockscreen by default.
+          If unlock screen is disabled, the puk should be unlocked through Emergency Dialer -->
+     <bool name="config_enable_puk_unlock_screen">true</bool>
+diff --git a/core/res/res/values/symbols.xml b/core/res/res/values/symbols.xml
+index 3f8c8ed..015b385 100644
+--- a/core/res/res/values/symbols.xml
++++ b/core/res/res/values/symbols.xml
+@@ -250,6 +250,7 @@
+   <java-symbol type="bool" name="config_duplicate_port_omadm_wappush" />
+   <java-symbol type="bool" name="config_enable_emergency_call_while_sim_locked" />
+   <java-symbol type="bool" name="config_enable_puk_unlock_screen" />
++  <java-symbol type="bool" name="config_hotswapCapable" />
+   <java-symbol type="bool" name="config_mms_content_disposition_support" />
+   <java-symbol type="bool" name="config_showMenuShortcutsWhenKeyboardPresent" />
+   <java-symbol type="bool" name="config_sip_wifi_only" />
+-- 
+1.8.4
+

@@ -103,7 +103,3 @@ PRODUCT_COPY_FILES += \
 PRODUCT_TAGS += dalvik.gc.type-precise
 
 $(call inherit-product, build/target/product/full.mk)
-
-PRODUCT_NAME := huawei_u8815
-PRODUCT_DEVICE := u8815
-PRODUCT_BRAND := Huawei

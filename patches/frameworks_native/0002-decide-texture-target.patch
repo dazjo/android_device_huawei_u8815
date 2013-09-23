@@ -1,0 +1,254 @@
+From fc24bf3c426f2752afcb666b0b61a34a48158798 Mon Sep 17 00:00:00 2001
+From: Daz Jones <yuki@thebronasium.com>
+Date: Thu, 8 Aug 2013 14:37:15 +0100
+Subject: [PATCH] Select texture target based on pixel format
+
+Adreno is not optimized for GL_TEXTURE_EXTERNAL_OES, making GPU
+utilization (and power), high with GL_TEXTURE_EXTERNAL_OES for
+RGB formats.
+
+Change texture target from GL_EXTERNAL_TEXTURE_OES to dynamically
+select between GL_EXTERNAL_TEXTURE_OES, and GL_TEXTURE_2D based
+on the pixel format.
+
+CM9 original author: Neti Ravi Kumar
+CM9-Change-Id: I89ab1d60b23eef55442a9fd338b2a05b3304ce61
+
+Change-Id: I9ea82f3fd1d9caea22d4b1da843f2dedb2daf51b
+
+Signed-off-by: Daz Jones <yuki@thebronasium.com>
+---
+ include/gui/GLConsumer.h                           |  8 ++++++
+ libs/gui/Android.mk                                |  4 +++
+ libs/gui/GLConsumer.cpp                            | 25 +++++++++++++++++
+ services/surfaceflinger/Android.mk                 |  4 +++
+ services/surfaceflinger/Layer.cpp                  | 31 ++++++++++++++++++++++
+ services/surfaceflinger/SurfaceFlingerConsumer.cpp |  8 ++++++
+ services/surfaceflinger/SurfaceFlingerConsumer.h   |  4 +++
+ 7 files changed, 84 insertions(+)
+
+diff --git a/include/gui/GLConsumer.h b/include/gui/GLConsumer.h
+index f0a75dc..533a38a 100644
+--- a/include/gui/GLConsumer.h
++++ b/include/gui/GLConsumer.h
+@@ -254,7 +254,11 @@ protected:
+     // This releases the buffer in the slot referenced by mCurrentTexture,
+     // then updates state to refer to the BufferItem, which must be a
+     // newly-acquired buffer.
++#ifdef DECIDE_TEXTURE_TARGET
++    status_t releaseAndUpdateLocked(const BufferQueue::BufferItem& item, bool isComposition=false);
++#else
+     status_t releaseAndUpdateLocked(const BufferQueue::BufferItem& item);
++#endif
+ 
+     // Binds mTexName and the current buffer to mTexTarget.  Uses
+     // mCurrentTexture if it's set, mCurrentTextureBuf if not.  If the
+@@ -363,7 +367,11 @@ private:
+     // glCopyTexSubImage to read from the texture.  This is a hack to work
+     // around a GL driver limitation on the number of FBO attachments, which the
+     // browser's tile cache exceeds.
++#ifdef DECIDE_TEXTURE_TARGET
++    GLenum mTexTarget;
++#else
+     const GLenum mTexTarget;
++#endif
+ 
+     // EGLSlot contains the information and object references that
+     // GLConsumer maintains about a BufferQueue buffer slot.
+diff --git a/libs/gui/Android.mk b/libs/gui/Android.mk
+index 39e37b5..11b3783 100644
+--- a/libs/gui/Android.mk
++++ b/libs/gui/Android.mk
+@@ -59,6 +59,10 @@ ifeq ($(TARGET_QCOM_DISPLAY_VARIANT),legacy)
+ 	LOCAL_CFLAGS += -DUSE_LEGACY_SCREENSHOT
+ endif
+ 
++ifeq ($(BOARD_ADRENO_DECIDE_TEXTURE_TARGET),true)
++	LOCAL_CFLAGS += -DDECIDE_TEXTURE_TARGET
++endif
++
+ LOCAL_MODULE:= libgui
+ 
+ ifeq ($(TARGET_BOARD_PLATFORM), tegra)
+diff --git a/libs/gui/GLConsumer.cpp b/libs/gui/GLConsumer.cpp
+index bec0f90..7b806d2 100644
+--- a/libs/gui/GLConsumer.cpp
++++ b/libs/gui/GLConsumer.cpp
+@@ -197,7 +197,11 @@ status_t GLConsumer::releaseBufferLocked(int buf, EGLDisplay display,
+     return err;
+ }
+ 
++#ifdef DECIDE_TEXTURE_TARGET
++status_t GLConsumer::releaseAndUpdateLocked(const BufferQueue::BufferItem& item, bool isComposition)
++#else
+ status_t GLConsumer::releaseAndUpdateLocked(const BufferQueue::BufferItem& item)
++#endif
+ {
+     status_t err = NO_ERROR;
+ 
+@@ -215,6 +219,27 @@ status_t GLConsumer::releaseAndUpdateLocked(const BufferQueue::BufferItem& item)
+ 
+     int buf = item.mBuf;
+ 
++#ifdef DECIDE_TEXTURE_TARGET
++    // GPU is not efficient in handling GL_TEXTURE_EXTERNAL_OES
++    // texture target. Depending on the image format, decide
++    // the texture target to be used.
++    if (isComposition) {
++        switch (mSlots[buf].mGraphicBuffer->format) {
++            case HAL_PIXEL_FORMAT_RGBA_8888:
++            case HAL_PIXEL_FORMAT_RGBX_8888:
++            case HAL_PIXEL_FORMAT_RGB_888:
++            case HAL_PIXEL_FORMAT_RGB_565:
++            case HAL_PIXEL_FORMAT_BGRA_8888:
++            case HAL_PIXEL_FORMAT_RGBA_5551:
++            case HAL_PIXEL_FORMAT_RGBA_4444:
++                mTexTarget = GL_TEXTURE_2D;
++                break;
++            default:
++                mTexTarget = GL_TEXTURE_EXTERNAL_OES;
++                break;
++        }
++    }
++#endif
+     // If the mEglSlot entry is empty, create an EGLImage for the gralloc
+     // buffer currently in the slot in ConsumerBase.
+     //
+diff --git a/services/surfaceflinger/Android.mk b/services/surfaceflinger/Android.mk
+index c98fcb7..b3480f3 100644
+--- a/services/surfaceflinger/Android.mk
++++ b/services/surfaceflinger/Android.mk
+@@ -52,6 +52,10 @@ ifneq ($(NUM_FRAMEBUFFER_SURFACE_BUFFERS),)
+   LOCAL_CFLAGS += -DNUM_FRAMEBUFFER_SURFACE_BUFFERS=$(NUM_FRAMEBUFFER_SURFACE_BUFFERS)
+ endif
+ 
++ifeq ($(BOARD_ADRENO_DECIDE_TEXTURE_TARGET),true)
++	LOCAL_CFLAGS += -DDECIDE_TEXTURE_TARGET
++endif
++
+ LOCAL_SHARED_LIBRARIES := \
+ 	libcutils \
+ 	liblog \
+diff --git a/services/surfaceflinger/Layer.cpp b/services/surfaceflinger/Layer.cpp
+index a49d190..03f5344 100644
+--- a/services/surfaceflinger/Layer.cpp
++++ b/services/surfaceflinger/Layer.cpp
+@@ -506,6 +506,9 @@ void Layer::onDraw(const sp<const DisplayDevice>& hw, const Region& clip) const
+ 
+     bool blackOutLayer = isProtected() || (isSecure() && !hw->isSecure());
+ 
++#ifdef DECIDE_TEXTURE_TARGET
++    GLuint currentTextureTarget = mSurfaceFlingerConsumer->getCurrentTextureTarget();
++#endif
+     if (!blackOutLayer) {
+         // TODO: we could be more subtle with isFixedSize()
+         const bool useFiltering = getFiltering() || needsFiltering(hw) || isFixedSize();
+@@ -516,25 +519,46 @@ void Layer::onDraw(const sp<const DisplayDevice>& hw, const Region& clip) const
+         mSurfaceFlingerConsumer->getTransformMatrix(textureMatrix);
+ 
+         // Set things up for texturing.
++#ifdef DECIDE_TEXTURE_TARGET
++        glBindTexture(currentTextureTarget, mTextureName);
++#else
+         glBindTexture(GL_TEXTURE_EXTERNAL_OES, mTextureName);
++#endif
+         GLenum filter = GL_NEAREST;
+         if (useFiltering) {
+             filter = GL_LINEAR;
+         }
++#ifdef DECIDE_TEXTURE_TARGET
++        glTexParameterx(currentTextureTarget, GL_TEXTURE_MAG_FILTER, filter);
++        glTexParameterx(currentTextureTarget, GL_TEXTURE_MIN_FILTER, filter);
++#else
+         glTexParameterx(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, filter);
+         glTexParameterx(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, filter);
++#endif
+         glMatrixMode(GL_TEXTURE);
+         glLoadMatrixf(textureMatrix);
+         glMatrixMode(GL_MODELVIEW);
+         glDisable(GL_TEXTURE_2D);
++#ifdef DECIDE_TEXTURE_TARGET
++        glEnable(currentTextureTarget);
++#else
+         glEnable(GL_TEXTURE_EXTERNAL_OES);
++#endif
+     } else {
++#ifdef DECIDE_TEXTURE_TARGET
++        glBindTexture(currentTextureTarget, mFlinger->getProtectedTexName());
++#else
+         glBindTexture(GL_TEXTURE_2D, mFlinger->getProtectedTexName());
++#endif
+         glMatrixMode(GL_TEXTURE);
+         glLoadIdentity();
+         glMatrixMode(GL_MODELVIEW);
++#ifdef DECIDE_TEXTURE_TARGET
++        glEnable(currentTextureTarget);
++#else
+         glDisable(GL_TEXTURE_EXTERNAL_OES);
+         glEnable(GL_TEXTURE_2D);
++#endif
+     }
+ 
+     drawWithOpenGL(hw, clip);
+@@ -1116,7 +1140,14 @@ Region Layer::latchBuffer(bool& recomputeVisibleRegions)
+ 
+         Reject r(mDrawingState, currentState(), recomputeVisibleRegions);
+ 
++#ifdef DECIDE_TEXTURE_TARGET
++        // While calling updateTexImage() from SurfaceFlinger, let it know
++        // by passing an extra parameter
++        // This will be true always.
++        if (mSurfaceFlingerConsumer->updateTexImage(&r, true) != NO_ERROR) {
++#else
+         if (mSurfaceFlingerConsumer->updateTexImage(&r) != NO_ERROR) {
++#endif
+             // something happened!
+             recomputeVisibleRegions = true;
+             return outDirtyRegion;
+diff --git a/services/surfaceflinger/SurfaceFlingerConsumer.cpp b/services/surfaceflinger/SurfaceFlingerConsumer.cpp
+index 2869250..1233505 100644
+--- a/services/surfaceflinger/SurfaceFlingerConsumer.cpp
++++ b/services/surfaceflinger/SurfaceFlingerConsumer.cpp
+@@ -28,7 +28,11 @@ namespace android {
+ 
+ // ---------------------------------------------------------------------------
+ 
++#ifdef DECIDE_TEXTURE_TARGET
++status_t SurfaceFlingerConsumer::updateTexImage(BufferRejecter* rejecter, bool isComposition)
++#else
+ status_t SurfaceFlingerConsumer::updateTexImage(BufferRejecter* rejecter)
++#endif
+ {
+     ATRACE_CALL();
+     ALOGV("updateTexImage");
+@@ -74,7 +78,11 @@ status_t SurfaceFlingerConsumer::updateTexImage(BufferRejecter* rejecter)
+     }
+ 
+     // Release the previous buffer.
++#ifdef DECIDE_TEXTURE_TARGET
++    err = releaseAndUpdateLocked(item, isComposition);
++#else
+     err = releaseAndUpdateLocked(item);
++#endif
+     if (err != NO_ERROR) {
+         return err;
+     }
+diff --git a/services/surfaceflinger/SurfaceFlingerConsumer.h b/services/surfaceflinger/SurfaceFlingerConsumer.h
+index 22eec81..6913776 100644
+--- a/services/surfaceflinger/SurfaceFlingerConsumer.h
++++ b/services/surfaceflinger/SurfaceFlingerConsumer.h
+@@ -47,7 +47,11 @@ public:
+     // reject the newly acquired buffer.  Unlike the GLConsumer version,
+     // this does not guarantee that the buffer has been bound to the GL
+     // texture.
++#ifdef DECIDE_TEXTURE_TARGET
++    status_t updateTexImage(BufferRejecter* rejecter, bool isComposition=false);
++#else
+     status_t updateTexImage(BufferRejecter* rejecter);
++#endif
+ 
+     // See GLConsumer::bindTextureImageLocked().
+     status_t bindTextureImage();
+-- 
+1.8.1.2
+

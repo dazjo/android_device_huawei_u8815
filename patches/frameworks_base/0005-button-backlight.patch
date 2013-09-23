@@ -1,0 +1,74 @@
+From c5d9dc8a63ad96996ec6c42cda7bceffebb6bc21 Mon Sep 17 00:00:00 2001
+From: Ricardo Cerqueira <cyanogenmod@cerqueira.org>
+Date: Fri, 23 Nov 2012 14:23:16 +0000
+Subject: [PATCH] TEMPORARY: Reintroduce button-backlight (and respective
+ inactivity timeout)
+
+The power manager rewrite from Change I1d7a52e98f0449f76d70bf421f6a7f245957d1d7
+completely removed support for control of the button backlights, which makes
+all capacitive buttons out there stay dark. The commit message in that change
+mentions it hasn't been implemented _yet_, so this fix should be temporary
+until upstream does their own implementation
+
+Change-Id: I6094c446e0b8c23f57d30652a3cbd35dee5e821a
+---
+ .../java/com/android/server/power/DisplayPowerController.java    | 1 +
+ services/java/com/android/server/power/PowerManagerService.java  | 9 +++++++++
+ 2 files changed, 10 insertions(+)
+
+diff --git a/services/java/com/android/server/power/DisplayPowerController.java b/services/java/com/android/server/power/DisplayPowerController.java
+index b5010f2..07aa0c1 100644
+--- a/services/java/com/android/server/power/DisplayPowerController.java
++++ b/services/java/com/android/server/power/DisplayPowerController.java
+@@ -767,6 +767,7 @@ final class DisplayPowerController {
+             if (on) {
+                 mNotifier.onScreenOn();
+             } else {
++                mLights.getLight(LightsService.LIGHT_ID_BUTTONS).setBrightness(0);
+                 mNotifier.onScreenOff();
+             }
+         }
+diff --git a/services/java/com/android/server/power/PowerManagerService.java b/services/java/com/android/server/power/PowerManagerService.java
+index ddd63c5..c66e2f2 100644
+--- a/services/java/com/android/server/power/PowerManagerService.java
++++ b/services/java/com/android/server/power/PowerManagerService.java
+@@ -148,6 +148,7 @@ public final class PowerManagerService extends IPowerManager.Stub
+     // This is subtracted from the end of the screen off timeout so the
+     // minimum screen off timeout should be longer than this.
+     private static final int SCREEN_DIM_DURATION = 7 * 1000;
++    private static final int BUTTON_ON_DURATION = 5 * 1000;
+ 
+     // The maximum screen dim time expressed as a ratio relative to the screen
+     // off timeout.  If the screen off timeout is very short then we want the
+@@ -181,6 +182,7 @@ public final class PowerManagerService extends IPowerManager.Stub
+     private DreamManagerService mDreamManager;
+     private AutoBrightnessHandler mAutoBrightnessHandler;
+     private LightsService.Light mAttentionLight;
++    private LightsService.Light mButtonsLight;
+ 
+     private final Object mLock = new Object();
+ 
+@@ -455,6 +457,7 @@ public final class PowerManagerService extends IPowerManager.Stub
+                     createSuspendBlockerLocked("PowerManagerService.WirelessChargerDetector"));
+             mSettingsObserver = new SettingsObserver(mHandler);
+             mAttentionLight = mLightsService.getLight(LightsService.LIGHT_ID_ATTENTION);
++            mButtonsLight = mLightsService.getLight(LightsService.LIGHT_ID_BUTTONS);
+ 
+             // Register for broadcasts from other components of the system.
+             IntentFilter filter = new IntentFilter();
+@@ -1334,6 +1337,12 @@ public final class PowerManagerService extends IPowerManager.Stub
+                     nextTimeout = mLastUserActivityTime
+                             + screenOffTimeout - screenDimDuration;
+                     if (now < nextTimeout) {
++                        if (now > mLastUserActivityTime + BUTTON_ON_DURATION) {
++                            mButtonsLight.setBrightness(0);
++                        } else {
++                            mButtonsLight.setBrightness(mDisplayPowerRequest.screenBrightness);
++                            nextTimeout = now + BUTTON_ON_DURATION;
++                        }
+                         mUserActivitySummary |= USER_ACTIVITY_SCREEN_BRIGHT;
+                     } else {
+                         nextTimeout = mLastUserActivityTime + screenOffTimeout;
+-- 
+1.8.1.2
+

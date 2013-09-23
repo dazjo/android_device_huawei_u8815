@@ -1,0 +1,76 @@
+From 6701c2f2b322b9e7b3d5b34a70e66a4cb8cf70cd Mon Sep 17 00:00:00 2001
+From: Daz Jones <yuki@thebronasium.com>
+Date: Fri, 16 Aug 2013 02:00:18 +0100
+Subject: [PATCH] legacy OMX: handle QCOM colorformat
+
+Change-Id: I21f51f8ed296503ba6210e07d730ee80126dbb8c
+---
+ include/media/stagefright/ACodec.h |  2 +-
+ media/libstagefright/ACodec.cpp    | 20 ++++++++++++++------
+ 2 files changed, 15 insertions(+), 7 deletions(-)
+
+diff --git a/include/media/stagefright/ACodec.h b/include/media/stagefright/ACodec.h
+index 44b0b5a..76e1be5 100644
+--- a/include/media/stagefright/ACodec.h
++++ b/include/media/stagefright/ACodec.h
+@@ -203,7 +203,7 @@ struct ACodec : public AHierarchicalStateMachine {
+     status_t freeBuffer(OMX_U32 portIndex, size_t i);
+ 
+     status_t allocateOutputBuffersFromNativeWindow();
+-#ifdef USE_SAMSUNG_COLORFORMAT
++#if defined(USE_SAMSUNG_COLORFORMAT) || defined(QCOM_LEGACY_OMX)
+     void setNativeWindowColorFormat(OMX_COLOR_FORMATTYPE &eNativeColorFormat);
+ #endif
+     status_t cancelBufferToNativeWindow(BufferInfo *info);
+diff --git a/media/libstagefright/ACodec.cpp b/media/libstagefright/ACodec.cpp
+index ca21a4d..50fedca 100644
+--- a/media/libstagefright/ACodec.cpp
++++ b/media/libstagefright/ACodec.cpp
+@@ -553,15 +553,15 @@ status_t ACodec::allocateOutputBuffersFromNativeWindow() {
+         return err;
+     }
+ 
+-#ifdef USE_SAMSUNG_COLORFORMAT
++#if defined(USE_SAMSUNG_COLORFORMAT) || defined(QCOM_LEGACY_OMX)
+     OMX_COLOR_FORMATTYPE eNativeColorFormat = def.format.video.eColorFormat;
+     setNativeWindowColorFormat(eNativeColorFormat);
+ 
+     err = native_window_set_buffers_geometry(
+-    mNativeWindow.get(),
+-    def.format.video.nFrameWidth,
+-    def.format.video.nFrameHeight,
+-    eNativeColorFormat);
++            mNativeWindow.get(),
++            def.format.video.nFrameWidth,
++            def.format.video.nFrameHeight,
++            eNativeColorFormat);
+ #else
+     err = native_window_set_buffers_geometry(
+             mNativeWindow.get(),
+@@ -711,7 +711,7 @@ status_t ACodec::allocateOutputBuffersFromNativeWindow() {
+     return err;
+ }
+ 
+-#ifdef USE_SAMSUNG_COLORFORMAT
++#if defined(USE_SAMSUNG_COLORFORMAT)
+ void ACodec::setNativeWindowColorFormat(OMX_COLOR_FORMATTYPE &eNativeColorFormat)
+ {
+     // In case of Samsung decoders, we set proper native color format for the Native Window
+@@ -728,6 +728,14 @@ void ACodec::setNativeWindowColorFormat(OMX_COLOR_FORMATTYPE &eNativeColorFormat
+         }
+     }
+ }
++#elif defined(QCOM_LEGACY_OMX)
++void ACodec::setNativeWindowColorFormat(OMX_COLOR_FORMATTYPE &eNativeColorFormat)
++{
++    if (!strncmp(mComponentName.c_str(), "OMX.qcom.", 9)) {
++        if (eNativeColorFormat == OMX_QCOM_COLOR_FormatYVU420SemiPlanar)
++            eNativeColorFormat = (OMX_COLOR_FORMATTYPE)HAL_PIXEL_FORMAT_YCrCb_420_SP;
++    }
++}
+ #endif
+ 
+ status_t ACodec::cancelBufferToNativeWindow(BufferInfo *info) {
+-- 
+1.8.4
+
