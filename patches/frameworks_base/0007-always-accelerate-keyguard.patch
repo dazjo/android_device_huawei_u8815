@@ -1,0 +1,52 @@
+From 641b8865d7b076abc318295477dbebc302f1a8a6 Mon Sep 17 00:00:00 2001
+From: Pawit Pornkitprasan <p.pawit@gmail.com>
+Date: Tue, 12 Feb 2013 17:40:06 +0700
+Subject: [PATCH] policy: always use hardware acceleration for keyguard
+
+Without hardware acceleration, keyguard widget will appear aliased
+and choppy (especially at the end of the scroll).
+
+Change-Id: I1bfb6fbcba6306edf366e8ea752d6919936c3ab6
+---
+ .../internal/policy/impl/keyguard/KeyguardViewManager.java | 14 ++++----------
+ 1 file changed, 4 insertions(+), 10 deletions(-)
+
+diff --git a/policy/src/com/android/internal/policy/impl/keyguard/KeyguardViewManager.java b/policy/src/com/android/internal/policy/impl/keyguard/KeyguardViewManager.java
+index 30c95fb..fa59604 100644
+--- a/policy/src/com/android/internal/policy/impl/keyguard/KeyguardViewManager.java
++++ b/policy/src/com/android/internal/policy/impl/keyguard/KeyguardViewManager.java
+@@ -184,14 +184,12 @@ public class KeyguardViewManager {
+             int flags = WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN
+                     | WindowManager.LayoutParams.FLAG_LAYOUT_INSET_DECOR
+                     | WindowManager.LayoutParams.FLAG_FORCE_NOT_FULLSCREEN
+-                    | WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER;
++                    | WindowManager.LayoutParams.FLAG_SHOW_WALLPAPER
++                    | WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+ 
+             if (!mNeedsInput) {
+                 flags |= WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM;
+             }
+-            if (ActivityManager.isHighEndGfx()) {
+-                flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+-            }
+ 
+             final int stretch = ViewGroup.LayoutParams.MATCH_PARENT;
+             final int type = isActivity ? WindowManager.LayoutParams.TYPE_APPLICATION
+@@ -202,12 +200,8 @@ public class KeyguardViewManager {
+             lp.windowAnimations = com.android.internal.R.style.Animation_LockScreen;
+             lp.screenOrientation = enableScreenRotation ?
+                     ActivityInfo.SCREEN_ORIENTATION_USER : ActivityInfo.SCREEN_ORIENTATION_NOSENSOR;
+-
+-            if (ActivityManager.isHighEndGfx()) {
+-                lp.flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
+-                lp.privateFlags |=
+-                        WindowManager.LayoutParams.PRIVATE_FLAG_FORCE_HARDWARE_ACCELERATED;
+-            }
++            lp.flags |= WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED;
++            lp.privateFlags |= WindowManager.LayoutParams.PRIVATE_FLAG_FORCE_HARDWARE_ACCELERATED;
+             lp.privateFlags |= WindowManager.LayoutParams.PRIVATE_FLAG_SET_NEEDS_MENU_KEY;
+             if (isActivity) {
+                 lp.privateFlags |= WindowManager.LayoutParams.PRIVATE_FLAG_SHOW_FOR_ALL_USERS;
+-- 
+1.8.1.2
+
