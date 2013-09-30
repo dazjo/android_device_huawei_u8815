@@ -1,0 +1,42 @@
+From 9bcaea58478ae4c9fef4bf138482ab18686b0f54 Mon Sep 17 00:00:00 2001
+From: UtkarshGupta <utkarsh.eminem@gmail.com>
+Date: Sat, 28 Sep 2013 21:45:31 +0530
+Subject: [PATCH] Size Optimizations
+
+Change-Id: Ifdf4664e0c0710dc97e7cadfbfbbc2b88d60dca7
+---
+ core/combo/TARGET_linux-arm.mk | 2 +-
+ core/combo/select.mk           | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/core/combo/TARGET_linux-arm.mk b/core/combo/TARGET_linux-arm.mk
+index 96f8e83..2e42279 100644
+--- a/core/combo/TARGET_linux-arm.mk
++++ b/core/combo/TARGET_linux-arm.mk
+@@ -68,7 +68,7 @@ endif
+ 
+ TARGET_NO_UNDEFINED_LDFLAGS := -Wl,--no-undefined
+ 
+-TARGET_arm_CFLAGS :=    -O2 \
++TARGET_arm_CFLAGS :=    -Os \
+                         -fomit-frame-pointer \
+                         -fstrict-aliasing    \
+                         -funswitch-loops
+diff --git a/core/combo/select.mk b/core/combo/select.mk
+index e485d00..b90e7f1 100644
+--- a/core/combo/select.mk
++++ b/core/combo/select.mk
+@@ -46,8 +46,8 @@ $(combo_target)HAVE_STRLCPY := 0
+ $(combo_target)HAVE_STRLCAT := 0
+ $(combo_target)HAVE_KERNEL_MODULES := 0
+ 
+-$(combo_target)GLOBAL_CFLAGS := -fno-exceptions -Wno-multichar
+-$(combo_target)RELEASE_CFLAGS := -O2 -g -fno-strict-aliasing
++$(combo_target)GLOBAL_CFLAGS := -Os -fno-exceptions -Wno-multichar
++$(combo_target)RELEASE_CFLAGS := -Os -g -fno-strict-aliasing
+ $(combo_target)GLOBAL_LDFLAGS :=
+ $(combo_target)GLOBAL_ARFLAGS := crsP
+ 
+-- 
+1.8.1.2
+
