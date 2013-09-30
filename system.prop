@@ -52,9 +52,6 @@ ro.telephony.ril_class=HuaweiQualcommRIL
 
 # USB
 persist.sys.usb.config=mtp,adb
-ro.additionalmounts=/storage/sdcard0
-ro.emmc.sdcard.partition=19
-ro.vold.switchablepair=/storage/sdcard1,/storage/sdcard0
 ro.vold.umsdirtyratio=50
 
 # Wi-Fi
