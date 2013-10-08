@@ -1,4 +1,4 @@
-From 8fb7fa33149b568000c66c4e1c0ffde3fc24c596 Mon Sep 17 00:00:00 2001
+From 052075313b8ecf2283b39b3ea4a67278c61798c6 Mon Sep 17 00:00:00 2001
 From: dhacker29 <davidhackerdvm@gmail.com>
 Date: Sat, 17 Aug 2013 16:35:18 -0500
 Subject: [PATCH] Add setting for Vold Switchable Pair (2/2)
@@ -11,10 +11,10 @@ to be set in the build.prop.
 Change-Id: Id83fc90d771ca3a7179f2c50d0ae828eb3dbaa9f
 ---
  AndroidManifest.xml                             |  1 +
- res/values/cm_strings.xml                       |  7 ++++
+ res/values/cm_strings.xml                       |  8 ++++
  res/xml/device_info_memory.xml                  |  5 +++
  src/com/android/settings/deviceinfo/Memory.java | 54 ++++++++++++++++++++++++-
- 4 files changed, 66 insertions(+), 1 deletion(-)
+ 4 files changed, 67 insertions(+), 1 deletion(-)
 
 diff --git a/AndroidManifest.xml b/AndroidManifest.xml
 index cb65bbb..7a697c4 100644
@@ -29,13 +29,14 @@ index cb65bbb..7a697c4 100644
      <permission
          android:name="android.permission.REQUEST_SUPERUSER"
 diff --git a/res/values/cm_strings.xml b/res/values/cm_strings.xml
-index eaabb1a..e793b06 100644
+index bc60e30..418eced 100644
 --- a/res/values/cm_strings.xml
 +++ b/res/values/cm_strings.xml
-@@ -999,4 +999,11 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
+@@ -1009,4 +1009,12 @@ two in order to insert additional control points. \'Remove\' deletes the selecte
+     <!-- SELinux warning -->
      <string name="selinux_enable_title">Security Enhanced Android</string>
      <string name="selinux_enable_warning">You are about to enable SEAndroid, an advanced security mechanism, on your device.\n\nThis option exists for debugging purposes only, and it is very likely that your device isn\'t fully ready for it, which may cause parts (or all) of your hardware to block or hang.\n\nAre you sure you want to proceed?</string>
- 
++
 +    <!-- Vold Switchable Pair -->
 +    <string name="storage_switch_title">Use external SD as primary</string>
 +    <string name="storage_switch_summary_off">Using expanded internal storage for apps and media</string>
