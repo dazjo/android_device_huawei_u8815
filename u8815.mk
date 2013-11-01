@@ -17,6 +17,15 @@
 # Inherit the msm7x27a-common definitions
 $(call inherit-product, device/huawei/msm7x27a-common/msm7x27a.mk)
 
+# Files
+PRODUCT_COPY_FILES += \
+    device/huawei/u8815/bluetooth/bt_vendor.conf:system/etc/bluetooth/bt_vendor.conf \
+    device/huawei/u8815/configs/nvram_4330.txt:system/etc/nvram_4330.txt
+
+PRODUCT_COPY_FILES += \
+    device/huawei/u8815/configs/AudioFilter.csv:system/etc/AudioFilter.csv \
+    device/huawei/u8815/configs/libcm.sh:system/etc/libcm.sh
+
 # Permissions
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
