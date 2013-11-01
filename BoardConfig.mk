@@ -46,6 +46,9 @@ BOARD_USERDATAIMAGE_PARTITION_SIZE := 805306368 # 0x30000000
 # Recovery
 TARGET_RECOVERY_FSTAB := device/huawei/u8815/rootdir/fstab.huawei
 
+# RIL
+BOARD_RIL_CLASS := ../../../device/huawei/u8815/ril/
+
 # Wi-Fi
 BOARD_WLAN_DEVICE := bcmdhd
 
