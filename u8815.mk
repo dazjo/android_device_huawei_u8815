@@ -19,6 +19,10 @@ $(call inherit-product, device/huawei/msm7x27a-common/msm7x27a.mk)
 
 # Files
 PRODUCT_COPY_FILES += \
+    device/huawei/u8815/rootdir/fstab.huawei:root/fstab.huawei \
+    device/huawei/u8815/rootdir/init.device.rc:root/init.device.rc
+
+PRODUCT_COPY_FILES += \
     device/huawei/u8815/bluetooth/bt_vendor.conf:system/etc/bluetooth/bt_vendor.conf \
     device/huawei/u8815/configs/nvram_4330.txt:system/etc/nvram_4330.txt
 
