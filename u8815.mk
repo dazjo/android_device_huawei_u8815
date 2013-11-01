@@ -26,6 +26,12 @@ PRODUCT_COPY_FILES += \
     device/huawei/u8815/configs/AudioFilter.csv:system/etc/AudioFilter.csv \
     device/huawei/u8815/configs/libcm.sh:system/etc/libcm.sh
 
+PRODUCT_COPY_FILES += \
+    device/huawei/u8815/idc/synaptics.idc:system/usr/idc/synaptics.idc \
+    device/huawei/u8815/keylayout/7k_handset.kl:system/usr/keylayout/7k_handset.kl \
+    device/huawei/u8815/keylayout/AVRCP.kl:system/usr/keylayout/AVRCP.kl \
+    device/huawei/u8815/keylayout/Generic.kl:system/usr/keylayout/Generic.kl
+
 # Permissions
 PRODUCT_COPY_FILES += \
     frameworks/native/data/etc/android.hardware.telephony.gsm.xml:system/etc/permissions/android.hardware.telephony.gsm.xml
