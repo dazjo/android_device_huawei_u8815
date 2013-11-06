@@ -44,9 +44,9 @@ PRODUCT_COPY_FILES += \
 
 # Properties
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.confg.hw_appfsversion=U8815V4_3_SYSIMG \
-    ro.confg.hw_appsbootversion=U8815V4_3_APPSBOOT \
-    ro.confg.hw_appversion=U8815V4_3_KERNEL
+    ro.confg.hw_appfsversion=U8815V4_4_SYSIMG \
+    ro.confg.hw_appsbootversion=U8815V4_4_APPSBOOT \
+    ro.confg.hw_appversion=U8815V4_4_KERNEL
 
 PRODUCT_PROPERTY_OVERRIDES += \
     rild.libpath=/system/lib/libril-qc-1.so \
