@@ -1343,7 +1343,7 @@ static int msm72xx_enable_postproc(bool state)
     int fd;
     int device_id=0;
 
-    char postProc[128];
+    char postProc[PROPERTY_VALUE_MAX];
     property_get("audio.legacy.postproc",postProc,"0");
 
     if(!(strcmp("true",postProc) == 0)){

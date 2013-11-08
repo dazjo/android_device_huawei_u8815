@@ -211,7 +211,7 @@ mDirectOutrefCnt(0)
 
     audcal_initialize();
 
-    char fluence_key[20] = "none";
+    char fluence_key[PROPERTY_VALUE_MAX] = "none";
     property_get("ro.qc.sdk.audio.fluencetype",fluence_key,"0");
 
     if (0 == strncmp("fluencepro", fluence_key, sizeof("fluencepro"))) {
