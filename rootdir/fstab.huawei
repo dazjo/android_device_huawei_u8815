@@ -10,5 +10,5 @@
 /dev/block/mmcblk0p16                  /recovery         emmc    defaults                                defaults
 /dev/block/mmcblk0p18                  /cust             ext4    ro,barrier=1                            wait
 
-/devices/platform/msm_sdcc.1/mmc_host  auto              auto    defaults                                voldmanaged=sdcard1:auto
-/devices/platform/msm_sdcc.3/mmc_host  auto              auto    defaults                                voldmanaged=sdcard0:19,nonremovable
+/devices/platform/msm_sdcc.1/mmc_host  auto              auto    defaults                                voldmanaged=sdcard1:auto,noemulatedsd
+/devices/platform/msm_sdcc.3/mmc_host  auto              auto    defaults                                voldmanaged=sdcard0:19,noemulatedsd,nonremovable
