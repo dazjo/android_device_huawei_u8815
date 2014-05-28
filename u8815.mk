@@ -19,6 +19,10 @@ $(call inherit-product, device/huawei/msm7x27a-common/msm7x27a.mk)
 
 DEVICE_PACKAGE_OVERLAYS += device/huawei/u8815/overlay
 
+# Packages
+PRODUCT_PACKAGES += \
+    lights.msm7x27a
+
 # Files
 PRODUCT_COPY_FILES += \
     device/huawei/u8815/rootdir/fstab.huawei:root/fstab.huawei \
